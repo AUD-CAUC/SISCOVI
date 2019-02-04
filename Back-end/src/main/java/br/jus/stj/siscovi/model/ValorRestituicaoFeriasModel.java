@@ -11,7 +11,9 @@ public class ValorRestituicaoFeriasModel {
     private final Date inicioPeriodoAquisitivo;
     private final Date fimPeriodoAquisitivo;
 
-    public ValorRestituicaoFeriasModel (float valorFerias, float valorTercoConstitucional, float valorIncidenciaFerias,
+    public ValorRestituicaoFeriasModel (float valorFerias,
+                                        float valorTercoConstitucional,
+                                        float valorIncidenciaFerias,
                                         float valorIncidenciaTercoConstitucional,
                                         Date inicioPeriodoAquisitivo,
                                         Date fimPeriodoAquisitivo) {

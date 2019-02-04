@@ -11,19 +11,5 @@ public class ListaTotalMensalData {
         this.dataReferencia = dataReferencia;
         this.totais = totais;
     }
-    public int getTotaisSize() {
-        return totais.size();
-    }
 
-    public Date getDataReferencia() {
-        return dataReferencia;
-    }
-
-    @Override
-    public String toString() {
-        return "ListaTotalMensalData{" +
-                "dataReferencia=" + dataReferencia +
-                ", totais=" + totais +
-                '}';
-    }
 }

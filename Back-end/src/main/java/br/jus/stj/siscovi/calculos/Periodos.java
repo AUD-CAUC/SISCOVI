@@ -294,7 +294,7 @@ public class Periodos {
 
                 if((vDataInicioFuncao.after(vDataInicio) || vDataInicioFuncao.equals(vDataInicio)) && (vDataInicioFuncao.before(vDataFim) || vDataInicioFuncao.equals(vDataFim))
                         && (vDataFimFuncao.after(vDataFim))) {
-                    vRetorno = (int) ChronoUnit.DAYS.between(vDataInicioFuncao.toLocalDate(), vDataFim.toLocalDate()) + 1;
+                   vRetorno = (int) ChronoUnit.DAYS.between(vDataInicioFuncao.toLocalDate(), vDataFim.toLocalDate()) + 1;
                 }
 
                 /* Se a data de disponibilização é maior que a data de inicio
@@ -320,7 +320,7 @@ public class Periodos {
                     LocalDate dataFimFuncao= vDataFimFuncao.toLocalDate();
                     LocalDate dataInicio = vDataInicio.toLocalDate();
                     long numeroDeDias = ChronoUnit.DAYS.between(dataInicio, dataFimFuncao) + 1;
-                    vRetorno = (int) numeroDeDias;
+                   vRetorno = (int) numeroDeDias;
                 }
             }
         }
@@ -351,7 +351,7 @@ public class Periodos {
 
                 /**--O primeiro ano é calculado em relação ao fim dele (mês 12). */
                 if(i == pDataInicio.toLocalDate().getYear()) {
-                    vRetorno = 12 - pDataInicio.toLocalDate().getMonthValue() + 1;
+                 vRetorno = 12 - pDataInicio.toLocalDate().getMonthValue() + 1;
                 }
 
                 /**--Os anos que estiverem entre o primeiro e o último acrescem 12 ao resultado final.*/
@@ -408,9 +408,9 @@ public class Periodos {
         try {
 
             preparedStatement = connection.prepareStatement("SELECT DATA_INICIO," +
-                    " DATA_FIM" +
-                    " FROM TB_FUNCAO_TERCEIRIZADO" +
-                    " WHERE COD = ?");
+                                                                       " DATA_FIM" +
+                                                                 " FROM TB_FUNCAO_TERCEIRIZADO" +
+                                                                 " WHERE COD = ?");
 
             preparedStatement.setInt(1, pCodFuncaoTerceirizado);
             resultSet = preparedStatement.executeQuery();
@@ -483,7 +483,7 @@ public class Periodos {
             /**Se a data de disponibilização está no mês referência e também a data de desligamento, então contam-se os dias trabalhados pelo terceirizado.*/
 
             if ((vDataInicio.after(vDataReferencia) || vDataInicio.equals(vDataReferencia)) && (vDataInicio.before(vFimDoMes) || vDataInicio.equals(vFimDoMes)) &&
-                    (vDataFim.after(vDataReferencia) || (vDataFim.equals(vDataReferencia))) && (vDataFim.before(vFimDoMes) || vDataFim.equals(vFimDoMes))) {
+                (vDataFim.after(vDataReferencia) || (vDataFim.equals(vDataReferencia))) && (vDataFim.before(vFimDoMes) || vDataFim.equals(vFimDoMes))) {
 
                 vContagemDeDias = ContaDias(vDataInicio, vDataFim);
 
@@ -740,7 +740,7 @@ public class Periodos {
              de dias trabalhados pelo terceirizado.*/
 
             if ((vDataInicio.after(pDataInicio) || vDataInicio.equals(pDataInicio)) && (vDataInicio.before(pDataFim) || vDataInicio.equals(pDataFim)) &&
-                    vDataFim.after(pDataFim)) {
+                vDataFim.after(pDataFim)) {
 
                 return (int) ChronoUnit.DAYS.between(vDataInicio.toLocalDate(), pDataFim.toLocalDate()) + 1;
 

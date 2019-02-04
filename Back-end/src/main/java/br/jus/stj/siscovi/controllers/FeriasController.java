@@ -45,7 +45,7 @@ public class FeriasController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/getValorRestituicaoFerias")
+    @Path("/getValorRestituicaoFeriasModel")
     public Response getValoresFeriasTerceirizado(String object) {
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
         CalcularFeriasModel cfm = gson.fromJson(object, CalcularFeriasModel.class);
@@ -58,13 +58,13 @@ public class FeriasController {
             } else if (cfm.getTipoRestituicao().equals("RESGATE")) {
 
             }
-        ValorRestituicaoFeriasModel vrfm = restituicaoFerias.CalculaRestituicaoFerias(cfm.getCodTerceirizadoContrato(),
-                cfm.getDiasVendidos(),
-                cfm.getInicioFerias(),
-                cfm.getFimFerias(),
-                cfm.getInicioPeriodoAquisitivo(),
-                cfm.getFimPeriodoAquisitivo());
-        json = gson.toJson(vrfm);
+            ValorRestituicaoFeriasModel vrfm = restituicaoFerias.CalculaRestituicaoFerias(cfm.getCodTerceirizadoContrato(),
+                    cfm.getDiasVendidos(),
+                    cfm.getInicioFerias(),
+                    cfm.getFimFerias(),
+                    cfm.getInicioPeriodoAquisitivo(),
+                    cfm.getFimPeriodoAquisitivo());
+            json = gson.toJson(vrfm);
             connectSQLServer.dbConnect().close();
         } catch (SQLException e) {
             System.err.println(e.toString());
@@ -231,7 +231,7 @@ public class FeriasController {
         FeriasDAO feriasDAO = new FeriasDAO(connectSQLServer.dbConnect());
         if(feriasDAO.salvaAvaliacaoCalculosFerias(avaliacaoFerias)) {
             try {
-               connectSQLServer.dbConnect().close();
+                connectSQLServer.dbConnect().close();
             }catch (SQLException sqle) {
                 String json = gson.toJson(new ErrorMessage().handleError(sqle));
                 return Response.ok(json, MediaType.APPLICATION_JSON).build();
