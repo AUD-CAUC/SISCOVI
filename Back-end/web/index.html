@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html >
+<head>
+    <meta charset="UTF-8">
+    <title>Bem-Vindo ao SISCOVI</title>
+
+
+
+    <link rel="stylesheet" href="css/style.css">
+
+
+</head>
+
+<body ng-app="SISCOVI" >
+<div ng-controller="MainController">
+    <div class="header">
+        <h1>Bem vindo ao SISCOVI</h1>
+    </div>
+    <div class ="form">
+        <div class="login-page">
+            <form class="register-form">
+                <input type="text" placeholder="Nome Completo ou Nome de Usuário"/>
+                <input type="password" placeholder="Senha"/>
+                <input type="text" placeholder="Endereço de email do STJ"/>
+                <button>criar</button>
+                <p class="message">Já está registrado ?<a href="#">Login</a></p>
+            </form>
+            <form class="login-form">
+                <input  type="text" placeholder="Nome de Usuário"/>
+                <input type="password" placeholder="Senha">
+                <button type="button" id="login-button" class="button" onclick="myFunction()">login</button>
+                <p class="message">Não está registrado ainda ? <a href="#">Crie uma conta</a></p>
+            </form>
+        </div>
+    </div>
+    <div class="image">
+        <img class="stj-logo-poor" src="img/superior-tribunal-de-justica-stj-original.png">
+    </div>
+
+</div>
+<script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+
+<script src="js/index.js"></script>
+
+</body>
+</html>
