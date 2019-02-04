@@ -31,4 +31,12 @@ public class CargosFuncionariosModel {
     public void setFuncao(CargoModel funcao) {
         this.funcao = funcao;
     }
+
+    public Date getDataDisponibilizacao() {
+        return dataDisponibilizacao;
+    }
+
+    public Date getDataDesligamento() {
+        return dataDesligamento;
+    }
 }

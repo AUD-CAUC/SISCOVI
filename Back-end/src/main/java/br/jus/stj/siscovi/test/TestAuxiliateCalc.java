@@ -2,9 +2,12 @@ package br.jus.stj.siscovi.test;
 
 import br.jus.stj.siscovi.dao.AuxiliateCalcDAO;
 import br.jus.stj.siscovi.dao.ConnectSQLServer;
+import br.jus.stj.siscovi.dao.HistoricoDAO;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 
 import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.Period;
@@ -16,13 +19,14 @@ public class TestAuxiliateCalc {
 
         ConnectSQLServer connectSQLServer = new ConnectSQLServer();
         AuxiliateCalcDAO calcDAO = new AuxiliateCalcDAO(connectSQLServer.dbConnect());
+        String username;
+
         try {
             // System.out.println(calcDAO.TipoDeRestituicao(1));
             // calcDAO.ExisteRetroatividade(1, 2, 8, 2013, 1);
             // System.out.println(calcDAO.RetornaConvencaoAnterior(1));
             // System.out.println(calcDAO.RetornaConvencaoAnterior(2));
             // System.out.println(calcDAO.RetornaRemuneracaoPeriodo(1,8,2013,1,1));
-
             Date date1 = Date.valueOf(""+2018+"-"+1+"-"+8); // Data no modelo de objetos da biblioteca do driver do SQL
             Date date2 = Date.valueOf(""+2018+"-"+2+"-"+8); // Data no modelo de objetos da biblioteca do driver do SQL
             System.out.println("A data1 segundo o driver sql é: "+date1); // imprime a Data1

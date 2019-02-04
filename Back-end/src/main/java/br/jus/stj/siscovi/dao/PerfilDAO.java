@@ -24,9 +24,9 @@ public class PerfilDAO {
             preparedStatement.setString(1,username);
             resultSet = preparedStatement.executeQuery();
             if(resultSet.next()){
-                perfilUser.setCod(resultSet.getInt("COD"));
-                perfilUser.setSigla(resultSet.getString("SIGLA"));
-                perfilUser.setDescricao(resultSet.getString("DESCRICAO"));
+                    perfilUser.setCod(resultSet.getInt("COD"));
+                    perfilUser.setSigla(resultSet.getString("SIGLA"));
+                    perfilUser.setDescricao(resultSet.getString("DESCRICAO"));
                 return perfilUser;
             }
         }catch(NullPointerException npe){
@@ -82,7 +82,7 @@ public class PerfilDAO {
                     perfilModel.setCod(resultSet.getInt("COD"));
                     perfilModel.setSigla(resultSet.getString("SIGLA"));
                     perfilModel.setDescricao(resultSet.getString("DESCRICAO"));
-                    perfis.add(perfilModel);
+                     perfis.add(perfilModel);
                 }
             }
         }catch (SQLException sqle) {

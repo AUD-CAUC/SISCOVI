@@ -1,13 +1,11 @@
 package br.jus.stj.siscovi.calculos;
 
 import java.sql.*;
-import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.Calendar;
 
 public class Ferias {
 
-    private Connection connection;
+    private final Connection connection;
 
     public Ferias(Connection connection) {
 
@@ -22,7 +20,6 @@ public class Ferias {
      * @param pDataFim
      * @return float
      */
-
     public float DiasPeriodoAquisitivo (Date pDataInicio, Date pDataFim) {
 
         //Checked.
@@ -33,11 +30,11 @@ public class Ferias {
         Date vDataInicio = null;
         Date vDataFim = null;
 
-        /*Calcula o número de dias baseado no período aquisitivo.*/
+        /**Calcula o número de dias baseado no período aquisitivo.*/
 
         do {
 
-            /*Inicializa a data de início no primeiro laço.*/
+            /**Inicializa a data de início no primeiro laço.*/
 
             if (vDataInicio == null) {
 
@@ -45,7 +42,7 @@ public class Ferias {
 
             }
 
-            /*Define o fim do mês como dia 30 exceto para fevereiro.*/
+            /**Define o fim do mês como dia 30 exceto para fevereiro.*/
 
             if (vDataInicio.toLocalDate().getMonthValue() != 2) {
 
@@ -110,7 +107,7 @@ public class Ferias {
 
         }
 
-        /**A cada 12 dias de trabalho o funcionário adquire 1 dia de férias,
+        /*A cada 12 dias de trabalho o funcionário adquire 1 dias de férias,
          considerando um período de 360 dias, óbviamente.*/
 
         vDiasAUsufruir = vContagemDeDias/12;
@@ -129,7 +126,6 @@ public class Ferias {
      * @param pDataFim
      * @return int
      */
-
     public int ParcelasConcedidas (int pCodTerceirizadoContrato, Date pDataInicio, Date pDataFim) {
 
         //Checked.
@@ -174,52 +170,37 @@ public class Ferias {
      * Função que retorna o início ou fim do período aquisitivo de férias.
      * @param pCodTerceirizadoContrato
      * @param pOperacao
-     * @return Date
+     * @return int
      */
-
     public Date DataPeriodoAquisitivo (int pCodTerceirizadoContrato, int pOperacao) {
 
-        /**pOperação:
-         1 - Início do período aquisitivo.
-         2 - Fim do período aquisitivo.*/
+        /*  pOperação:
+            1 - Início do período aquisitivo.
+            2 - Fim do período aquisitivo.
+         */
 
         Date vDataDisponibilizacao = null;
         Date vDataInicio = null;
         Date vDataFim = null;
         int vDiasUsufruidos = 0;
         int vSaldoFerias = 0;
-
         PreparedStatement preparedStatement;
         ResultSet resultSet;
-
-        /**Recupera a data de disponibilização do terceirizado.*/
-
+        /* Recupera a data de disponibilização do terceirizado.*/
         try {
-
             preparedStatement = connection.prepareStatement("SELECT data_disponibilizacao" +
                     " FROM tb_terceirizado_contrato" +
                     " WHERE cod = ?;");
-
             preparedStatement.setInt(1, pCodTerceirizadoContrato);
-
             resultSet = preparedStatement.executeQuery();
-
             if (resultSet.next()) {
-
                 vDataDisponibilizacao = resultSet.getDate(1);
-
             }
-
         } catch (SQLException sqle) {
-
             throw new NullPointerException("Não foi possível recuperar a data de disponibilização do terceirizado.");
-
         }
-
-        /**Recupera a última data de período aquisitivo e os dias concedidos.*/
-
+        /* Recupera a última data de período aquisitivo e os dias concedidos.*/
         try {
-
             preparedStatement = connection.prepareStatement("SELECT data_inicio_periodo_aquisitivo," +
                     " data_fim_periodo_aquisitivo," +
                     " SUM(DATEDIFF(day, data_inicio_usufruto, data_fim_usufruto) + dias_vendidos + 1)" +
@@ -229,68 +210,40 @@ public class Ferias {
                     " FROM tb_restituicao_ferias" +
                     " WHERE cod_terceirizado_contrato = ?)" +
                     " GROUP BY data_inicio_periodo_aquisitivo, data_fim_periodo_aquisitivo");
-
             preparedStatement.setInt(1, pCodTerceirizadoContrato);
             preparedStatement.setInt(2, pCodTerceirizadoContrato);
-
             resultSet = preparedStatement.executeQuery();
-
             if (resultSet.next()) {
-
                 vDataInicio = resultSet.getDate(1);
                 vDataFim = resultSet.getDate(2);
                 vDiasUsufruidos = resultSet.getInt(3);
-
             } else {
-
                 vDataInicio = null;
                 vDataFim = null;
                 vDiasUsufruidos = 0;
-
             }
-
         } catch (SQLException sqle) {
-
             throw new NullPointerException("Não foi possível recuperar o último período de férias.");
-
         }
-
         if (vDataInicio != null) {
-
             vSaldoFerias = 30 - vDiasUsufruidos;
-
             if (vSaldoFerias <= 0) {
-
                 vDataInicio = Date.valueOf(vDataFim.toLocalDate().plusDays(1));
                 vDataFim = Date.valueOf(vDataInicio.toLocalDate().plusDays(364));
-
             }
-
         } else {
-
             vDataInicio = vDataDisponibilizacao;
             vDataFim = Date.valueOf(vDataInicio.toLocalDate().plusDays(364));
-
         }
-
-        /**Retorna o início do período aquisitivo válido (corrente).*/
-
+        /* Retorna o início do período aquisitivo válido (corrente). */
         if (pOperacao == 1) {
-
             return vDataInicio;
-
         }
-
-        /**Retorna o fim do período aquisitivo válido (corrente).*/
-
+        /* Retorna o fim do período aquisitivo válido (corrente). */
         if (pOperacao == 2) {
-
             return vDataFim;
-
         }
-
         return null;
-
     }
 
     /**
@@ -327,9 +280,8 @@ public class Ferias {
 
         if (vDataFimFeriasIntegrais.after(pDataDesligamento)) {
 
-            vDataFimFeriasIntegrais = null;
+            vDataFimFeriasIntegrais = pDataDesligamento;
             vDataInicioFeriasProporcionais = vDataInicioFeriasIntegrais;
-            vDataInicioFeriasIntegrais = null;
 
         }
 
@@ -384,46 +336,27 @@ public class Ferias {
      * @param pCodTerceirizadoContrato
      * @return boolean
      */
-
     public boolean ExisteFeriasTerceirizado (int pCodTerceirizadoContrato) {
-
         PreparedStatement preparedStatement;
         ResultSet resultSet;
-
         int vNumeroRestituicoes = 0;
-
         String query = "SELECT COUNT(cod)\n" +
-                       " FROM tb_restituicao_ferias\n" +
-                       " WHERE cod_terceirizado_contrato = ?";
-
+                " FROM tb_restituicao_ferias\n" +
+                " WHERE cod_terceirizado_contrato = ?";
         try {
-
             preparedStatement = connection.prepareStatement(query);
-
             preparedStatement.setInt(1, pCodTerceirizadoContrato);
-
             resultSet = preparedStatement.executeQuery();
-
             if (resultSet.next()) {
-
                 vNumeroRestituicoes = resultSet.getInt(1);
-
             }
-
         } catch (SQLException sqle) {
-
             throw new NullPointerException("Não foi possível recuperar restituições de férias anteriores.");
-
         }
-
         if (vNumeroRestituicoes == 0) {
-
             return false;
-
         }
-
         return true;
-
     }
 
 }

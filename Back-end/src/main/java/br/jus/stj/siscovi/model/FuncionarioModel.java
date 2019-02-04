@@ -27,4 +27,24 @@ public class FuncionarioModel {
     public String getNome() {
         return nome;
     }
+
+    public int getCodigo() {
+        return codigo;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public char getAtivo() {
+        return ativo;
+    }
+
+    public String getLoginAtualizacao() {
+        return loginAtualizacao;
+    }
+
+    public Date getDataAtualizacao() {
+        return dataAtualizacao;
+    }
 }

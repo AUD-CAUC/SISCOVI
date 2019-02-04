@@ -166,8 +166,8 @@ public class ConsultaTSQL {
         try {
 
             preparedStatement = connection.prepareStatement("SELECT MIN(data_inicio_vigencia)\n" +
-                                                                 " FROM tb_evento_contratual\n" +
-                                                                 " WHERE cod_contrato = ?");
+                    " FROM tb_evento_contratual\n" +
+                    " WHERE cod_contrato = ?");
 
             preparedStatement.setInt(1, pCodContrato);
 
@@ -234,51 +234,6 @@ public class ConsultaTSQL {
 
     }
 
-    /**
-     *Função que retorna o código de um perfil de usuario.
-     *
-     * @param pPerfilUsuario;
-     *
-     * @return O código (cod) do registro correspondente a um tipo de restituição.
-     */
-
-    public int RetornaCodPerfilUsuario (String pPerfilUsuario) {
-
-        PreparedStatement preparedStatement;
-        ResultSet resultSet;
-        int vCodPerfilUsuario = 0;
-
-        /*Atribuição do cod do perfil de tipo de usuário.*/
-
-        try {
-
-            preparedStatement = connection.prepareStatement("SELECT COD" + " FROM TB_PERFIL_USUARIO" + " WHERE UPPER(nome) = UPPER(?)");
-
-            preparedStatement.setString(1, pPerfilUsuario);
-            resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-
-                vCodPerfilUsuario = resultSet.getInt(1);
-
-            }
-
-        } catch (SQLException e) {
-
-            e.printStackTrace();
-
-        }
-
-        if (vCodPerfilUsuario == 0) {
-
-            throw new NullPointerException("Tipo de restituição não encontrada.");
-
-        }
-
-        return vCodPerfilUsuario;
-
-    }
-
 
 /*
     /**
@@ -290,40 +245,25 @@ public class ConsultaTSQL {
      */
 /*
     public String RetornaTipoRestituicao (int pCodTipoRestituicao) {
-
         PreparedStatement preparedStatement;
         ResultSet resultSet;
         String vTipoRestituicao = null;
-
         /*Atribuição do tipo de restituição.*/
 /*
         try {
-
             preparedStatement = connection.prepareStatement("SELECT NOME" + " FROM TB_TIPO_RESTITUICAO" + " WHERE cod = ?");
-
             preparedStatement.setInt(1, pCodTipoRestituicao);
             resultSet = preparedStatement.executeQuery();
-
             if (resultSet.next()) {
-
                 vTipoRestituicao = resultSet.getString(1);
-
             }
-
         } catch (SQLException e) {
-
             e.printStackTrace();
-
         }
-
         if (vTipoRestituicao == null) {
-
             throw new NullPointerException("Tipo de restituição não encontrada.");
-
         }
-
         return vTipoRestituicao;
-
     }
 */
     /**
@@ -751,36 +691,36 @@ public class ConsultaTSQL {
         try {
 
             preparedStatement = connection.prepareStatement("SELECT data_inicio AS data" +
-                                                                 " FROM tb_percentual_contrato" +
-                                                                 " WHERE cod_contrato = ?" +
-                                                                   " AND (MONTH(DATA_INICIO) = ?" +
-                                                                        " AND \n" +
-                                                                        " YEAR(DATA_INICIO) = ?)" +
-                                                               " UNION" +
-                                                               " SELECT data_fim AS data" +
-                                                                 " FROM tb_percentual_contrato" +
-                                                                 " WHERE cod_contrato = ?" +
-                                                                   " AND (MONTH(DATA_FIM)=?" +
-                                                                        " AND" + " YEAR(DATA_FIM) = ?)" +
-                                                               " UNION" +
-                                                               " SELECT data_inicio AS data" +
-                                                                 " FROM tb_percentual_estatico" +
-                                                                 " WHERE (MONTH(DATA_INICIO) = ?" +
-                                                                   " AND " + " YEAR(DATA_INICIO) = ?)" +
-                                                               " UNION" +
-                                                               " SELECT data_fim AS data" +
-                                                                 " FROM tb_percentual_estatico" +
-                                                                 " WHERE (MONTH(DATA_FIM)=?" +
-                                                                   " AND" + " YEAR(DATA_FIM)=?)" +
-                                                               " UNION" +
-                                                               " SELECT CASE WHEN ? = 2 THEN" +
-                                                                        " EOMONTH(CONVERT(DATE, CONCAT('28/' , ? , '/' ,?), 103))" +
-                                                                      " ELSE" + " CONVERT(DATE, CONCAT('30/' , ? , '/' ,?), 103) END AS data" +
-                                                               " EXCEPT" +
-                                                               " SELECT CASE WHEN DAY(EOMONTH(CONVERT(DATE, CONCAT('30/' , ? , '/' ,?), 103))) = 31 THEN" +
-                                                                        " CONVERT(DATE, CONCAT('31/' , ? , '/' ,?), 103)" +
-                                                                      " ELSE" + " NULL END AS data" +
-                                                               " ORDER BY data ASC");
+                    " FROM tb_percentual_contrato" +
+                    " WHERE cod_contrato = ?" +
+                    " AND (MONTH(DATA_INICIO) = ?" +
+                    " AND \n" +
+                    " YEAR(DATA_INICIO) = ?)" +
+                    " UNION" +
+                    " SELECT data_fim AS data" +
+                    " FROM tb_percentual_contrato" +
+                    " WHERE cod_contrato = ?" +
+                    " AND (MONTH(DATA_FIM)=?" +
+                    " AND" + " YEAR(DATA_FIM) = ?)" +
+                    " UNION" +
+                    " SELECT data_inicio AS data" +
+                    " FROM tb_percentual_estatico" +
+                    " WHERE (MONTH(DATA_INICIO) = ?" +
+                    " AND " + " YEAR(DATA_INICIO) = ?)" +
+                    " UNION" +
+                    " SELECT data_fim AS data" +
+                    " FROM tb_percentual_estatico" +
+                    " WHERE (MONTH(DATA_FIM)=?" +
+                    " AND" + " YEAR(DATA_FIM)=?)" +
+                    " UNION" +
+                    " SELECT CASE WHEN ? = 2 THEN" +
+                    " EOMONTH(CONVERT(DATE, CONCAT('28/' , ? , '/' ,?), 103))" +
+                    " ELSE" + " CONVERT(DATE, CONCAT('30/' , ? , '/' ,?), 103) END AS data" +
+                    " EXCEPT" +
+                    " SELECT CASE WHEN DAY(EOMONTH(CONVERT(DATE, CONCAT('30/' , ? , '/' ,?), 103))) = 31 THEN" +
+                    " CONVERT(DATE, CONCAT('31/' , ? , '/' ,?), 103)" +
+                    " ELSE" + " NULL END AS data" +
+                    " ORDER BY data ASC");
 
             preparedStatement.setInt(1, pCodContrato);
             preparedStatement.setInt(2, pMes);
@@ -845,33 +785,33 @@ public class ConsultaTSQL {
         try {
 
             preparedStatement = connection.prepareStatement("SELECT rfc.data_inicio AS data" +
-                                                                 " FROM tb_remuneracao_fun_con rfc\n" +
-                                                                   " JOIN tb_funcao_contrato fc ON fc.cod = rfc.cod_funcao_contrato" +
-                                                                 " WHERE fc.cod_contrato = ?" +
-                                                                   " AND fc.cod = ?" +
-                                                                   " AND (MONTH(rfc.data_inicio) = ?" +
-                                                                        " AND" +
-                                                                        " YEAR(rfc.data_inicio) = ?)" +
-                                                                " UNION" +
-                                                                " SELECT rfc.data_fim AS data " +
-                                                                  " FROM tb_remuneracao_fun_con rfc" +
-                                                                    " JOIN tb_funcao_contrato fc ON fc.cod = rfc.cod_funcao_contrato" +
-                                                                  " WHERE fc.cod_contrato = ?" +
-                                                                    " AND fc.cod = ?" +
-                                                                    " AND (MONTH(rfc.data_fim) = ?" +
-                                                                         " AND " +
-                                                                         " YEAR(rfc.data_fim) = ?)" +
-                                                                " UNION" +
-                                                                " SELECT CASE WHEN ? = 2 THEN" +
-                                                                         " EOMONTH(CONVERT(DATE, CONCAT('28/' , ? , '/' ,?), 103))" +
-                                                                       " ELSE" +
-                                                                         " CONVERT(DATE, CONCAT('30/' , ? , '/' ,?), 103) END AS data" +
-                                                                " EXCEPT" +
-                                                                " SELECT CASE WHEN DAY(EOMONTH(CONVERT(DATE, CONCAT('30/' , ? , '/' ,?), 103))) = 31 THEN" +
-                                                                         " CONVERT(DATE, CONCAT('31/' , ? , '/' ,?), 103)" +
-                                                                       " ELSE" +
-                                                                         " NULL END AS data" +
-                                                                " ORDER BY DATA ASC");
+                    " FROM tb_remuneracao_fun_con rfc\n" +
+                    " JOIN tb_funcao_contrato fc ON fc.cod = rfc.cod_funcao_contrato" +
+                    " WHERE fc.cod_contrato = ?" +
+                    " AND fc.cod = ?" +
+                    " AND (MONTH(rfc.data_inicio) = ?" +
+                    " AND" +
+                    " YEAR(rfc.data_inicio) = ?)" +
+                    " UNION" +
+                    " SELECT rfc.data_fim AS data " +
+                    " FROM tb_remuneracao_fun_con rfc" +
+                    " JOIN tb_funcao_contrato fc ON fc.cod = rfc.cod_funcao_contrato" +
+                    " WHERE fc.cod_contrato = ?" +
+                    " AND fc.cod = ?" +
+                    " AND (MONTH(rfc.data_fim) = ?" +
+                    " AND " +
+                    " YEAR(rfc.data_fim) = ?)" +
+                    " UNION" +
+                    " SELECT CASE WHEN ? = 2 THEN" +
+                    " EOMONTH(CONVERT(DATE, CONCAT('28/' , ? , '/' ,?), 103))" +
+                    " ELSE" +
+                    " CONVERT(DATE, CONCAT('30/' , ? , '/' ,?), 103) END AS data" +
+                    " EXCEPT" +
+                    " SELECT CASE WHEN DAY(EOMONTH(CONVERT(DATE, CONCAT('30/' , ? , '/' ,?), 103))) = 31 THEN" +
+                    " CONVERT(DATE, CONCAT('31/' , ? , '/' ,?), 103)" +
+                    " ELSE" +
+                    " NULL END AS data" +
+                    " ORDER BY DATA ASC");
 
             preparedStatement.setInt(1, pCodContrato);
             preparedStatement.setInt(2, pCodFuncaoContrato);
@@ -934,59 +874,59 @@ public class ConsultaTSQL {
         try {
 
             preparedStatement = connection.prepareStatement("SELECT data_inicio AS data" +
-                                                                 " FROM tb_percentual_contrato" +
-                                                                 " WHERE cod_contrato = ?" +
-                                                                   " AND (MONTH(DATA_INICIO) = ?" +
-                                                                        " AND " +
-                                                                        " YEAR(DATA_INICIO) = ?)" +
-                                                               " UNION" +
-                                                               " SELECT data_fim AS data" +
-                                                                 " FROM tb_percentual_contrato" +
-                                                                 " WHERE cod_contrato = ?" +
-                                                                   " AND (MONTH(DATA_FIM)=?" +
-                                                                        " AND" +
-                                                                        " YEAR(DATA_FIM) = ?)" +
-                                                               " UNION" +
-                                                               " SELECT data_inicio AS data" +
-                                                                 " FROM tb_percentual_estatico" +
-                                                                 " WHERE (MONTH(DATA_INICIO) = ?" +
-                                                                        " AND " +
-                                                                        " YEAR(DATA_INICIO) = ?)" +
-                                                               " UNION" +
-                                                               " SELECT data_fim AS data" +
-                                                                 " FROM tb_percentual_estatico" +
-                                                                 " WHERE (MONTH(DATA_FIM)=?" +
-                                                                        " AND" +
-                                                                        " YEAR(DATA_FIM)=?)" +
-                                                               " UNION" +
-                                                               " SELECT rfc.data_inicio AS data" +
-                                                                 " FROM tb_remuneracao_fun_con rfc" +
-                                                                   " JOIN tb_funcao_contrato fc ON fc.cod = rfc.cod_funcao_contrato" +
-                                                                 " WHERE fc.cod_contrato = ?" +
-                                                                   " AND fc.cod = ?" +
-                                                                   " AND (MONTH(rfc.data_inicio) = ?" +
-                                                                        " AND" +
-                                                                        " YEAR(rfc.data_inicio) = ?)" +
-                                                               " UNION" +
-                                                               " SELECT rfc.data_fim AS data " +
-                                                                 " FROM tb_remuneracao_fun_con rfc" +
-                                                                   " JOIN tb_funcao_contrato fc ON fc.cod = rfc.cod_funcao_contrato" +
-                                                                 " WHERE fc.cod_contrato = ?" +
-                                                                   " AND fc.cod = ?" +
-                                                                   " AND (MONTH(rfc.data_fim) = ?" +
-                                                                        " AND " +
-                                                                        " YEAR(rfc.data_fim) = ?)" +
-                                                               " UNION" +
-                                                               " SELECT CASE WHEN ? = 2 THEN" +
-                                                                        " EOMONTH(CONVERT(DATE, CONCAT('28/' , ? , '/' ,?), 103))" +
-                                                                      " ELSE" +
-                                                                        " CONVERT(DATE, CONCAT('30/' , ? , '/' ,?), 103) END AS data" +
-                                                               " EXCEPT" +
-                                                               " SELECT CASE WHEN DAY(EOMONTH(CONVERT(DATE, CONCAT('30/' , ? , '/' ,?), 103))) = 31 THEN" +
-                                                                        " CONVERT(DATE, CONCAT('31/' , ? , '/' ,?), 103)" +
-                                                                      " ELSE" +
-                                                                        " NULL END AS data" +
-                                                               " ORDER BY DATA ASC");
+                    " FROM tb_percentual_contrato" +
+                    " WHERE cod_contrato = ?" +
+                    " AND (MONTH(DATA_INICIO) = ?" +
+                    " AND " +
+                    " YEAR(DATA_INICIO) = ?)" +
+                    " UNION" +
+                    " SELECT data_fim AS data" +
+                    " FROM tb_percentual_contrato" +
+                    " WHERE cod_contrato = ?" +
+                    " AND (MONTH(DATA_FIM)=?" +
+                    " AND" +
+                    " YEAR(DATA_FIM) = ?)" +
+                    " UNION" +
+                    " SELECT data_inicio AS data" +
+                    " FROM tb_percentual_estatico" +
+                    " WHERE (MONTH(DATA_INICIO) = ?" +
+                    " AND " +
+                    " YEAR(DATA_INICIO) = ?)" +
+                    " UNION" +
+                    " SELECT data_fim AS data" +
+                    " FROM tb_percentual_estatico" +
+                    " WHERE (MONTH(DATA_FIM)=?" +
+                    " AND" +
+                    " YEAR(DATA_FIM)=?)" +
+                    " UNION" +
+                    " SELECT rfc.data_inicio AS data" +
+                    " FROM tb_remuneracao_fun_con rfc" +
+                    " JOIN tb_funcao_contrato fc ON fc.cod = rfc.cod_funcao_contrato" +
+                    " WHERE fc.cod_contrato = ?" +
+                    " AND fc.cod = ?" +
+                    " AND (MONTH(rfc.data_inicio) = ?" +
+                    " AND" +
+                    " YEAR(rfc.data_inicio) = ?)" +
+                    " UNION" +
+                    " SELECT rfc.data_fim AS data " +
+                    " FROM tb_remuneracao_fun_con rfc" +
+                    " JOIN tb_funcao_contrato fc ON fc.cod = rfc.cod_funcao_contrato" +
+                    " WHERE fc.cod_contrato = ?" +
+                    " AND fc.cod = ?" +
+                    " AND (MONTH(rfc.data_fim) = ?" +
+                    " AND " +
+                    " YEAR(rfc.data_fim) = ?)" +
+                    " UNION" +
+                    " SELECT CASE WHEN ? = 2 THEN" +
+                    " EOMONTH(CONVERT(DATE, CONCAT('28/' , ? , '/' ,?), 103))" +
+                    " ELSE" +
+                    " CONVERT(DATE, CONCAT('30/' , ? , '/' ,?), 103) END AS data" +
+                    " EXCEPT" +
+                    " SELECT CASE WHEN DAY(EOMONTH(CONVERT(DATE, CONCAT('30/' , ? , '/' ,?), 103))) = 31 THEN" +
+                    " CONVERT(DATE, CONCAT('31/' , ? , '/' ,?), 103)" +
+                    " ELSE" +
+                    " NULL END AS data" +
+                    " ORDER BY DATA ASC");
 
             preparedStatement.setInt(1, pCodContrato);
             preparedStatement.setInt(2, pMes);
@@ -1041,36 +981,36 @@ public class ConsultaTSQL {
      * @return Um registro de restituição de férias no model.
      */
 
-    public RegistroRestituicaoFerias RetornaRegistroRestituicaoFerias (int pCodRestituicaoFerias) {
+    public RegistroDeFeriasModel RetornaRegistroRestituicaoFerias (int pCodRestituicaoFerias) {
 
         PreparedStatement preparedStatement;
         ResultSet resultSet;
 
-        RegistroRestituicaoFerias registro = null;
+        RegistroDeFeriasModel registro = null;
 
         try {
 
             String sql = "SELECT COD," +
-                               " COD_TERCEIRIZADO_CONTRATO," +
-                               " COD_TIPO_RESTITUICAO," +
-                               " DATA_INICIO_PERIODO_AQUISITIVO," +
-                               " DATA_FIM_PERIODO_AQUISITIVO," +
-                               " DATA_INICIO_USUFRUTO," +
-                               " DATA_FIM_USUFRUTO," +
-                               " DIAS_VENDIDOS," +
-                               " VALOR_FERIAS," +
-                               " VALOR_TERCO_CONSTITUCIONAL," +
-                               " INCID_SUBMOD_4_1_FERIAS," +
-                               " INCID_SUBMOD_4_1_TERCO," +
-                               " PARCELA," +
-                               " DATA_REFERENCIA," +
-                               " AUTORIZADO," +
-                               " RESTITUIDO," +
-                               " OBSERVACAO," +
-                               " LOGIN_ATUALIZACAO," +
-                               " DATA_ATUALIZACAO" +
-                        " FROM TB_RESTITUICAO_FERIAS" +
-                        " WHERE COD = ?";
+                    " COD_TERCEIRIZADO_CONTRATO," +
+                    " COD_TIPO_RESTITUICAO," +
+                    " DATA_INICIO_PERIODO_AQUISITIVO," +
+                    " DATA_FIM_PERIODO_AQUISITIVO," +
+                    " DATA_INICIO_USUFRUTO," +
+                    " DATA_FIM_USUFRUTO," +
+                    " DIAS_VENDIDOS," +
+                    " VALOR_FERIAS," +
+                    " VALOR_TERCO_CONSTITUCIONAL," +
+                    " INCID_SUBMOD_4_1_FERIAS," +
+                    " INCID_SUBMOD_4_1_TERCO," +
+                    " PARCELA," +
+                    " DATA_REFERENCIA," +
+                    " AUTORIZADO," +
+                    " RESTITUIDO," +
+                    " OBSERVACAO," +
+                    " LOGIN_ATUALIZACAO," +
+                    " DATA_ATUALIZACAO" +
+                    " FROM TB_RESTITUICAO_FERIAS" +
+                    " WHERE COD = ?";
 
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, pCodRestituicaoFerias);
@@ -1079,25 +1019,25 @@ public class ConsultaTSQL {
 
             if (resultSet.next()) {
 
-                registro = new RegistroRestituicaoFerias(resultSet.getInt(1),
-                                                     resultSet.getInt(2),
-                                                     resultSet.getInt(3),
-                                                     resultSet.getDate(4),
-                                                     resultSet.getDate(5),
-                                                     resultSet.getDate(6),
-                                                     resultSet.getDate(7),
-                                                     resultSet.getInt(8),
-                                                     resultSet.getFloat(9),
-                                                     resultSet.getFloat(10),
-                                                     resultSet.getFloat(11),
-                                                     resultSet.getFloat(12),
-                                                     resultSet.getInt(13),
-                                                     resultSet.getDate(14),
-                                                     resultSet.getString(15),
-                                                     resultSet.getString(16),
-                                                     resultSet.getString(17),
-                                                     resultSet.getString(18),
-                                                     resultSet.getTimestamp(19));
+                registro = new RegistroDeFeriasModel(resultSet.getInt(1),
+                        resultSet.getInt(2),
+                        resultSet.getInt(3),
+                        resultSet.getDate(4),
+                        resultSet.getDate(5),
+                        resultSet.getDate(6),
+                        resultSet.getDate(7),
+                        resultSet.getInt(8),
+                        resultSet.getFloat(9),
+                        resultSet.getFloat(10),
+                        resultSet.getFloat(11),
+                        resultSet.getFloat(12),
+                        resultSet.getInt(13),
+                        resultSet.getDate(14),
+                        resultSet.getString(15),
+                        resultSet.getString(16),
+                        resultSet.getString(17),
+                        resultSet.getString(18),
+                        resultSet.getTimestamp(19));
 
             }
 
@@ -1121,30 +1061,30 @@ public class ConsultaTSQL {
      * @return Um registro de restituição de décimo terceiro no model.
      */
 
-    public RegistroRestituicaoDecimoTerceiro RetornaRegistroRestituicaoDecimoTerceiro (int pCodRestituicaoDecimoTerceiro) {
+    public RegistroDeDecimoTerceiroModel RetornaRegistroRestituicaoDecimoTerceiro (int pCodRestituicaoDecimoTerceiro) {
 
         PreparedStatement preparedStatement;
         ResultSet resultSet;
 
-        RegistroRestituicaoDecimoTerceiro registro = null;
+        RegistroDeDecimoTerceiroModel registro = null;
 
         try {
 
             String sql = "SELECT COD," +
-                        " COD_TERCEIRIZADO_CONTRATO," +
-                        " COD_TIPO_RESTITUICAO," +
-                        " PARCELA," +
-                        " DATA_INICIO_CONTAGEM," +
-                        " VALOR," +
-                        " INCIDENCIA_SUBMODULO_4_1," +
-                        " DATA_REFERENCIA," +
-                        " AUTORIZADO," +
-                        " RESTITUIDO," +
-                        " OBSERVACAO," +
-                        " LOGIN_ATUALIZACAO," +
-                        " DATA_ATUALIZACAO" +
-                        " FROM TB_RESTITUICAO_DECIMO_TERCEIRO" +
-                        " WHERE COD = ?";
+                    " COD_TERCEIRIZADO_CONTRATO," +
+                    " COD_TIPO_RESTITUICAO," +
+                    " PARCELA," +
+                    " DATA_INICIO_CONTAGEM," +
+                    " VALOR," +
+                    " INCIDENCIA_SUBMODULO_4_1," +
+                    " DATA_REFERENCIA," +
+                    " AUTORIZADO," +
+                    " RESTITUIDO," +
+                    " OBSERVACAO," +
+                    " LOGIN_ATUALIZACAO," +
+                    " DATA_ATUALIZACAO" +
+                    " FROM TB_RESTITUICAO_DECIMO_TERCEIRO" +
+                    " WHERE COD = ?";
 
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, pCodRestituicaoDecimoTerceiro);
@@ -1153,19 +1093,19 @@ public class ConsultaTSQL {
 
             if (resultSet.next()) {
 
-                registro = new RegistroRestituicaoDecimoTerceiro(resultSet.getInt(1),
-                                                             resultSet.getInt(2),
-                                                             resultSet.getInt(3),
-                                                             resultSet.getInt(4),
-                                                             resultSet.getDate(5),
-                                                             resultSet.getFloat(6),
-                                                             resultSet.getFloat(7),
-                                                             resultSet.getDate(8),
-                                                             resultSet.getString(9),
-                                                             resultSet.getString(10),
-                                                             resultSet.getString(11),
-                                                             resultSet.getString(12),
-                                                             resultSet.getTimestamp(13));
+                registro = new RegistroDeDecimoTerceiroModel(resultSet.getInt(1),
+                        resultSet.getInt(2),
+                        resultSet.getInt(3),
+                        resultSet.getInt(4),
+                        resultSet.getDate(5),
+                        resultSet.getFloat(6),
+                        resultSet.getFloat(7),
+                        resultSet.getDate(8),
+                        resultSet.getString(9),
+                        resultSet.getString(10),
+                        resultSet.getString(11),
+                        resultSet.getString(12),
+                        resultSet.getTimestamp(13));
 
             }
 
@@ -1199,39 +1139,35 @@ public class ConsultaTSQL {
         try {
 
             String sql = "SELECT COD," +
-                               " COD_TERCEIRIZADO_CONTRATO," +
-                               " COD_TIPO_RESTITUICAO," +
-                               " COD_TIPO_RESCISAO," +
-                               " DATA_DESLIGAMENTO," +
-                               " DATA_INICIO_FERIAS," +
-                               " DATA_FIM_FERIAS," +
-                               " DATA_INICIO_FERIAS_PROP," +
-                               " DATA_FIM_FERIAS_PROP," +
-                               " DATA_INICIO_CONTAGEM_DEC_TER," +
-                               " VALOR_DECIMO_TERCEIRO," +
-                               " INCID_SUBMOD_4_1_DEC_TERCEIRO," +
-                               " INCID_MULTA_FGTS_DEC_TERCEIRO," +
-                               " VALOR_FERIAS," +
-                               " VALOR_TERCO," +
-                               " INCID_SUBMOD_4_1_FERIAS," +
-                               " INCID_SUBMOD_4_1_DEC_TERCEIRO," +
-                               " INCID_MULTA_FGTS_FERIAS," +
-                               " INCID_MULTA_FGTS_TERCO," +
-                               " VALOR_FERIAS_PROP," +
-                               " VALOR_TERCO_PROP," +
-                               " INCID_SUBMOD_4_1_FERIAS_PROP," +
-                               " INCID_SUBMOD_4_1_TERCO_PROP," +
-                               " INCID_MULTA_FGTS_FERIAS_PROP," +
-                               " INCID_MULTA_FGTS_TERCO_PROP," +
-                               " MULTA_FGTS_SALARIO," +
-                               " DATA_REFERENCIA," +
-                               " AUTORIZADO," +
-                               " RESTITUIDO," +
-                               " OBSERVACAO," +
-                               " LOGIN_ATUALIZACAO," +
-                               " DATA_ATUALIZACAO" +
-                          " FROM TB_RESTITUICAO_RESCISAO" +
-                          " WHERE COD = ?";
+                    " COD_TERCEIRIZADO_CONTRATO," +
+                    " COD_TIPO_RESTITUICAO," +
+                    " COD_TIPO_RESCISAO," +
+                    " DATA_DESLIGAMENTO," +
+                    " DATA_INICIO_FERIAS," +
+                    " VALOR_DECIMO_TERCEIRO," +
+                    " INCID_SUBMOD_4_1_DEC_TERCEIRO," +
+                    " INCID_MULTA_FGTS_DEC_TERCEIRO," +
+                    " VALOR_FERIAS," +
+                    " VALOR_TERCO," +
+                    " INCID_SUBMOD_4_1_FERIAS," +
+                    " INCID_SUBMOD_4_1_DEC_TERCEIRO," +
+                    " INCID_MULTA_FGTS_FERIAS," +
+                    " INCID_MULTA_FGTS_TERCO," +
+                    " VALOR_FERIAS_PROP," +
+                    " VALOR_TERCO_PROP," +
+                    " INCID_SUBMOD_4_1_FERIAS_PROP," +
+                    " INCID_SUBMOD_4_1_DEC_TERCEIRO_PROP," +
+                    " INCID_MULTA_FGTS_FERIAS_PROP," +
+                    " INCID_MULTA_FGTS_TERCO_PROP," +
+                    " MULTA_FGTS_SALARIO," +
+                    " DATA_REFERENCIA," +
+                    " AUTORIZADO," +
+                    " RESTITUIDO," +
+                    " OBSERVACAO," +
+                    " LOGIN_ATUALIZACAO," +
+                    " DATA_ATUALIZACAO" +
+                    " FROM TB_RESTITUICAO_RESCISAO" +
+                    " WHERE COD = ?";
 
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, pCodRestituicaoRescisao);
@@ -1241,37 +1177,33 @@ public class ConsultaTSQL {
             if (resultSet.next()) {
 
                 registro = new RegistroRestituicaoRescisao(resultSet.getInt(1),
-                                                           resultSet.getInt(2),
-                                                           resultSet.getInt(3),
-                                                           resultSet.getInt(4),
-                                                           resultSet.getDate(5),
-                                                           resultSet.getDate(6),
-                                                           resultSet.getDate(7),
-                                                           resultSet.getDate(8),
-                                                           resultSet.getDate(9),
-                                                           resultSet.getDate(10),
-                                                           resultSet.getFloat(11),
-                                                           resultSet.getFloat(12),
-                                                           resultSet.getFloat(13),
-                                                           resultSet.getFloat(14),
-                                                           resultSet.getFloat(15),
-                                                           resultSet.getFloat(16),
-                                                           resultSet.getFloat(17),
-                                                           resultSet.getFloat(18),
-                                                           resultSet.getFloat(19),
-                                                           resultSet.getFloat(20),
-                                                           resultSet.getFloat(21),
-                                                           resultSet.getFloat(22),
-                                                           resultSet.getFloat(23),
-                                                           resultSet.getFloat(24),
-                                                           resultSet.getFloat(25),
-                                                           resultSet.getFloat(26),
-                                                           resultSet.getDate(27),
-                                                           resultSet.getString(28),
-                                                           resultSet.getString(29),
-                                                           resultSet.getString(30),
-                                                           resultSet.getString(31),
-                                                           resultSet.getTimestamp(32));
+                        resultSet.getInt(2),
+                        resultSet.getInt(3),
+                        resultSet.getInt(4),
+                        resultSet.getDate(5),
+                        resultSet.getDate(6),
+                        resultSet.getFloat(7),
+                        resultSet.getFloat(8),
+                        resultSet.getFloat(9),
+                        resultSet.getFloat(10),
+                        resultSet.getFloat(11),
+                        resultSet.getFloat(12),
+                        resultSet.getFloat(13),
+                        resultSet.getFloat(14),
+                        resultSet.getFloat(15),
+                        resultSet.getFloat(16),
+                        resultSet.getFloat(17),
+                        resultSet.getFloat(18),
+                        resultSet.getFloat(19),
+                        resultSet.getFloat(20),
+                        resultSet.getFloat(21),
+                        resultSet.getFloat(22),
+                        resultSet.getDate(23),
+                        resultSet.getString(24),
+                        resultSet.getString(25),
+                        resultSet.getString(26),
+                        resultSet.getString(27),
+                        resultSet.getTimestamp(28));
 
             }
 
@@ -1305,12 +1237,12 @@ public class ConsultaTSQL {
         try {
 
             String sql = "SELECT nome, " +
-                                "sigla, " +
-                                "descricao, " +
-                                "login_atualizacao, " +
-                                "data_atualizacao " +
-                           "FROM tb_rubrica " +
-                           "WHERE cod = ?";
+                    "sigla, " +
+                    "descricao, " +
+                    "login_atualizacao, " +
+                    "data_atualizacao " +
+                    "FROM tb_rubrica " +
+                    "WHERE cod = ?";
 
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, pCodRubrica);
@@ -1320,11 +1252,11 @@ public class ConsultaTSQL {
             if (resultSet.next()) {
 
                 registro = new RegistroRubricaModel(pCodRubrica,
-                                                    resultSet.getString(1),
-                                                    resultSet.getString(2),
-                                                    resultSet.getString(3),
-                                                    resultSet.getString(4),
-                                                    resultSet.getTimestamp(5));
+                        resultSet.getString(1),
+                        resultSet.getString(2),
+                        resultSet.getString(3),
+                        resultSet.getString(4),
+                        resultSet.getTimestamp(5));
 
             }
 
@@ -1333,543 +1265,6 @@ public class ConsultaTSQL {
             sqle.printStackTrace();
 
             throw new NullPointerException("Não foi possível recuperar o registro da rubrica requisitada.");
-
-        }
-
-        return registro;
-
-    }
-
-    /**
-     * Retorna um registro da tabela tb_contrato.
-     *
-     * @param pCodContrato;
-     *
-     * @return Um registro de contrato no model.
-     */
-
-    public RegistroContrato RetornaRegistroContrato (int pCodContrato) {
-
-        PreparedStatement preparedStatement;
-        ResultSet resultSet;
-
-        RegistroContrato registro = null;
-
-        try {
-
-            String sql = "SELECT nome_empresa, " +
-                                "cnpj, " +
-                                "numero_contrato, " +
-                                "numero_processo_stj, " +
-                                "se_ativo, " +
-                                "objeto, " +
-                                "login_atualizacao, " +
-                                "data_atualizacao " +
-                                "FROM tb_contrato " +
-                                "WHERE cod = ?";
-
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, pCodContrato);
-
-            resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-
-                registro = new RegistroContrato(pCodContrato,
-                                                     resultSet.getString(1),
-                                                     resultSet.getString(2),
-                                                     resultSet.getString(3),
-                                                     resultSet.getString(4),
-                                                     resultSet.getString(5),
-                                                     resultSet.getString(6),
-                                                     resultSet.getString(7),
-                                                     resultSet.getTimestamp(8));
-
-            }
-
-        } catch (SQLException sqle) {
-
-            sqle.printStackTrace();
-
-            throw new NullPointerException("Não foi possível recuperar o registro do contrato solicitado.");
-
-        }
-
-        return registro;
-
-    }
-
-    /**
-     * Retorna um registro da tabela tb_convencao_coletiva.
-     *
-     * @param pCodConvencao;
-     *
-     * @return Um registro de convenção no model.
-     */
-
-    public RegistroConvencaoColetiva RetornaRegistroConvencaoColetiva (int pCodConvencao) {
-
-        PreparedStatement preparedStatement;
-        ResultSet resultSet;
-
-        RegistroConvencaoColetiva registro = null;
-
-        try {
-
-            String sql = "SELECT nome, " +
-                                "sigla, " +
-                                "data_base, " +
-                                "descricao, " +
-                                "login_atualizacao, " +
-                                "data_atualizacao " +
-                                "FROM tb_convencao_coletiva " +
-                                "WHERE cod = ?";
-
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, pCodConvencao);
-
-            resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-
-                registro = new RegistroConvencaoColetiva(pCodConvencao,
-                                                              resultSet.getString(1),
-                                                              resultSet.getString(2),
-                                                              resultSet.getString(4),
-                                                              resultSet.getDate(3),
-                                                              resultSet.getString(5),
-                                                              resultSet.getTimestamp(6));
-
-            }
-
-        } catch (SQLException sqle) {
-
-            sqle.printStackTrace();
-
-            throw new NullPointerException("Não foi possível recuperar o registro da convenção coletiva solicitada.");
-
-        }
-
-        return registro;
-
-    }
-
-    /**
-     * Retorna um registro da tabela tb_evento_contratual.
-     *
-     * @param pCodEventoContratual;
-     *
-     * @return Um registro de evento contratual no model.
-     */
-
-    public RegistroEventoContratual RetornaRegistroEventoContratual (int pCodEventoContratual) {
-
-        PreparedStatement preparedStatement;
-        ResultSet resultSet;
-
-        RegistroEventoContratual registro = null;
-
-        try {
-
-            String sql = "SELECT cod_contrato, " +
-                                "cod_tipo_evento, " +
-                                "prorrogacao, " +
-                                "assunto, " +
-                                "data_inicio_vigencia, " +
-                                "data_fim_vigencia, " +
-                                "data_assinatura, " +
-                                "login_atualizacao, " +
-                                "data_atualizacao " +
-                           "FROM tb_evento_contratual " +
-                           "WHERE cod = ?";
-
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, pCodEventoContratual);
-
-            resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-
-                registro = new RegistroEventoContratual(pCodEventoContratual,
-                        resultSet.getInt(1),
-                        resultSet.getInt(2),
-                        resultSet.getString(3),
-                        resultSet.getString(4),
-                        resultSet.getDate(5),
-                        resultSet.getDate(6),
-                        resultSet.getDate(7),
-                        resultSet.getString(8),
-                        resultSet.getTimestamp(9));
-
-            }
-
-        } catch (SQLException sqle) {
-
-            sqle.printStackTrace();
-
-            throw new NullPointerException("Não foi possível recuperar o registro de evento contratual solicitado.");
-
-        }
-
-        return registro;
-
-    }
-
-    /**
-     * Retorna um registro da tabela tb_funcao.
-     *
-     * @param pCodFuncao;
-     *
-     * @return Um registro de função no model.
-     */
-
-    public RegistroFuncao RetornaRegistroFuncao (int pCodFuncao) {
-
-        PreparedStatement preparedStatement;
-        ResultSet resultSet;
-
-        RegistroFuncao registro = null;
-
-        try {
-
-            String sql = "SELECT nome, " +
-                                "descricao, " +
-                                "login_atualizacao, " +
-                                "data_atualizacao " +
-                           "FROM tb_funcao " +
-                           "WHERE cod = ?";
-
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, pCodFuncao);
-
-            resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-
-                registro = new RegistroFuncao(pCodFuncao,
-                                                   resultSet.getString(1),
-                                                   resultSet.getString(2),
-                                                   resultSet.getString(3),
-                                                   resultSet.getTimestamp(4));
-
-            }
-
-        } catch (SQLException sqle) {
-
-            sqle.printStackTrace();
-
-            throw new NullPointerException("Não foi possível recuperar o registro da função solicitada.");
-
-        }
-
-        return registro;
-
-    }
-
-    /**
-     * Retorna um registro da tabela tb_funcao_contrato.
-     *
-     * @param pCodFuncaoContrato;
-     *
-     * @return Um registro de funcao do contrato no model.
-     */
-
-    public RegistroFuncaoContrato RetornaRegistroFuncaoContrato (int pCodFuncaoContrato) {
-
-        PreparedStatement preparedStatement;
-        ResultSet resultSet;
-
-        RegistroFuncaoContrato registro = null;
-
-        try {
-
-            String sql = "SELECT cod_contrato, " +
-                                "cod_funcao, " +
-                                "descricao, " +
-                                "login_atualizacao, " +
-                                "data_atualizacao " +
-                           "FROM tb_funcao_contrato " +
-                           "WHERE cod = ?";
-
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, pCodFuncaoContrato);
-
-            resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-
-                registro = new RegistroFuncaoContrato(pCodFuncaoContrato,
-                                                           resultSet.getInt(1),
-                                                           resultSet.getInt(2),
-                                                           resultSet.getString(3),
-                                                           resultSet.getString(4),
-                                                           resultSet.getTimestamp(5));
-
-            }
-
-        } catch (SQLException sqle) {
-
-            sqle.printStackTrace();
-
-            throw new NullPointerException("Não foi possível recuperar o registro de funcão do contrato solicitado.");
-
-        }
-
-        return registro;
-
-    }
-
-    /**
-     * Retorna um registro da tabela tb_historico_gestao_contrato.
-     *
-     * @param pCodHistoricoGestaoContrato;
-     *
-     * @return Um registro do histórico de gestão do contrato no model.
-     */
-
-    public RegistroHistoricoGestaoContrato RetornaRegistroHistoricoGestaoContrato (int pCodHistoricoGestaoContrato) {
-
-        PreparedStatement preparedStatement;
-        ResultSet resultSet;
-
-        RegistroHistoricoGestaoContrato registro = null;
-
-        try {
-
-            String sql = "SELECT cod_contrato, " +
-                                "cod_usuario, " +
-                                "cod_perfil_gestao, " +
-                                "data_inicio, " +
-                                "data_fim, " +
-                                "login_atualizacao, " +
-                                "data_atualizacao " +
-                           "FROM tb_historico_gestao_contrato " +
-                           "WHERE cod = ?";
-
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, pCodHistoricoGestaoContrato);
-
-            resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-
-                registro = new RegistroHistoricoGestaoContrato(pCodHistoricoGestaoContrato,
-                                                               resultSet.getInt(1),
-                                                               resultSet.getInt(2),
-                                                               resultSet.getInt(3),
-                                                               resultSet.getDate(4),
-                                                               resultSet.getDate(5),
-                                                               resultSet.getString(6),
-                                                               resultSet.getTimestamp(7));
-
-            }
-
-        } catch (SQLException sqle) {
-
-            sqle.printStackTrace();
-
-            throw new NullPointerException("Não foi possível recuperar o registro de histórico de gestão do contrato solicitado.");
-
-        }
-
-        return registro;
-
-    }
-
-    /**
-     * Retorna um registro da tabela tb_funcao_terceirizado.
-     *
-     * @param pCodFuncaoTerceirizado;
-     *
-     * @return Um registro de função do terceirizado no model.
-     */
-
-    public RegistroFuncaoTerceirizado RetornaRegistroFuncaoTerceirizado (int pCodFuncaoTerceirizado) {
-
-        PreparedStatement preparedStatement;
-        ResultSet resultSet;
-
-        RegistroFuncaoTerceirizado registro = null;
-
-        try {
-
-            String sql = "SELECT COD_TERCEIRIZADO_CONTRATO, " +
-                                "COD_FUNCAO_CONTRATO, " +
-                                "data_inicio, " +
-                                "data_fim, " +
-                                "login_atualizacao, " +
-                                "data_atualizacao " +
-                           "FROM tb_funcao_terceirizado " +
-                           "WHERE cod = ?";
-
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, pCodFuncaoTerceirizado);
-
-            resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-
-                registro = new RegistroFuncaoTerceirizado(pCodFuncaoTerceirizado,
-                                                               resultSet.getInt(1),
-                                                               resultSet.getInt(2),
-                                                               resultSet.getDate(3),
-                                                               resultSet.getDate(4),
-                                                               resultSet.getString(5),
-                                                               resultSet.getTimestamp(6));
-
-            }
-
-        } catch (SQLException sqle) {
-
-            sqle.printStackTrace();
-
-            throw new NullPointerException("Não foi possível recuperar o registro de função do terceirizado solicitado.");
-
-        }
-
-        return registro;
-
-    }
-
-    /**
-     * Retorna um registro da tabela tb_hist_restituicao_dec_ter.
-     *
-     * @param pCodHistRestituicaoDecTer;
-     *
-     * @return Um registro do histórico de restituições rejeitadas de décimo terceiro no model.
-     */
-
-    public RegistroHistRestituicaoDecTer RetornaRegistroHistRestituicaoDecTer (int pCodHistRestituicaoDecTer) {
-
-        PreparedStatement preparedStatement;
-        ResultSet resultSet;
-
-        RegistroHistRestituicaoDecTer registro = null;
-
-        try {
-
-            String sql = "SELECT cod_restituicao_dec_terceiro, " +
-                                "cod_tipo_restituicao, " +
-                                "parcela, " +
-                                "data_inicio_contagem, " +
-                                "valor, " +
-                                "incidencia_submodulo_4_1, " +
-                                "data_referencia, " +
-                                "autorizado, " +
-                                "restituido, " +
-                                "observacao, " +
-                                "login_atualizacao, " +
-                                "data_atualizacao " +
-                           "FROM tb_hist_restituicao_dec_ter " +
-                           "WHERE cod = ?";
-
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, pCodHistRestituicaoDecTer);
-
-            resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-
-                registro = new RegistroHistRestituicaoDecTer(pCodHistRestituicaoDecTer,
-                                                             resultSet.getInt(1),
-                                                             resultSet.getInt(2),
-                                                             resultSet.getInt(3),
-                                                             resultSet.getDate(4),
-                                                             resultSet.getFloat(5),
-                                                             resultSet.getFloat(6),
-                                                             resultSet.getDate(7),
-                                                             resultSet.getString(8),
-                                                             resultSet.getString(9),
-                                                             resultSet.getString(10),
-                                                             resultSet.getString(11),
-                                                             resultSet.getTimestamp(12));
-
-            }
-
-        } catch (SQLException sqle) {
-
-            sqle.printStackTrace();
-
-            throw new NullPointerException("Não foi possível recuperar o registro de histórico de restituição de décimo terceiro solicitado.");
-
-        }
-
-        return registro;
-
-    }
-
-    /**
-     * Retorna um registro da tabela tb_hist_restituicao_ferias.
-     *
-     * @param pCodHistRestituicaoFerias;
-     *
-     * @return Um registro ddo histórico de restituições rejeitadas de décimo terceiro no model.
-     */
-
-    public RegistroHistRestituicaoFerias RetornaRegistroHistRestituicaoFerias (int pCodHistRestituicaoFerias) {
-
-        PreparedStatement preparedStatement;
-        ResultSet resultSet;
-
-        RegistroHistRestituicaoFerias registro = null;
-
-        try {
-
-            String sql = "SELECT cod_restituicao_ferias, " +
-                                "cod_tipo_restituicao, " +
-                                "data_inicio_periodo_aquisitivo, " +
-                                "data_fim_periodo_aquisitivo, " +
-                                "data_inicio_usufruto, " +
-                                "data_fim_usufruto, " +
-                                "dias_vendidos, " +
-                                "valor_ferias, " +
-                                "valor_terco_constitucional, " +
-                                "incid_submod_4_1_ferias, " +
-                                "incid_submod_4_1_terco, " +
-                                "parcela, " +
-                                "data_referencia, " +
-                                "autorizado, " +
-                                "restituido, " +
-                                "observacao, " +
-                                "login_atualizacao, " +
-                                "data_atualizacao " +
-                           "FROM tb_hist_restituicao_ferias " +
-                           "WHERE cod = ?";
-
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, pCodHistRestituicaoFerias);
-
-            resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-
-                registro = new RegistroHistRestituicaoFerias(pCodHistRestituicaoFerias,
-                                                             resultSet.getInt(1),
-                                                             resultSet.getInt(2),
-                                                             resultSet.getDate(3),
-                                                             resultSet.getDate(4),
-                                                             resultSet.getDate(5),
-                                                             resultSet.getDate(6),
-                                                             resultSet.getInt(7),
-                                                             resultSet.getFloat(8),
-                                                             resultSet.getFloat(9),
-                                                             resultSet.getFloat(10),
-                                                             resultSet.getFloat(11),
-                                                             resultSet.getInt(12),
-                                                             resultSet.getDate(13),
-                                                             resultSet.getString(14),
-                                                             resultSet.getString(15),
-                                                             resultSet.getString(16),
-                                                             resultSet.getString(17),
-                                                             resultSet.getTimestamp(18));
-
-            }
-
-        } catch (SQLException sqle) {
-
-            sqle.printStackTrace();
-
-            throw new NullPointerException("Não foi possível recuperar o registro de histórico de restituição de férias solicitado.");
 
         }
 
@@ -1895,38 +1290,34 @@ public class ConsultaTSQL {
         try {
 
             String sql = "SELECT cod_restituicao_rescisao, " +
-                                "cod_tipo_restituicao, " +
-                                "COD_TIPO_RESCISAO, " +
-                                "DATA_DESLIGAMENTO, " +
-                                "DATA_INICIO_FERIAS, " +
-                                "DATA_FIM_FERIAS, " +
-                                "DATA_INICIO_FERIAS_PROP, " +
-                                "DATA_FIM_FERIAS_PROP, " +
-                                "DATA_INICIO_CONTAGEM_DEC_TER, " +
-                                "VALOR_DECIMO_TERCEIRO, " +
-                                "INCID_SUBMOD_4_1_DEC_TERCEIRO, " +
-                                "INCID_MULTA_FGTS_DEC_TERCEIRO, " +
-                                "valor_ferias, " +
-                                "valor_terco, " +
-                                "incid_submod_4_1_ferias, " +
-                                "incid_submod_4_1_terco, " +
-                                "INCID_MULTA_FGTS_FERIAS, " +
-                                "INCID_MULTA_FGTS_TERCO, " +
-                                "valor_ferias_prop, " +
-                                "valor_terco_prop, " +
-                                "incid_submod_4_1_ferias_prop, " +
-                                "incid_submod_4_1_terco_prop, " +
-                                "incid_multa_fgts_ferias_prop, " +
-                                "incid_multa_fgts_terco_prop, " +
-                                "MULTA_FGTS_SALARIO, " +
-                                "data_referencia, " +
-                                "autorizado, " +
-                                "restituido, " +
-                                "observacao, " +
-                                "login_atualizacao, " +
-                                "data_atualizacao " +
-                           "FROM tb_hist_restituicao_rescisao " +
-                           "WHERE cod = ?";
+                    "cod_tipo_restituicao, " +
+                    "COD_TIPO_RESCISAO, " +
+                    "DATA_DESLIGAMENTO, " +
+                    "DATA_INICIO_FERIAS, " +
+                    "VALOR_DECIMO_TERCEIRO, " +
+                    "INCID_SUBMOD_4_1_DEC_TERCEIRO, " +
+                    "INCID_MULTA_FGTS_DEC_TERCEIRO, " +
+                    "valor_ferias, " +
+                    "valor_terco, " +
+                    "incid_submod_4_1_ferias, " +
+                    "incid_submod_4_1_terco, " +
+                    "INCID_MULTA_FGTS_FERIAS, " +
+                    "INCID_MULTA_FGTS_TERCO, " +
+                    "valor_ferias_prop, " +
+                    "valor_terco_prop, " +
+                    "incid_submod_4_1_ferias_prop, " +
+                    "incid_submod_4_1_terco_prop, " +
+                    "incid_multa_fgts_ferias_prop, " +
+                    "incid_multa_fgts_terco_prop, " +
+                    "MULTA_FGTS_SALARIO, " +
+                    "data_referencia, " +
+                    "autorizado, " +
+                    "restituido, " +
+                    "observacao, " +
+                    "login_atualizacao, " +
+                    "data_atualizacao " +
+                    "FROM tb_hist_restituicao_rescisao " +
+                    "WHERE cod = ?";
 
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, pCodHistRestituicaoRescisao);
@@ -1936,37 +1327,33 @@ public class ConsultaTSQL {
             if (resultSet.next()) {
 
                 registro = new RegistroHistRestituicaoRescisao(pCodHistRestituicaoRescisao,
-                                                               resultSet.getInt(1),
-                                                               resultSet.getInt(2),
-                                                               resultSet.getInt(3),
-                                                               resultSet.getDate(4),
-                                                               resultSet.getDate(5),
-                                                               resultSet.getDate(6),
-                                                               resultSet.getDate(7),
-                                                               resultSet.getDate(8),
-                                                               resultSet.getDate(9),
-                                                               resultSet.getFloat(10),
-                                                               resultSet.getFloat(11),
-                                                               resultSet.getFloat(12),
-                                                               resultSet.getFloat(13),
-                                                               resultSet.getFloat(14),
-                                                               resultSet.getFloat(15),
-                                                               resultSet.getFloat(16),
-                                                               resultSet.getFloat(17),
-                                                               resultSet.getFloat(18),
-                                                               resultSet.getFloat(19),
-                                                               resultSet.getFloat(20),
-                                                               resultSet.getFloat(21),
-                                                               resultSet.getFloat(22),
-                                                               resultSet.getFloat(23),
-                                                               resultSet.getFloat(24),
-                                                               resultSet.getFloat(25),
-                                                               resultSet.getDate(26),
-                                                               resultSet.getString(27),
-                                                               resultSet.getString(28),
-                                                               resultSet.getString(29),
-                                                               resultSet.getString(30),
-                                                               resultSet.getTimestamp(31));
+                        resultSet.getInt(1),
+                        resultSet.getInt(2),
+                        resultSet.getInt(3),
+                        resultSet.getDate(4),
+                        resultSet.getDate(5),
+                        resultSet.getFloat(6),
+                        resultSet.getFloat(7),
+                        resultSet.getFloat(8),
+                        resultSet.getFloat(9),
+                        resultSet.getFloat(10),
+                        resultSet.getFloat(11),
+                        resultSet.getFloat(12),
+                        resultSet.getFloat(13),
+                        resultSet.getFloat(14),
+                        resultSet.getFloat(15),
+                        resultSet.getFloat(16),
+                        resultSet.getFloat(17),
+                        resultSet.getFloat(18),
+                        resultSet.getFloat(19),
+                        resultSet.getFloat(20),
+                        resultSet.getFloat(21),
+                        resultSet.getDate(22),
+                        resultSet.getString(23),
+                        resultSet.getString(24),
+                        resultSet.getString(25),
+                        resultSet.getString(26),
+                        resultSet.getTimestamp(27));
 
             }
 
@@ -1975,637 +1362,6 @@ public class ConsultaTSQL {
             sqle.printStackTrace();
 
             throw new NullPointerException("Não foi possível recuperar o registro de histórico de restituição de rescisão solicitado.");
-
-        }
-
-        return registro;
-
-    }
-
-    /**
-     * Retorna um registro da tabela tb_percentual_contrato.
-     *
-     * @param pCodPercentualContrato;
-     *
-     * @return Um registro de percentual de contrato no model.
-     */
-
-    public RegistroPercentualContrato RetornaRegistroPercentualContrato (int pCodPercentualContrato) {
-
-        PreparedStatement preparedStatement;
-        ResultSet resultSet;
-
-        RegistroPercentualContrato registro = null;
-
-        try {
-
-            String sql = "SELECT cod_contrato, " +
-                                "cod_rubrica, " +
-                                "percentual, " +
-                                "data_inicio, " +
-                                "data_fim, " +
-                                "data_aditamento, " +
-                                "login_atualizacao, " +
-                                "data_atualizacao " +
-                           "FROM tb_percentual_contrato " +
-                           "WHERE cod = ?";
-
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, pCodPercentualContrato);
-
-            resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-
-                registro = new RegistroPercentualContrato(pCodPercentualContrato,
-                                                          resultSet.getInt(1),
-                                                          resultSet.getInt(2),
-                                                          resultSet.getFloat(3),
-                                                          resultSet.getDate(4),
-                                                          resultSet.getDate(5),
-                                                          resultSet.getDate(6),
-                                                          resultSet.getString(7),
-                                                          resultSet.getTimestamp(8));
-
-            }
-
-        } catch (SQLException sqle) {
-
-            sqle.printStackTrace();
-
-            throw new NullPointerException("Não foi possível recuperar o registro de percentual do contrato solicitado.");
-
-        }
-
-        return registro;
-
-    }
-
-    /**
-     * Retorna um registro da tabela tb_percentual_estatico.
-     *
-     * @param pCodPercentualEstatico;
-     *
-     * @return Um registro de percentual de contrato no model.
-     */
-
-    public RegistroPercentualEstatico RetornaRegistroPercentualEstatico (int pCodPercentualEstatico) {
-
-        PreparedStatement preparedStatement;
-        ResultSet resultSet;
-
-        RegistroPercentualEstatico registro = null;
-
-        try {
-
-            String sql = "SELECT cod_rubrica, " +
-                                "percentual, " +
-                                "data_inicio, " +
-                                "data_fim, " +
-                                "data_aditamento, " +
-                                "login_atualizacao, " +
-                                "data_atualizacao " +
-                           "FROM tb_percentual_estatico " +
-                           "WHERE cod = ?";
-
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, pCodPercentualEstatico);
-
-            resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-
-                registro = new RegistroPercentualEstatico(pCodPercentualEstatico,
-                                                          resultSet.getInt(1),
-                                                          resultSet.getFloat(2),
-                                                          resultSet.getDate(3),
-                                                          resultSet.getDate(4),
-                                                          resultSet.getDate(5),
-                                                          resultSet.getString(6),
-                                                          resultSet.getTimestamp(7));
-
-            }
-
-        } catch (SQLException sqle) {
-
-            sqle.printStackTrace();
-
-            throw new NullPointerException("Não foi possível recuperar o registro de percentual estático solicitado.");
-
-        }
-
-        return registro;
-
-    }
-
-    /**
-     * Retorna um registro da tabela tb_perfil_gestao.
-     *
-     * @param pCodPerfilGestao;
-     *
-     * @return Um registro de perfil de gestão no model.
-     */
-
-    public RegistroPerfilGestao RetornaRegistroPerfilGestao (int pCodPerfilGestao) {
-
-        PreparedStatement preparedStatement;
-        ResultSet resultSet;
-
-        RegistroPerfilGestao registro = null;
-
-        try {
-
-            String sql = "SELECT nome, " +
-                                "sigla, " +
-                                "descricao, " +
-                                "login_atualizacao, " +
-                                "data_atualizacao " +
-                           "FROM tb_perfil_gestao " +
-                           "WHERE cod = ?";
-
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, pCodPerfilGestao);
-
-            resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-
-                registro = new RegistroPerfilGestao(pCodPerfilGestao,
-                                                    resultSet.getString(1),
-                                                    resultSet.getString(2),
-                                                    resultSet.getString(3),
-                                                    resultSet.getString(4),
-                                                    resultSet.getTimestamp(5));
-
-            }
-
-        } catch (SQLException sqle) {
-
-            sqle.printStackTrace();
-
-            throw new NullPointerException("Não foi possível recuperar o registro de perfil de gestão solicitado.");
-
-        }
-
-        return registro;
-
-    }
-
-    /**
-     * Retorna um registro da tabela tb_perfil_usuario.
-     *
-     * @param pCodPerfilUsuario;
-     *
-     * @return Um registro de perfil de usuário no model.
-     */
-
-    public RegistroPerfilUsuario RetornaRegistroPerfilUsuario (int pCodPerfilUsuario) {
-
-        PreparedStatement preparedStatement;
-        ResultSet resultSet;
-
-        RegistroPerfilUsuario registro = null;
-
-        try {
-
-            String sql = "SELECT nome, " +
-                                "sigla, " +
-                                "descricao, " +
-                                "login_atualizacao, " +
-                                "data_atualizacao " +
-                           "FROM tb_perfil_usuario " +
-                           "WHERE cod = ?";
-
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, pCodPerfilUsuario);
-
-            resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-
-                registro = new RegistroPerfilUsuario(pCodPerfilUsuario,
-                        resultSet.getString(1),
-                        resultSet.getString(2),
-                        resultSet.getString(3),
-                        resultSet.getString(4),
-                        resultSet.getTimestamp(5));
-
-            }
-
-        } catch (SQLException sqle) {
-
-            sqle.printStackTrace();
-
-            throw new NullPointerException("Não foi possível recuperar o registro de perfil de usuário solicitado.");
-
-        }
-
-        return registro;
-
-    }
-
-    /**
-     * Retorna um registro da tabela tb_remuneracao_fun_con.
-     *
-     * @param pCodRemuneracaoFunCon;
-     *
-     * @return Um registro de percentual de contrato no model.
-     */
-
-    public RegistroRemuneracaoFunCon RetornaRegistroRemuneracaoFunCon (int pCodRemuneracaoFunCon) {
-
-        PreparedStatement preparedStatement;
-        ResultSet resultSet;
-
-        RegistroRemuneracaoFunCon registro = null;
-
-        try {
-
-            String sql = "SELECT cod_funcao_contrato, " +
-                                "cod_convencao_coletiva, " +
-                                "data_inicio, " +
-                                "data_fim, " +
-                                "data_aditamento, " +
-                                "remuneracao, " +
-                                "trienios, " +
-                                "adicionais, " +
-                                "login_atualizacao, " +
-                                "data_atualizacao " +
-                           "FROM tb_remuneracao_fun_con " +
-                           "WHERE cod = ?";
-
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, pCodRemuneracaoFunCon);
-
-            resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-
-                registro = new RegistroRemuneracaoFunCon(pCodRemuneracaoFunCon,
-                                                         resultSet.getInt(1),
-                                                         resultSet.getInt(2),
-                                                         resultSet.getDate(3),
-                                                         resultSet.getDate(4),
-                                                         resultSet.getDate(5),
-                                                         resultSet.getFloat(6),
-                                                         resultSet.getFloat(7),
-                                                         resultSet.getFloat(8),
-                                                         resultSet.getString(9),
-                                                         resultSet.getTimestamp(10));
-
-            }
-
-        } catch (SQLException sqle) {
-
-            sqle.printStackTrace();
-
-            throw new NullPointerException("Não foi possível recuperar o registro de remuneração da função do contrato solicitado.");
-
-        }
-
-        return registro;
-
-    }
-
-    /**
-     * Retorna um registro da tabela tb_retro_percentual_estatico.
-     *
-     * @param pCodRetroPercentualEstatico;
-     *
-     * @return Um registro de retroatividade de percentual estático no model.
-     */
-
-    public RegistroRetroPercentualEstatico RetornaRegistroRetroPercentualEstatico  (int pCodRetroPercentualEstatico) {
-
-        PreparedStatement preparedStatement;
-        ResultSet resultSet;
-
-        RegistroRetroPercentualEstatico registro = null;
-
-        try {
-
-            String sql = "SELECT cod_contrato, " +
-                                "cod_percentual_estatico, " +
-                                "inicio, " +
-                                "fim, " +
-                                "data_cobranca, " +
-                                "login_atualizacao, " +
-                                "data_atualizacao " +
-                           "FROM tb_retro_percentual_estatico " +
-                           "WHERE cod = ?";
-
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, pCodRetroPercentualEstatico);
-
-            resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-
-                registro = new RegistroRetroPercentualEstatico(pCodRetroPercentualEstatico,
-                                                               resultSet.getInt(1),
-                                                               resultSet.getInt(2),
-                                                               resultSet.getDate(3),
-                                                               resultSet.getDate(4),
-                                                               resultSet.getDate(5),
-                                                               resultSet.getString(6),
-                                                               resultSet.getTimestamp(7));
-
-            }
-
-        } catch (SQLException sqle) {
-
-            sqle.printStackTrace();
-
-            throw new NullPointerException("Não foi possível recuperar o registro de retroatividade do percentual estático solicitado.");
-
-        }
-
-        return registro;
-
-    }
-
-    /**
-     * Retorna um registro da tabela tb_retroatividade_percentual.
-     *
-     * @param pCodRetroatividadePercentualContrato;
-     *
-     * @return Um registro de retroatividade de percentual do contrato no model.
-     */
-
-    public RegistroRetroatividadePercentual RetornaRegistroRetroatividadePercentual  (int pCodRetroatividadePercentualContrato) {
-
-        PreparedStatement preparedStatement;
-        ResultSet resultSet;
-
-        RegistroRetroatividadePercentual registro = null;
-
-        try {
-
-            String sql = "SELECT cod_percentual_contrato, " +
-                                "inicio, " +
-                                "fim, " +
-                                "data_cobranca, " +
-                                "login_atualizacao, " +
-                                "data_atualizacao " +
-                           "FROM tb_retroatividade_percentual " +
-                           "WHERE cod = ?";
-
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, pCodRetroatividadePercentualContrato);
-
-            resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-
-                registro = new RegistroRetroatividadePercentual(pCodRetroatividadePercentualContrato,
-                                                                resultSet.getInt(1),
-                                                                resultSet.getDate(2),
-                                                                resultSet.getDate(3),
-                                                                resultSet.getDate(4),
-                                                                resultSet.getString(5),
-                                                                resultSet.getTimestamp(6));
-
-            }
-
-        } catch (SQLException sqle) {
-
-            sqle.printStackTrace();
-
-            throw new NullPointerException("Não foi possível recuperar o registro de retroatividade do percentual solicitado.");
-
-        }
-
-        return registro;
-
-    }
-
-    /**
-     * Retorna um registro da tabela tb_retroatividade_remuneracao.
-     *
-     * @param pCodRetroatividadeRemuneracao;
-     *
-     * @return Um registro de retroatividade de remuneração no model.
-     */
-
-    public RegistroRetroatividadeRemuneracao RetornaRegistroRetroatividadeRemuneracao  (int pCodRetroatividadeRemuneracao) {
-
-        PreparedStatement preparedStatement;
-        ResultSet resultSet;
-
-        RegistroRetroatividadeRemuneracao registro = null;
-
-        try {
-
-            String sql = "SELECT COD_REM_FUNCAO_CONTRATO, " +
-                                "inicio, " +
-                                "fim, " +
-                                "data_cobranca, " +
-                                "login_atualizacao, " +
-                                "data_atualizacao " +
-                           "FROM tb_retroatividade_remuneracao " +
-                           "WHERE cod = ?";
-
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, pCodRetroatividadeRemuneracao);
-
-            resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-
-                registro = new RegistroRetroatividadeRemuneracao(pCodRetroatividadeRemuneracao,
-                                                                 resultSet.getInt(1),
-                                                                 resultSet.getDate(2),
-                                                                 resultSet.getDate(3),
-                                                                 resultSet.getDate(4),
-                                                                 resultSet.getString(5),
-                                                                 resultSet.getTimestamp(6));
-
-            }
-
-        } catch (SQLException sqle) {
-
-            sqle.printStackTrace();
-
-            throw new NullPointerException("Não foi possível recuperar o registro de retroatividade da remuneração solicitada.");
-
-        }
-
-        return registro;
-
-    }
-
-    /**
-     * Retorna um registro da tabela tb_retroatividade_total_mensal.
-     *
-     * @param pCodRetroatividadeTotalMensal;
-     *
-     * @return Um registro de retroatividade de total mensal a reter no model.
-     */
-
-    public RegistroRetroatividadeTotalMensal RetornaRegistroRetroatividadeTotalMensal  (int pCodRetroatividadeTotalMensal) {
-
-        PreparedStatement preparedStatement;
-        ResultSet resultSet;
-
-        RegistroRetroatividadeTotalMensal registro = null;
-
-        try {
-
-            String sql = "SELECT cod_total_mensal_a_reter, " +
-                                "ferias, " +
-                                "TERCO_CONSTITUCIONAL, " +
-                                "DECIMO_TERCEIRO, " +
-                                "INCIDENCIA_SUBMODULO_4_1, " +
-                                "MULTA_FGTS, " +
-                                "total, " +
-                                "login_atualizacao, " +
-                                "data_atualizacao " +
-                    "FROM tb_retroatividade_total_mensal " +
-                    "WHERE COD = ?";
-
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, pCodRetroatividadeTotalMensal);
-
-            resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-
-                registro = new RegistroRetroatividadeTotalMensal(pCodRetroatividadeTotalMensal,
-                                                                 resultSet.getInt(1),
-                                                                 resultSet.getFloat(2),
-                                                                 resultSet.getFloat(3),
-                                                                 resultSet.getFloat(4),
-                                                                 resultSet.getFloat(5),
-                                                                 resultSet.getFloat(6),
-                                                                 resultSet.getFloat(7),
-                                                                 resultSet.getString(8),
-                                                                 resultSet.getTimestamp(9));
-
-            }
-
-        } catch (SQLException sqle) {
-
-            sqle.printStackTrace();
-
-            throw new NullPointerException("Não foi possível recuperar o registro de retroatividade de total mensal a reter solicitado.");
-
-        }
-
-        return registro;
-
-    }
-
-    /**
-     * Retorna um registro da tabela tb_saldo_residual_dec_ter.
-     *
-     * @param pCodRestituicaoDecTerceiro;
-     *
-     * @return Um registro de saldo residual de décimo terceiro no model.
-     */
-
-    public RegistroSaldoResidualDecTer RetornaRegistroSaldoResidualDecTer  (int pCodRestituicaoDecTerceiro) {
-
-        PreparedStatement preparedStatement;
-        ResultSet resultSet;
-
-        RegistroSaldoResidualDecTer registro = null;
-
-        try {
-
-            String sql = "SELECT cod, " +
-                                "valor, " +
-                                "INCIDENCIA_SUBMODULO_4_1, " +
-                                "AUTORIZADO, " +
-                                "RESTITUIDO, " +
-                                "login_atualizacao, " +
-                                "data_atualizacao " +
-                           "FROM tb_saldo_residual_dec_ter " +
-                           "WHERE COD_RESTITUICAO_DEC_TERCEIRO = ?";
-
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, pCodRestituicaoDecTerceiro);
-
-            resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-
-                registro = new RegistroSaldoResidualDecTer(resultSet.getInt(1),
-                                                           pCodRestituicaoDecTerceiro,
-                                                           resultSet.getFloat(2),
-                                                           resultSet.getFloat(3),
-                                                           resultSet.getString(4),
-                                                           resultSet.getString(5),
-                                                           resultSet.getString(6),
-                                                           resultSet.getTimestamp(7));
-
-            }
-
-        } catch (SQLException sqle) {
-
-            sqle.printStackTrace();
-
-            throw new NullPointerException("Não foi possível recuperar o registro de saldo residual de décimo terceiro solicitado.");
-
-        }
-
-        return registro;
-
-    }
-
-    /**
-     * Retorna um registro da tabela tb_saldo_residual_ferias.
-     *
-     * @param pCodRestituicaoFerias;
-     *
-     * @return Um registro de saldo residual de férias no model.
-     */
-
-    public RegistroSaldoResidualFerias RetornaRegistroSaldoResidualFerias  (int pCodRestituicaoFerias) {
-
-        PreparedStatement preparedStatement;
-        ResultSet resultSet;
-
-        RegistroSaldoResidualFerias registro = null;
-
-        try {
-
-            String sql = "SELECT cod, " +
-                                "valor_ferias, " +
-                                "valor_ferias, " +
-                                "INCID_SUBMOD_4_1_FERIAS, " +
-                                "INCID_SUBMOD_4_1_TERCO, " +
-                                "AUTORIZADO, " +
-                                "RESTITUIDO, " +
-                                "login_atualizacao, " +
-                                "data_atualizacao " +
-                           "FROM tb_saldo_residual_ferias " +
-                           "WHERE COD_RESTITUICAO_FERIAS = ?";
-
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, pCodRestituicaoFerias);
-
-            resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-
-                registro = new RegistroSaldoResidualFerias(resultSet.getInt(1),
-                                                           pCodRestituicaoFerias,
-                                                           resultSet.getFloat(2),
-                                                           resultSet.getFloat(3),
-                                                           resultSet.getFloat(4),
-                                                           resultSet.getFloat(5),
-                                                           resultSet.getString(6),
-                                                           resultSet.getString(7),
-                                                           resultSet.getString(8),
-                                                           resultSet.getTimestamp(9));
-
-            }
-
-        } catch (SQLException sqle) {
-
-            sqle.printStackTrace();
-
-            throw new NullPointerException("Não foi possível recuperar o registro de saldo residual de férias solicitado.");
 
         }
 
@@ -2631,28 +1387,28 @@ public class ConsultaTSQL {
         try {
 
             String sql = "SELECT cod, " +
-                                "VALOR_DECIMO_TERCEIRO, " +
-                                "INCID_SUBMOD_4_1_DEC_TERCEIRO, " +
-                                "INCID_MULTA_FGTS_DEC_TERCEIRO, " +
-                                "valor_ferias, " +
-                                "valor_ferias, " +
-                                "INCID_SUBMOD_4_1_FERIAS, " +
-                                "INCID_SUBMOD_4_1_TERCO, " +
-                                "INCID_MULTA_FGTS_FERIAS, " +
-                                "INCID_MULTA_FGTS_TERCO, " +
-                                "valor_ferias_prop, " +
-                                "valor_terco_prop, " +
-                                "incid_submod_4_1_ferias_prop, " +
-                                "incid_submod_4_1_terco_prop, " +
-                                "incid_multa_fgts_ferias_prop, " +
-                                "incid_multa_fgts_terco_prop, " +
-                                "MULTA_FGTS_SALARIO, " +
-                                "AUTORIZADO, " +
-                                "RESTITUIDO, " +
-                                "login_atualizacao, " +
-                                "data_atualizacao " +
-                                "FROM tb_saldo_residual_rescisao " +
-                                "WHERE COD_RESTITUICAO_RESCISAO = ?";
+                    "VALOR_DECIMO_TERCEIRO, " +
+                    "INCID_SUBMOD_4_1_DEC_TERCEIRO, " +
+                    "INCID_MULTA_FGTS_DEC_TERCEIRO, " +
+                    "valor_ferias, " +
+                    "valor_ferias, " +
+                    "INCID_SUBMOD_4_1_FERIAS, " +
+                    "INCID_SUBMOD_4_1_TERCO, " +
+                    "INCID_MULTA_FGTS_FERIAS, " +
+                    "INCID_MULTA_FGTS_TERCO, " +
+                    "valor_ferias_prop, " +
+                    "valor_terco_prop, " +
+                    "incid_submod_4_1_ferias_prop, " +
+                    "incid_submod_4_1_terco_prop, " +
+                    "incid_multa_fgts_ferias_prop, " +
+                    "incid_multa_fgts_terco_prop, " +
+                    "MULTA_FGTS_SALARIO, " +
+                    "AUTORIZADO, " +
+                    "RESTITUIDO, " +
+                    "login_atualizacao, " +
+                    "data_atualizacao " +
+                    "FROM tb_saldo_residual_rescisao " +
+                    "WHERE COD_RESTITUICAO_RESCISAO = ?";
 
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, pCodRestituicaoRescisao);
@@ -2662,27 +1418,27 @@ public class ConsultaTSQL {
             if (resultSet.next()) {
 
                 registro = new RegistroSaldoResidualRescisao(resultSet.getInt(1),
-                                                             pCodRestituicaoRescisao,
-                                                             resultSet.getFloat(2),
-                                                             resultSet.getFloat(3),
-                                                             resultSet.getFloat(4),
-                                                             resultSet.getFloat(5),
-                                                             resultSet.getFloat(6),
-                                                             resultSet.getFloat(7),
-                                                             resultSet.getFloat(8),
-                                                             resultSet.getFloat(9),
-                                                             resultSet.getFloat(10),
-                                                             resultSet.getFloat(11),
-                                                             resultSet.getFloat(12),
-                                                             resultSet.getFloat(13),
-                                                             resultSet.getFloat(14),
-                                                             resultSet.getFloat(15),
-                                                             resultSet.getFloat(16),
-                                                             resultSet.getFloat(17),
-                                                             resultSet.getString(18),
-                                                             resultSet.getString(19),
-                                                             resultSet.getString(20),
-                                                             resultSet.getTimestamp(21));
+                        pCodRestituicaoRescisao,
+                        resultSet.getFloat(2),
+                        resultSet.getFloat(3),
+                        resultSet.getFloat(4),
+                        resultSet.getFloat(5),
+                        resultSet.getFloat(6),
+                        resultSet.getFloat(7),
+                        resultSet.getFloat(8),
+                        resultSet.getFloat(9),
+                        resultSet.getFloat(10),
+                        resultSet.getFloat(11),
+                        resultSet.getFloat(12),
+                        resultSet.getFloat(13),
+                        resultSet.getFloat(14),
+                        resultSet.getFloat(15),
+                        resultSet.getFloat(16),
+                        resultSet.getFloat(17),
+                        resultSet.getString(18),
+                        resultSet.getString(19),
+                        resultSet.getString(20),
+                        resultSet.getTimestamp(21));
 
             }
 
@@ -2697,442 +1453,5 @@ public class ConsultaTSQL {
         return registro;
 
     }
-
-    /**
-     * Retorna um registro da tabela tb_terceirizado.
-     *
-     * @param pCodTerceirizado;
-     *
-     * @return Um registro de terceirizado no model.
-     */
-
-    public RegistroTerceirizado RetornaRegistroTerceirizado  (int pCodTerceirizado) {
-
-        PreparedStatement preparedStatement;
-        ResultSet resultSet;
-
-        RegistroTerceirizado registro = null;
-
-        try {
-
-            String sql = "SELECT nome, " +
-                                "cpf, " +
-                                "ativo, " +
-                                "login_atualizacao, " +
-                                "data_atualizacao " +
-                           "FROM tb_terceirizado " +
-                           "WHERE cod = ?";
-
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, pCodTerceirizado);
-
-            resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-
-                registro = new RegistroTerceirizado(pCodTerceirizado,
-                                                    resultSet.getString(1),
-                                                    resultSet.getString(2),
-                                                    resultSet.getString(3),
-                                                    resultSet.getString(4),
-                                                    resultSet.getTimestamp(5));
-
-            }
-
-        } catch (SQLException sqle) {
-
-            sqle.printStackTrace();
-
-            throw new NullPointerException("Não foi possível recuperar o registro do terceirizado solicitado.");
-
-        }
-
-        return registro;
-
-    }
-
-    /**
-     * Retorna um registro da tabela tb_terceirizado_contrato.
-     *
-     * @param pCodTerceirizadoContrato;
-     *
-     * @return Um registro de terceirizado no contrato no model.
-     */
-
-    public RegistroTerceirizadoContrato RetornaRegistroTerceirizadoContrato  (int pCodTerceirizadoContrato) {
-
-        PreparedStatement preparedStatement;
-        ResultSet resultSet;
-
-        RegistroTerceirizadoContrato registro = null;
-
-        try {
-
-            String sql = "SELECT cod_contrato, " +
-                                "cod_terceirizado, " +
-                                "data_disponibilizacao, " +
-                                "data_desligamento, " +
-                                "login_atualizacao, " +
-                                "data_atualizacao " +
-                                "FROM tb_terceirizado_contrato " +
-                                "WHERE cod = ?";
-
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, pCodTerceirizadoContrato);
-
-            resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-
-                registro = new RegistroTerceirizadoContrato(pCodTerceirizadoContrato,
-                                                            resultSet.getInt(1),
-                                                            resultSet.getInt(2),
-                                                            resultSet.getDate(3),
-                                                            resultSet.getDate(4),
-                                                            resultSet.getString(5),
-                                                            resultSet.getTimestamp(6));
-
-            }
-
-        } catch (SQLException sqle) {
-
-            sqle.printStackTrace();
-
-            throw new NullPointerException("Não foi possível recuperar o registro do terceirizado no contrato solicitado.");
-
-        }
-
-        return registro;
-
-    }
-
-    /**
-     * Retorna um registro da tabela tb_tipo_evento_contratual.
-     *
-     * @param pCodTipoEventoContratual;
-     *
-     * @return Um registro de tipo de evento contratual no model.
-     */
-
-    public RegistroTipoEventoContratual RetornaRegistroTipoEventoContratual (int pCodTipoEventoContratual) {
-
-        PreparedStatement preparedStatement;
-        ResultSet resultSet;
-
-        RegistroTipoEventoContratual registro = null;
-
-        try {
-
-            String sql = "SELECT tipo, " +
-                                "login_atualizacao, " +
-                                "data_atualizacao " +
-                           "FROM tb_tipo_evento_contratual " +
-                           "WHERE cod = ?";
-
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, pCodTipoEventoContratual);
-
-            resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-
-                registro = new RegistroTipoEventoContratual(pCodTipoEventoContratual,
-                                                            resultSet.getString(1),
-                                                            resultSet.getString(2),
-                                                            resultSet.getTimestamp(3));
-
-            }
-
-        } catch (SQLException sqle) {
-
-            sqle.printStackTrace();
-
-            throw new NullPointerException("Não foi possível recuperar o tipo de evento contratual.");
-
-        }
-
-        return registro;
-
-    }
-
-    /**
-     * Retorna um registro da tabela tb_tipo_rescisao.
-     *
-     * @param pCodTipoRescisao;
-     *
-     * @return Um registro de tipo de rescisão no model.
-     */
-
-    public RegistroTipoRescisao RetornaRegistroTipoRescisao (int pCodTipoRescisao) {
-
-        PreparedStatement preparedStatement;
-        ResultSet resultSet;
-
-        RegistroTipoRescisao registro = null;
-
-        try {
-
-            String sql = "SELECT tipo_rescisao, " +
-                                "login_atualizacao, " +
-                                "data_atualizacao " +
-                                "FROM tb_tipo_rescisao " +
-                                "WHERE cod = ?";
-
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, pCodTipoRescisao);
-
-            resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-
-                registro = new RegistroTipoRescisao(pCodTipoRescisao,
-                        resultSet.getString(1),
-                        resultSet.getString(2),
-                        resultSet.getTimestamp(3));
-
-            }
-
-        } catch (SQLException sqle) {
-
-            sqle.printStackTrace();
-
-            throw new NullPointerException("Não foi possível recuperar o tipo de rescisão.");
-
-        }
-
-        return registro;
-
-    }
-
-    /**
-     * Retorna um registro da tabela tb_tipo_restituicao.
-     *
-     * @param pCodTipoRestituicao;
-     *
-     * @return Um registro de tipo de restituição no model.
-     */
-
-    public RegistroTipoRestituicao RetornaRegistroTipoRestituicao (int pCodTipoRestituicao) {
-
-        PreparedStatement preparedStatement;
-        ResultSet resultSet;
-
-        RegistroTipoRestituicao registro = null;
-
-        try {
-
-            String sql = "SELECT nome, " +
-                                "login_atualizacao, " +
-                                "data_atualizacao " +
-                           "FROM tb_tipo_restituicao " +
-                           "WHERE cod = ?";
-
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, pCodTipoRestituicao);
-
-            resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-
-                registro = new RegistroTipoRestituicao(pCodTipoRestituicao,
-                                                       resultSet.getString(1),
-                                                       resultSet.getString(2),
-                                                       resultSet.getTimestamp(3));
-
-            }
-
-        } catch (SQLException sqle) {
-
-            sqle.printStackTrace();
-
-            throw new NullPointerException("Não foi possível recuperar o tipo de restituição.");
-
-        }
-
-        return registro;
-
-    }
-
-    /**
-     * Retorna um registro da tabela tb_total_mensal_a_reter.
-     *
-     * @param pCodTotalMensalAReter;
-     *
-     * @return Um registro de retroatividade de total mensal a reter no model.
-     */
-
-    public RegistroTotalMensalAReter RetornaRegistroTotalMensalAReter  (int pCodTotalMensalAReter) {
-
-        PreparedStatement preparedStatement;
-        ResultSet resultSet;
-
-        RegistroTotalMensalAReter registro = null;
-
-        try {
-
-            String sql = "SELECT COD_TERCEIRIZADO_CONTRATO, " +
-                                "COD_FUNCAO_TERCEIRIZADO, " +
-                                "ferias, " +
-                                "TERCO_CONSTITUCIONAL, " +
-                                "DECIMO_TERCEIRO, " +
-                                "INCIDENCIA_SUBMODULO_4_1, " +
-                                "MULTA_FGTS, " +
-                                "total, " +
-                                "DATA_REFERENCIA, " +
-                                "AUTORIZADO, " +
-                                "RETIDO, " +
-                                "OBSERVACAO, " +
-                                "login_atualizacao, " +
-                                "data_atualizacao " +
-                           "FROM tb_total_mensal_a_reter " +
-                           "WHERE cod = ?";
-
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, pCodTotalMensalAReter);
-
-            resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-
-                registro = new RegistroTotalMensalAReter(pCodTotalMensalAReter,
-                                                         resultSet.getInt(1),
-                                                         resultSet.getInt(2),
-                                                         resultSet.getFloat(3),
-                                                         resultSet.getFloat(4),
-                                                         resultSet.getFloat(5),
-                                                         resultSet.getFloat(6),
-                                                         resultSet.getFloat(7),
-                                                         resultSet.getFloat(8),
-                                                         resultSet.getDate(9),
-                                                         resultSet.getString(10),
-                                                         resultSet.getString(11),
-                                                         resultSet.getString(12),
-                                                         resultSet.getString(13),
-                                                         resultSet.getTimestamp(14));
-
-            }
-
-        } catch (SQLException sqle) {
-
-            sqle.printStackTrace();
-
-            throw new NullPointerException("Não foi possível recuperar o registro de total mensal retido solicitado.");
-
-        }
-
-        return registro;
-
-    }
-
-    /**
-     * Retorna um registro da tabela tb_trienio_terc_contrato.
-     *
-     * @param pCodTrienioTercContrato;
-     *
-     * @return Um registro de triênio do terceirizado no model.
-     */
-
-    public RegistroTrienioTercContrato RetornaRegistroTrienioTercContrato (int pCodTrienioTercContrato) {
-
-        PreparedStatement preparedStatement;
-        ResultSet resultSet;
-
-        RegistroTrienioTercContrato registro = null;
-
-        try {
-
-            String sql = "SELECT COD_TERCEIRIZADO_CONTRATO, " +
-                                "NUMERO_DE_TRIENIOS, " +
-                                "data_inicio, " +
-                                "data_fim, " +
-                                "login_atualizacao, " +
-                                "data_atualizacao " +
-                           "FROM tb_trienio_terc_contrato " +
-                           "WHERE cod = ?";
-
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, pCodTrienioTercContrato);
-
-            resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-
-                registro = new RegistroTrienioTercContrato(pCodTrienioTercContrato,
-                                                           resultSet.getInt(1),
-                                                           resultSet.getInt(2),
-                                                           resultSet.getDate(3),
-                                                           resultSet.getDate(4),
-                                                           resultSet.getString(5),
-                                                           resultSet.getTimestamp(6));
-
-            }
-
-        } catch (SQLException sqle) {
-
-            sqle.printStackTrace();
-
-            throw new NullPointerException("Não foi possível recuperar o registro de triênio do terceirizado solicitado.");
-
-        }
-
-        return registro;
-
-    }
-
-    /**
-     * Retorna um registro da tabela tb_usuario.
-     *
-     * @param pCodUsuario;
-     *
-     * @return Um registro de usuário no model.
-     */
-
-    public RegistroUsuario RetornaRegistroUsuario (int pCodUsuario) {
-
-        PreparedStatement preparedStatement;
-        ResultSet resultSet;
-
-        RegistroUsuario registro = null;
-
-        try {
-
-            String sql = "SELECT COD_PERFIL, " +
-                                "NOME, " +
-                                "LOGIN, " +
-                                "PASSWORD, " +
-                                "login_atualizacao, " +
-                                "data_atualizacao " +
-                           "FROM tb_usuario " +
-                           "WHERE cod = ?";
-
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, pCodUsuario);
-
-            resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-
-                registro = new RegistroUsuario(pCodUsuario,
-                                               resultSet.getInt(1),
-                                               resultSet.getString(2),
-                                               resultSet.getString(3),
-                                               resultSet.getString(4),
-                                               resultSet.getString(5),
-                                               resultSet.getTimestamp(6));
-
-            }
-
-        } catch (SQLException sqle) {
-
-            sqle.printStackTrace();
-
-            throw new NullPointerException("Não foi possível recuperar o registro de usuário solicitado.");
-
-        }
-
-        return registro;
-
-    }
-
 
 }

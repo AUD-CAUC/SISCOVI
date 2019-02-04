@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ConvencoesDAO {
     private Connection connection;
@@ -15,7 +16,52 @@ public class ConvencoesDAO {
     public ConvencoesDAO(Connection connection) {
         this.connection = connection;
     }
-    public ArrayList getConvencoesContrato(int codigoContrato) {
+
+    public List<ConvencaoColetivaModel> getAllConvencoes() throws RuntimeException{
+        List<ConvencaoColetivaModel> allConvencoes = new ArrayList<>();
+        String sql = "SELECT * FROM TB_CONVENCAO_COLETIVA";
+        try(PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            try(ResultSet resultSet = preparedStatement.executeQuery()) {
+                while(resultSet.next()) {
+                    ConvencaoColetivaModel convencaoColetivaModel = new ConvencaoColetivaModel(resultSet.getString("SIGLA"), resultSet.getString("NOME"),
+                            resultSet.getDate("DATA_BASE"));
+                    convencaoColetivaModel.setCodigo(resultSet.getInt("COD"));
+                    convencaoColetivaModel.setDataAtualizacao(resultSet.getDate("DATA_ATUALIZACAO"));
+                    convencaoColetivaModel.setLoginAtualizacao(resultSet.getString("LOGIN_ATUALIZACAO"));
+                    convencaoColetivaModel.setDescricao(resultSet.getString("DESCRICAO"));
+                    allConvencoes.add(convencaoColetivaModel);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+            throw new RuntimeException("Erro ao recuperar as convenções coletivas Cadastradas. Tente novamente mais tarde ou entre em contato com o administrador do sistema !");
+        }
+        return allConvencoes;
+    }
+
+    public ConvencaoColetivaModel getConvencaoColetiva(int codConvencaoColetiva) throws RuntimeException{
+        String sql = "SELECT * FROM TB_CONVENCAO_COLETIVA WHERE COD=?";
+        ConvencaoColetivaModel convencaoColetivaModel = null;
+        try(PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, codConvencaoColetiva);
+            try(ResultSet resultSet = preparedStatement.executeQuery()) {
+                if(resultSet.next()) {
+                    convencaoColetivaModel = new ConvencaoColetivaModel(resultSet.getString("SIGLA"),
+                            resultSet.getString("NOME"),
+                            resultSet.getDate("DATA_BASE"));
+                    convencaoColetivaModel.setCodigo(resultSet.getInt("COD"));
+                    convencaoColetivaModel.setDescricao(resultSet.getString("DESCRICAO"));
+                    convencaoColetivaModel.setLoginAtualizacao(resultSet.getString("LOGIN_ATUALIZACAO"));
+                    convencaoColetivaModel.setDataAtualizacao(resultSet.getDate("DATA_ATUALIZACAO"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        throw new RuntimeException("Erro ao tentar recuperar as convenções coletivas desta função no contrato !");
+        }
+        return convencaoColetivaModel;
+    }
+    /*public ArrayList getConvencoesContrato(int codigoContrato) {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         ListaConvencoesModel listaConvencoes = null;
@@ -57,5 +103,5 @@ public class ConvencoesDAO {
             e.printStackTrace();
         }
         return null;
-    }
+    }*/
 }

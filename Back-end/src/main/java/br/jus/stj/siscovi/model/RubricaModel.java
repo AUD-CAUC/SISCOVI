@@ -11,7 +11,6 @@ public class RubricaModel {
         this.sigla = sigla;
         this.codigo = codigo;
     }
-
     public int getCodigo(){
         return codigo;
     }
@@ -44,4 +43,13 @@ public class RubricaModel {
         this.sigla = sigla;
     }
 
+    @Override
+    public String toString() {
+        return "RubricaModel{" +
+                "nome='" + nome + '\'' +
+                ", sigla='" + sigla + '\'' +
+                ", codigo=" + codigo +
+                ", descricao='" + descricao + '\'' +
+                '}';
+    }
 }

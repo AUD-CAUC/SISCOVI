@@ -43,7 +43,6 @@ public class RestituicaoRescisao {
                                                                      Date pDataFimFeriasProporcionais) {
 
         ConsultaTSQL consulta = new ConsultaTSQL(connection);
-        DecimoTerceiro decimoTerceiro = new DecimoTerceiro(connection);
 
         /*Variáveis totalizadoras de valores.*/
 
@@ -79,7 +78,18 @@ public class RestituicaoRescisao {
 
         vDataDisponibilizacao = consulta.RetornaDataDisponibilizacaoTerceirizado(pCodTerceirizadoContrato);
 
-        vDataInicioContagemDecTer = decimoTerceiro.RetornaDataInicioContagem(pCodTerceirizadoContrato, pDataDesligamento.toLocalDate().getYear());
+        /*Determina se a data de inicio da contagem do 13 é a data de disponibilização ou o primeiro dia do ano de desligamento.*/
+        if (vDataDisponibilizacao.toLocalDate().getYear() == pDataDesligamento.toLocalDate().getYear()) {
+
+            vDataInicioContagemDecTer = vDataDisponibilizacao;
+
+        }
+
+        else {
+
+            vDataInicioContagemDecTer = Date.valueOf(pDataDesligamento.toLocalDate().getYear() + "-01-01");
+
+        }
 
         vTotalDecimoTerceiro = CalcularValorRubricaRescisao(pCodTerceirizadoContrato, 3, vDataInicioContagemDecTer, pDataDesligamento);
         vTotalIncidenciaDecimoTerceiro = CalcularValorRubricaRescisao(pCodTerceirizadoContrato, 6, vDataInicioContagemDecTer, pDataDesligamento);
@@ -106,21 +116,21 @@ public class RestituicaoRescisao {
 
 
         return new ValorRestituicaoRescisaoModel(vTotalDecimoTerceiro,
-                                                 vTotalIncidenciaDecimoTerceiro,
-                                                 vTotalMultaFGTSDecimoTerceiro,
-                                                 vTotalFerias,
-                                                 vTotalTercoConstitucional,
-                                                 vTotalIncidenciaFerias,
-                                                 vTotalIncidenciaTerco,
-                                                 vTotalMultaFGTSFerias,
-                                                 vTotalMultaFGTSTerco,
-                                                 vTotalFeriasProporcional,
-                                                 vTotalTercoConstitucionalProporcional,
-                                                 vTotalIncidenciaFeriasProporcional,
-                                                 vTotalIncidenciaTercoProporcional,
-                                                 vTotalMultaFGTSFeriasProporcional,
-                                                 vTotalMultaFGTSTercoProporcional,
-                                                 vTotalMultaFGTSRemuneracao);
+                vTotalIncidenciaDecimoTerceiro,
+                vTotalMultaFGTSDecimoTerceiro,
+                vTotalFerias,
+                vTotalTercoConstitucional,
+                vTotalIncidenciaFerias,
+                vTotalIncidenciaTerco,
+                vTotalMultaFGTSFerias,
+                vTotalMultaFGTSTerco,
+                vTotalFeriasProporcional,
+                vTotalTercoConstitucionalProporcional,
+                vTotalIncidenciaFeriasProporcional,
+                vTotalIncidenciaTercoProporcional,
+                vTotalMultaFGTSFeriasProporcional,
+                vTotalMultaFGTSTercoProporcional,
+                vTotalMultaFGTSRemuneracao);
 
     }
 
@@ -705,11 +715,6 @@ public class RestituicaoRescisao {
      * @param pTipoRestituicao;
      * @param pTipoRescisao;
      * @param pDataDesligamento;
-     * @param pDataInicioFeriasIntegrais;
-     * @param pDataFimFeriasIntegrais;
-     * @param pDataInicioFeriasProporcionais;
-     * @param pDataFimFeriasProporcionais;
-     * @param pDataInicioContagemDecTer;
      * @param pValorDecimoTerceiro;
      * @param pValorIncidenciaDecimoTerceiro;
      * @param pValorFGTSDecimoTerceiro;
@@ -734,11 +739,7 @@ public class RestituicaoRescisao {
                                                  String pTipoRestituicao,
                                                  String pTipoRescisao,
                                                  Date pDataDesligamento,
-                                                 Date pDataInicioFeriasIntegrais,
-                                                 Date pDataFimFeriasIntegrais,
-                                                 Date pDataInicioFeriasProporcionais,
-                                                 Date pDataFimFeriasProporcionais,
-                                                 Date pDataInicioContagemDecTer,
+                                                 Date pDataInicioFerias,
                                                  float pValorDecimoTerceiro,
                                                  float pValorIncidenciaDecimoTerceiro,
                                                  float pValorFGTSDecimoTerceiro,
@@ -821,31 +822,27 @@ public class RestituicaoRescisao {
         /*Gravação no banco*/
 
         vCodTbRestituicaoRescisao = insert.InsertRestituicaoRescisao(pCodTerceirizadoContrato,
-                                                                     vCodTipoRestituicao,
-                                                                     vCodTipoRescisao,
-                                                                     pDataDesligamento,
-                                                                     pDataInicioFeriasIntegrais,
-                                                                     pDataFimFeriasIntegrais,
-                                                                     pDataInicioFeriasProporcionais,
-                                                                     pDataFimFeriasProporcionais,
-                                                                     pDataInicioContagemDecTer,
-                                                                     pValorDecimoTerceiro,
-                                                                     pValorIncidenciaDecimoTerceiro,
-                                                                     pValorFGTSDecimoTerceiro,
-                                                                     pValorFerias,
-                                                                     pValorTerco,
-                                                                     pValorIncidenciaFerias,
-                                                                     pValorIncidenciaTerco,
-                                                                     pValorFGTSFerias,
-                                                                     pValorFGTSTerco,
-                                                                     pValorFeriasProporcional,
-                                                                     pValorTercoProporcional,
-                                                                     pValorIncidenciaFeriasProporcional,
-                                                                     pValorIncidenciaTercoProporcional,
-                                                                     pValorFGTSFeriasProporcional,
-                                                                     pValorFGTSTercoProporcional,
-                                                                     pValorFGTSSalario,
-                                                                     pLoginAtualizacao);
+                vCodTipoRestituicao,
+                vCodTipoRescisao,
+                pDataDesligamento,
+                pDataInicioFerias,
+                pValorDecimoTerceiro,
+                pValorIncidenciaDecimoTerceiro,
+                pValorFGTSDecimoTerceiro,
+                pValorFerias,
+                pValorTerco,
+                pValorIncidenciaFerias,
+                pValorIncidenciaTerco,
+                pValorFGTSFerias,
+                pValorFGTSTerco,
+                pValorFeriasProporcional,
+                pValorTercoProporcional,
+                pValorIncidenciaFeriasProporcional,
+                pValorIncidenciaTercoProporcional,
+                pValorFGTSFeriasProporcional,
+                pValorFGTSTercoProporcional,
+                pValorFGTSSalario,
+                pLoginAtualizacao);
 
         if (pTipoRestituicao.equals("MOVIMENTAÇÃO")) {
 
@@ -878,11 +875,7 @@ public class RestituicaoRescisao {
                                               String pTipoRestituicao,
                                               String pTipoRescisao,
                                               Date pDataDesligamento,
-                                              Date pDataInicioFeriasIntegrais,
-                                              Date pDataFimFeriasIntegrais,
-                                              Date pDataInicioFeriasProporcionais,
-                                              Date pDataFimFeriasProporcionais,
-                                              Date pDataInicioContagemDecTer,
+                                              Date pDataInicioFerias,
                                               float pValorDecimoTerceiro,
                                               float pValorIncidenciaDecimoTerceiro,
                                               float pValorFGTSDecimoTerceiro,
@@ -919,35 +912,31 @@ public class RestituicaoRescisao {
         }
 
         vRetornoChavePrimaria = insert.InsertHistoricoRestituicaoRescisao(registro.getpCod(),
-                                                                          registro.getpCodTipoRestituicao(),
-                                                                          registro.getpCodTipoRescisao(),
-                                                                          registro.getpDataDesligamento(),
-                                                                          registro.getpDataInicioFeriasIntegrais(),
-                                                                          registro.getpDataFimFeriasIntegrais(),
-                                                                          registro.getpDataInicioFeriasProporcionais(),
-                                                                          registro.getpDataFimFeriasProporcionais(),
-                                                                          registro.getpDataInicioContagemDecTer(),
-                                                                          registro.getpValorDecimoTerceiro(),
-                                                                          registro.getpIncidSubmod41DecTerceiro(),
-                                                                          registro.getpIncidMultaFGTSDecTeceriro(),
-                                                                          registro.getpValorFerias(),
-                                                                          registro.getpValorTerco(),
-                                                                          registro.getpIncidSubmod41Ferias(),
-                                                                          registro.getpIncidSubmod41Terco(),
-                                                                          registro.getpIncidMultaFGTSFerias(),
-                                                                          registro.getpIncidMultaFGTSTerco(),
-                                                                          registro.getValorFeriasProporcional(),
-                                                                          registro.getValorTercoProporcional(),
-                                                                          registro.getValorIncidenciaFeriasProporcional(),
-                                                                          registro.getValorIncidenciaTercoProporcional(),
-                                                                          registro.getValorFGTSFeriasProporcional(),
-                                                                          registro.getValorFGTSTercoProporcional(),
-                                                                          registro.getpMultaFGTSSalario(),
-                                                                          registro.getpDataReferencia(),
-                                                                          registro.getpAutorizado(),
-                                                                          registro.getpRestituido(),
-                                                                          registro.getpObservacao(),
-                                                                          registro.getpLoginAtualizacao());
+                registro.getpCodTipoRestituicao(),
+                registro.getpCodTipoRescisao(),
+                registro.getpDataDesligamento(),
+                registro.getpDataInicioFerias(),
+                registro.getpValorDecimoTerceiro(),
+                registro.getpIncidSubmod41DecTerceiro(),
+                registro.getpIncidMultaFGTSDecTeceriro(),
+                registro.getpValorFerias(),
+                registro.getpValorTerco(),
+                registro.getpIncidSubmod41Ferias(),
+                registro.getpIncidSubmod41Terco(),
+                registro.getpIncidMultaFGTSFerias(),
+                registro.getpIncidMultaFGTSTerco(),
+                registro.getValorFeriasProporcional(),
+                registro.getValorTercoProporcional(),
+                registro.getValorIncidenciaFeriasProporcional(),
+                registro.getValorIncidenciaTercoProporcional(),
+                registro.getValorFGTSFeriasProporcional(),
+                registro.getValorFGTSTercoProporcional(),
+                registro.getpMultaFGTSSalario(),
+                registro.getpDataReferencia(),
+                registro.getpAutorizado(),
+                registro.getpRestituido(),
+                registro.getpObservacao(),
+                registro.getpLoginAtualizacao());
 
         delete.DeleteSaldoResidualRescisao(pCodRestituicaoRescisao);
 
@@ -1000,11 +989,7 @@ public class RestituicaoRescisao {
                 vCodTipoRestituicao,
                 vCodTipoRescisao,
                 pDataDesligamento,
-                pDataInicioFeriasIntegrais,
-                pDataFimFeriasIntegrais,
-                pDataInicioFeriasProporcionais,
-                pDataFimFeriasProporcionais,
-                pDataInicioContagemDecTer,
+                pDataInicioFerias,
                 pValorDecimoTerceiro,
                 pValorIncidenciaDecimoTerceiro,
                 pValorFGTSDecimoTerceiro,

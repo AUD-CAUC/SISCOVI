@@ -7,6 +7,8 @@ public class ValorRestituicaoDecimoTerceiroModel {
 
     public ValorRestituicaoDecimoTerceiroModel (float valorDecimoTerceiro, float valorIncidenciaDecimoTerceiro) {
 
+        // this.valorDecimoTerceiro = Math.round(valorDecimoTerceiro * 100f)/(100f);
+        // this.valorIncidenciaDecimoTerceiro = Math.round(valorIncidenciaDecimoTerceiro * 100f)/(100f);
         this.valorDecimoTerceiro = valorDecimoTerceiro;
         this.valorIncidenciaDecimoTerceiro = valorIncidenciaDecimoTerceiro;
 

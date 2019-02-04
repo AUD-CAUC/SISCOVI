@@ -17,10 +17,10 @@ public class Token {
         byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(apiKey.getSecret());
         Key signinKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
         JwtBuilder builder = Jwts.builder().setId(id)
-                .setIssuedAt(now)
-                .setSubject(subject)
-                .setIssuer(issuer)
-                .signWith(signatureAlgorithm, signinKey);
+                                            .setIssuedAt(now)
+                                            .setSubject(subject)
+                                            .setIssuer(issuer)
+                                            .signWith(signatureAlgorithm, signinKey);
         if(ttlMillis >= 0){
             long expMillis = nowMillis + ttlMillis;
             Date exp = new Date(expMillis);

@@ -24,38 +24,11 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" name="jjwt-0.9.0-sources" level="project" />
-    <orderEntry type="library" exported="" name="aopalliance-repackaged-2.5.0-b32" level="project" />
-    <orderEntry type="library" exported="" name="gson-2.8.0" level="project" />
-    <orderEntry type="library" exported="" name="hk2-api-2.5.0-b32" level="project" />
-    <orderEntry type="library" exported="" name="hk2-locator-2.5.0-b32" level="project" />
-    <orderEntry type="library" exported="" name="hk2-utils-2.5.0-b32" level="project" />
-    <orderEntry type="library" exported="" name="jackson-annotations-2.7.3" level="project" />
-    <orderEntry type="library" exported="" name="jackson-core-2.7.3" level="project" />
-    <orderEntry type="library" exported="" name="jackson-databind-2.7.3" level="project" />
-    <orderEntry type="library" exported="" name="javassist-3.20.0-GA" level="project" />
-    <orderEntry type="library" exported="" name="javax.annotation-api-1.2" level="project" />
-    <orderEntry type="library" exported="" name="javax.inject-2.5.0-b32" level="project" />
-    <orderEntry type="library" exported="" name="javax.servlet-api-3.0.1" level="project" />
-    <orderEntry type="library" exported="" name="javax.ws.rs-api-2.0" level="project" />
-    <orderEntry type="library" exported="" name="javax.ws.rs-api-2.0.1" level="project" />
-    <orderEntry type="library" exported="" name="jaxb-api-2.2.7" level="project" />
-    <orderEntry type="library" exported="" name="jersey-client" level="project" />
-    <orderEntry type="library" exported="" name="jersey-common" level="project" />
-    <orderEntry type="library" exported="" name="jersey-container-servlet" level="project" />
-    <orderEntry type="library" exported="" name="jersey-container-servlet-core" level="project" />
-    <orderEntry type="library" exported="" name="jersey-container-servlet1" level="project" />
-    <orderEntry type="library" exported="" name="jersey-guava-2.25.1" level="project" />
-    <orderEntry type="library" exported="" name="jersey-media-jaxb" level="project" />
-    <orderEntry type="library" exported="" name="jersey-server" level="project" />
-    <orderEntry type="library" exported="" name="jjwt-0.9.0" level="project" />
-    <orderEntry type="library" exported="" name="mssql-jdbc-6.2.2.jre8" level="project" />
-    <orderEntry type="library" exported="" scope="PROVIDED" name="org.osgi.core-4.2.0" level="project" />
-    <orderEntry type="library" exported="" name="osgi-resource-locator-1.0.1" level="project" />
-    <orderEntry type="library" exported="" name="persistence-api-1.0" level="project" />
-    <orderEntry type="library" exported="" name="validation-api-1.1.0.Final" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="Tomcat 8.0.50" level="application_server_libraries" />
-    <orderEntry type="library" exported="" name="jbcrypt-1.0.0" level="project" />
+    <orderEntry type="library" exported="" name="aopalliance-repackaged-2.5.0-b32" level="project" />
+    <orderEntry type="library" name="Maven: com.microsoft.sqlserver:mssql-jdbc:6.2.2.jre8" level="project" />
+    <orderEntry type="library" name="Maven: org.connectbot.jbcrypt:jbcrypt:1.0.0" level="project" />
+    <orderEntry type="library" name="jbcrypt-0.3m" level="project" />
     <orderEntry type="library" name="Maven: org.glassfish.hk2.external:aopalliance-repackaged:2.5.0-b32" level="project" />
     <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.8.0" level="project" />
     <orderEntry type="library" name="Maven: org.glassfish.hk2:hk2-api:2.5.0-b32" level="project" />
@@ -64,7 +37,6 @@
     <orderEntry type="library" name="Maven: org.glassfish.hk2:hk2-utils:2.5.0-b32" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.7.3" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.7.3" level="project" />
-    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.7.3" level="project" />
     <orderEntry type="library" name="Maven: org.javassist:javassist:3.20.0-GA" level="project" />
     <orderEntry type="library" name="Maven: javax.annotation:javax.annotation-api:1.2" level="project" />
     <orderEntry type="library" name="Maven: org.glassfish.hk2.external:javax.inject:2.5.0-b32" level="project" />
@@ -72,6 +44,7 @@
     <orderEntry type="library" name="Maven: javax.ws.rs:javax.ws.rs-api:2.0.1" level="project" />
     <orderEntry type="library" name="Maven: javax.xml.bind:jaxb-api:2.2.7" level="project" />
     <orderEntry type="library" name="Maven: io.jsonwebtoken:jjwt:0.9.0" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.8.9" level="project" />
     <orderEntry type="library" name="Maven: org.glassfish.jersey.core:jersey-client:2.25.1" level="project" />
     <orderEntry type="library" name="Maven: org.glassfish.jersey.containers:jersey-container-servlet:2.25.1" level="project" />
     <orderEntry type="library" name="Maven: org.glassfish.jersey.core:jersey-common:2.25.1" level="project" />
@@ -83,5 +56,19 @@
     <orderEntry type="library" name="Maven: org.glassfish.hk2:osgi-resource-locator:1.0.1" level="project" />
     <orderEntry type="library" name="Maven: javax.persistence:persistence-api:1.0" level="project" />
     <orderEntry type="library" name="Maven: javax.validation:validation-api:1.1.0.Final" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.tomcat:tomcat-catalina:9.0.14" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.tomcat:tomcat-servlet-api:9.0.14" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.tomcat:tomcat-jsp-api:9.0.14" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.tomcat:tomcat-el-api:9.0.14" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.tomcat:tomcat-juli:9.0.14" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.tomcat:tomcat-annotations-api:9.0.14" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.tomcat:tomcat-api:9.0.14" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.tomcat:tomcat-jni:9.0.14" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.tomcat:tomcat-coyote:9.0.14" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.tomcat:tomcat-util:9.0.14" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.tomcat:tomcat-util-scan:9.0.14" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.tomcat:tomcat-jaspic-api:9.0.14" level="project" />
+    <orderEntry type="library" name="Maven: com.microsoft.sqlserver:mssql-jdbc:6.2.2.jre8" level="project" />
+    <orderEntry type="library" name="Maven: org.connectbot.jbcrypt:jbcrypt:1.0.0" level="project" />
   </component>
 </module>

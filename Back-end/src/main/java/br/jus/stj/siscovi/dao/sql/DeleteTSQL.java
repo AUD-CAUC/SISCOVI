@@ -273,10 +273,9 @@ public class DeleteTSQL {
      * @param pTabela;
      */
 
-    public int DeleteRegistro (int pCod, String pTabela) {
+    public void DeleteRegistro (int pCod, String pTabela) {
 
         PreparedStatement preparedStatement;
-        int vRetorno = 1;
 
         String query = "DELETE FROM " + pTabela + " WHERE COD = ?";
 
@@ -293,10 +292,6 @@ public class DeleteTSQL {
             throw new RuntimeException("Não foi possível deletar o registro da tabela " + pTabela + ".");
 
         }
-
-        vRetorno = 0;
-
-        return vRetorno;
 
     }
 

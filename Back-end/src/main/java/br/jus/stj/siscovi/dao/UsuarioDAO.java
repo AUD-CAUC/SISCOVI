@@ -1,6 +1,4 @@
 package br.jus.stj.siscovi.dao;
-import br.jus.stj.siscovi.dao.sql.ConsultaTSQL;
-import br.jus.stj.siscovi.dao.sql.UpdateTSQL;
 import br.jus.stj.siscovi.model.UsuarioModel;
 
 
@@ -20,7 +18,7 @@ public class UsuarioDAO {
         ArrayList<UsuarioModel> usuarios = new ArrayList<UsuarioModel>();
         try {
             preparedStatement = connection.prepareStatement("SELECT U.cod, U.NOME, LOGIN, SIGLA, U.LOGIN_ATUALIZACAO, U.DATA_ATUALIZACAO FROM tb_usuario U" +
-                    " JOIN TB_PERFIL_USUARIO P ON P.cod=u.COD_PERFIL");
+                    " JOIN TB_PERFIL_USUARIO P ON P.cod=u.COD_PERFIL ORDER BY NOME ASC");
             resultSet = preparedStatement.executeQuery();
             while(resultSet.next()) {
                 UsuarioModel usuarioModel = new UsuarioModel(resultSet.getInt("COD"),
@@ -99,8 +97,8 @@ public class UsuarioDAO {
         try {
             preparedStatement = connection.prepareStatement("INSERT INTO TB_USUARIO(COD_PERFIL, NOME, LOGIN, PASSWORD, LOGIN_ATUALIZACAO, DATA_ATUALIZACAO) VALUES (?,?,?,?,?,CURRENT_TIMESTAMP)");
             preparedStatement.setInt(1, codigo);
-            preparedStatement.setString(2, usuario.getNome());
-            preparedStatement.setString(3, usuario.getLogin());
+            preparedStatement.setString(2, usuario.getNome().toUpperCase());
+            preparedStatement.setString(3, usuario.getLogin().toUpperCase());
             preparedStatement.setString(4, password);
             preparedStatement.setString(5, currentUser.toUpperCase());
             preparedStatement.executeUpdate();
@@ -111,27 +109,26 @@ public class UsuarioDAO {
         return false;
     }
 
-    public ArrayList<UsuarioModel> getGestores(){
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
+    public ArrayList<UsuarioModel> getGestores() throws  RuntimeException{
+        String sql = "SELECT U.cod, U.NOME, LOGIN, SIGLA, U.LOGIN_ATUALIZACAO, U.DATA_ATUALIZACAO FROM tb_usuario U JOIN TB_PERFIL_USUARIO P ON P.cod=u.COD_PERFIL WHERE P.SIGLA = 'USUÁRIO'";
         ArrayList<UsuarioModel> usuarios = new ArrayList<>();
-        try {
-            preparedStatement = connection.prepareStatement("SELECT U.cod, U.NOME, LOGIN, SIGLA, U.LOGIN_ATUALIZACAO, U.DATA_ATUALIZACAO FROM tb_usuario U JOIN TB_PERFIL_USUARIO P ON P.cod=u.COD_PERFIL WHERE P.COD=4");
-            resultSet = preparedStatement.executeQuery();
-            while(resultSet.next()) {
-                UsuarioModel usuarioModel = new UsuarioModel(resultSet.getInt("COD"),
-                        resultSet.getString("NOME"),
-                        resultSet.getString("LOGIN"),
-                        resultSet.getString("LOGIN_ATUALIZACAO"),
-                        resultSet.getDate("DATA_ATUALIZACAO"));
-                usuarioModel.setPerfil(resultSet.getString("SIGLA"));
-                usuarios.add(usuarioModel);
+        try(PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            try(ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    UsuarioModel usuarioModel = new UsuarioModel(resultSet.getInt("COD"),
+                            resultSet.getString("NOME"),
+                            resultSet.getString("LOGIN"),
+                            resultSet.getString("LOGIN_ATUALIZACAO"),
+                            resultSet.getDate("DATA_ATUALIZACAO"));
+                    usuarioModel.setPerfil(resultSet.getString("SIGLA"));
+                    usuarios.add(usuarioModel);
+                }
             }
             return usuarios;
         }catch(SQLException sqle) {
             sqle.printStackTrace();
+            throw new RuntimeException("Usuários não encontrados. " + sqle.getMessage());
         }
-        return null;
     }
 
     public int verifyPermission(int codUsuario, int codContrato) {
@@ -183,21 +180,21 @@ public class UsuarioDAO {
         }
         return codGestor;
     }
-    public boolean alteraUsuario(UsuarioModel usuario, String currentUser) {
-        ConsultaTSQL consulta = new ConsultaTSQL(connection);
-        UpdateTSQL update = new UpdateTSQL(connection);
 
-        try {
-
-            update.UpdateUsuario(usuario.getCodigo(),consulta.RetornaCodPerfilUsuario(usuario.getPerfil()), usuario.getNome(), usuario.getLogin(), "SYSTEM");
-
-            return true;
-
-        } catch (Exception exception) {
-
-            throw new NullPointerException("Não foi possível atualizar o uusuário.");
-
+    public boolean isAdmin(String username) throws RuntimeException {
+        String sql = "SELECT PU.SIGLA FROM TB_USUARIO U JOIN TB_PERFIL_USUARIO PU ON U.COD_PERFIL=PU.COD  WHERE LOGIN = ?";
+        try(PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+            preparedStatement.setString(1, username);
+            try(ResultSet resultSet = preparedStatement.executeQuery()) {
+                if(resultSet.next()){
+                    if(resultSet.getString("SIGLA").contains("ADMINISTRADOR")) {
+                        return  true;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Usuário não existe !");
         }
-
+        return false;
     }
 }

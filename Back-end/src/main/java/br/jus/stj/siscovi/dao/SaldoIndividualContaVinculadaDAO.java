@@ -24,11 +24,11 @@ public class SaldoIndividualContaVinculadaDAO {
         ArrayList<SaldoIndividualContaVinculadaModel> lista = new ArrayList<>();
 
         String sql = "SELECT  t.nome," +
-                           "  t.cpf," +
-                           "  tc.cod" +
-                      " FROM tb_terceirizado t" +
-                       "  JOIN tb_terceirizado_contrato tc ON tc.cod_terceirizado = t.cod" +
-                      " WHERE tc.cod_contrato = ?";
+                "  t.cpf," +
+                "  tc.cod" +
+                " FROM tb_terceirizado t" +
+                "  JOIN tb_terceirizado_contrato tc ON tc.cod_terceirizado = t.cod" +
+                " WHERE tc.cod_contrato = ?";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 

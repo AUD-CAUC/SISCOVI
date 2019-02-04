@@ -17,6 +17,11 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>com.heroku.sdk</groupId>
+                <artifactId>heroku-maven-plugin</artifactId>
+                <version>2.0.6</version>
+            </plugin>
         </plugins>
     </build>
 <dependencies>
@@ -59,12 +64,6 @@
     <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-core</artifactId>
-        <version>2.7.3</version>
-    </dependency>
-    <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
-    <dependency>
-        <groupId>com.fasterxml.jackson.core</groupId>
-        <artifactId>jackson-databind</artifactId>
         <version>2.7.3</version>
     </dependency>
     <!-- https://mvnrepository.com/artifact/org.javassist/javassist -->
@@ -177,8 +176,27 @@
         <artifactId>validation-api</artifactId>
         <version>1.1.0.Final</version>
     </dependency>
-
-
+    <!-- https://mvnrepository.com/artifact/org.apache.tomcat/tomcat-catalina -->
+    <dependency>
+        <groupId>org.apache.tomcat</groupId>
+        <artifactId>tomcat-catalina</artifactId>
+        <version>9.0.14</version>
+    </dependency>
+    <dependency>
+        <groupId>com.microsoft.sqlserver</groupId>
+        <artifactId>mssql-jdbc</artifactId>
+        <version>6.2.2.jre8</version>
+    </dependency>
+    <dependency>
+        <groupId>org.connectbot.jbcrypt</groupId>
+        <artifactId>jbcrypt</artifactId>
+        <version>1.0.0</version>
+    </dependency>
+    <dependency>
+        <groupId>org.connectbot.jbcrypt</groupId>
+        <artifactId>jbcrypt</artifactId>
+        <version>1.0.0</version>
+    </dependency>
 </dependencies>
 
 </project>

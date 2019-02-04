@@ -1,10 +1,10 @@
 package br.jus.stj.siscovi.controllers;
 
+
 import br.jus.stj.siscovi.dao.ConnectSQLServer;
 import br.jus.stj.siscovi.dao.RubricasDAO;
 import br.jus.stj.siscovi.model.CadastroRubricaModel;
 import br.jus.stj.siscovi.model.RubricaModel;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -28,7 +28,6 @@ public class RubricaController {
         connectSQLServer.dbConnect().close();
         return Response.ok(json, MediaType.APPLICATION_JSON).build();
     }
-/*
     @GET
     @Path("/getStaticPercent")
     @Produces(MediaType.APPLICATION_JSON)
@@ -41,12 +40,11 @@ public class RubricaController {
         connectSQLServer.dbConnect().close();
         return Response.ok(json, MediaType.APPLICATION_JSON).build();
     }
-*/
     @POST
     @Path("/criarRubrica")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response insertRubrica(String object) {
+    public Response insertPercentuais(String object) {
         Gson gson = new Gson();
         String json;
         CadastroRubricaModel cadastroRubricaModel = gson.fromJson(object, CadastroRubricaModel.class);
@@ -81,7 +79,7 @@ public class RubricaController {
         return Response.ok(json, MediaType.APPLICATION_JSON).build();
     }
     @DELETE
-    @Path("deleteRubrica/{codigo}")
+    @Path("/deleteRubrica/{codigo}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response apagarRubrica(@PathParam("codigo") int codigo) {
         ConnectSQLServer connectSQLServer = new ConnectSQLServer();
@@ -89,7 +87,7 @@ public class RubricaController {
         Gson gson = new Gson();
         String json;
         if (rubricasDAO.DeleteRubrica(codigo)) {
-            json = gson.toJson("Rubrica apagada com sucesso!");
+            json = gson.toJson("Rubrica Apagada Com sucesso !");
         }else {
             json = gson.toJson("Houve uma falha ao tentar apagar a Rubrica !");
         }

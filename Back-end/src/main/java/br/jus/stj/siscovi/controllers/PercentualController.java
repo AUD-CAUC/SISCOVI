@@ -3,19 +3,19 @@ package br.jus.stj.siscovi.controllers;
 import br.jus.stj.siscovi.dao.ConnectSQLServer;
 import br.jus.stj.siscovi.dao.ContratoDAO;
 import br.jus.stj.siscovi.dao.PercentualDAO;
+import br.jus.stj.siscovi.helpers.ErrorMessage;
 import br.jus.stj.siscovi.model.ContratoModel;
+import br.jus.stj.siscovi.model.PercentualModel;
 import br.jus.stj.siscovi.model.PercentualModelResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 @Path("/percentual")
 public class PercentualController {
@@ -45,6 +45,43 @@ public class PercentualController {
         }
         String json = gson.toJson(percentuais);
         connectSQLServer.dbConnect().close();
+        return Response.ok(json, MediaType.APPLICATION_JSON).build();
+    }
+
+    @GET
+    @Path("/getPercentuaisDecimoTerceiro")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getPercentuaisDecimoTerceiro() {
+        ConnectSQLServer connectSQLServer = new ConnectSQLServer();
+        PercentualDAO percentualDAO = new PercentualDAO(connectSQLServer.dbConnect());
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+        String json = "";
+        try {
+            List<PercentualModel> percentuais = percentualDAO.getPercentuaisDecimoTerceiro();
+            json = gson.toJson(percentuais);
+            connectSQLServer.dbConnect().close();
+        }catch (Exception ex) {
+            json = gson.toJson(ErrorMessage.handleError(ex));
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(json).build();
+        }
+        return Response.ok(json, MediaType.APPLICATION_JSON).build();
+    }
+
+    @GET
+    @Path("/getPercentuaisFerias")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response getPercentuaisFerias() {
+        ConnectSQLServer connectSQLServer = new ConnectSQLServer();
+        PercentualDAO percentualDAO = new PercentualDAO(connectSQLServer.dbConnect());
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+        String json = "";
+        try{
+            List<PercentualModel> percentuais = percentualDAO.getPercentuaisFerias();
+            json = gson.toJson(percentuais);
+            connectSQLServer.dbConnect().close();
+        }catch (Exception ex) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(gson.toJson(ErrorMessage.handleError(ex))).build();
+        }
         return Response.ok(json, MediaType.APPLICATION_JSON).build();
     }
 }

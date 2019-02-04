@@ -8,7 +8,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
-import br.jus.stj.siscovi.dao.sql.InsertTSQL;
 
 public class TotalMensalAReter {
 
@@ -28,9 +27,9 @@ public class TotalMensalAReter {
      * @param pAno
      */
 
-    public void CalculaTotalMensal (int pCodContrato, int pMes, int pAno, String pLoginAtualizacao) {
+    public void CalculaTotalMensal (int pCodContrato, int pMes, int pAno) {
 
-        //Checked.
+        // Checked.
 
         PreparedStatement preparedStatement;
         ResultSet resultSet;
@@ -38,9 +37,8 @@ public class TotalMensalAReter {
         Percentual percentual = new Percentual(connection);
         Periodos periodo = new Periodos(connection);
         Remuneracao remuneracao = new Remuneracao(connection);
-        InsertTSQL insert = new InsertTSQL(connection);
 
-        /*Variáveis totalizadoras de valores.*/
+        /* Variáveis totalizadoras de valores.*/
 
         float vTotalFerias = 0;
         float vTotalTercoConstitucional = 0;
@@ -49,7 +47,7 @@ public class TotalMensalAReter {
         float vTotalIndenizacao = 0;
         float vTotal = 0;
 
-        /*Variáveis de valores parciais.*/
+        /* Variáveis de valores parciais.*/
 
         float vValorFerias = 0;
         float vValorTercoConstitucional = 0;
@@ -57,7 +55,7 @@ public class TotalMensalAReter {
         float vValorIncidencia = 0;
         float vValorIndenizacao = 0 ;
 
-        /*Variáveis de percentuais.*/
+        /* Variáveis de percentuais.*/
 
         float vPercentualFerias = 0;
         float vPercentualTercoConstitucional = 0;
@@ -67,15 +65,15 @@ public class TotalMensalAReter {
         float vPercentualPenalidadeFGTS = 0;
         float vPercentualMultaFGTS = 0;
 
-        /*Variável da remuneração da função do contrato.*/
+        /* Variável da remuneração da função do contrato.*/
 
         float vRemuneracao = 0;
 
-        /*Variável para a verificação de existência da cálculos realizados.*/
+        /* Variável para a verificação de existência da cálculos realizados.*/
 
         int vExisteCalculo = 0;
 
-        /*Variáveis de datas.*/
+        /* Variáveis de datas.*/
 
         Date vDataReferencia = Date.valueOf(pAno + "-" + pMes + "-01");
         Date vDataInicio = null;
@@ -84,12 +82,12 @@ public class TotalMensalAReter {
         Date vDataFimContrato = null;
 
 
-        /*Variável de checagem da existência do contrato.*/
+        /* Variável de checagem da existência do contrato.*/
 
         int vCheck = 0;
         int vDiasSubperiodo = 0;
 
-        /**Checagem da validade do contrato passado (existe).*/
+        /* Checagem da validade do contrato passado (existe).*/
 
         try {
 
@@ -115,7 +113,7 @@ public class TotalMensalAReter {
 
         }
 
-        /**Se a data passada for anterior ao contrato ou posterior ao seu termino aborta-se.*/
+        /* Se a data passada for anterior ao contrato ou posterior ao seu termino aborta-se.*/
 
         try {
 
@@ -148,7 +146,7 @@ public class TotalMensalAReter {
 
         }
 
-        /**Verificação da existência de cálculo para aquele mês e consequente deleção.*/
+        /* Verificação da existência de cálculo para aquele mês e consequente deleção.*/
 
         try {
 
@@ -168,7 +166,7 @@ public class TotalMensalAReter {
 
             if (vExisteCalculo > 0) {
 
-                /**Deleta as retroatividades associadas aquele mês/ano.*/
+                /* Deleta as retroatividades associadas aquele mês/ano.*/
 
                 preparedStatement = connection.prepareStatement("DELETE FROM TB_RETROATIVIDADE_TOTAL_MENSAL WHERE COD_TOTAL_MENSAL_A_RETER IN (SELECT TMR.COD" +
                         " FROM TB_TOTAL_MENSAL_A_RETER TMR JOIN TB_TERCEIRIZADO_CONTRATO TC ON TC.COD = TMR.COD_TERCEIRIZADO_CONTRATO" +
@@ -179,7 +177,7 @@ public class TotalMensalAReter {
                 preparedStatement.setInt(3, pCodContrato);
                 preparedStatement.executeUpdate();
 
-                /**Deleta os recolhimentos realizados naquele mês/ano.*/
+                /* Deleta os recolhimentos realizados naquele mês/ano. */
 
                 preparedStatement = connection.prepareStatement("DELETE FROM TB_TOTAL_MENSAL_A_RETER WHERE MONTH(DATA_REFERENCIA) = ? AND YEAR(DATA_REFERENCIA) = ?" +
                         " AND COD_TERCEIRIZADO_CONTRATO IN (SELECT TC.COD FROM TB_TERCEIRIZADO_CONTRATO TC WHERE TC.COD_CONTRATO = ?)");
@@ -197,7 +195,7 @@ public class TotalMensalAReter {
 
         }
 
-        /**Caso não hajam mudaças de percentual no mês designado carregam-se os valores.*/
+        /* Caso não hajam mudaças de percentual no mês designado carregam-se os valores. */
 
         if (!percentual.ExisteMudancaPercentual(pCodContrato, pMes, pAno, 1)) {
 
@@ -216,7 +214,7 @@ public class TotalMensalAReter {
 
         }
 
-        /**Busca funções do contrato.*/
+        /* Busca funções do contrato. */
 
         ArrayList<Integer> c1 = new ArrayList<>();
 
@@ -502,8 +500,8 @@ public class TotalMensalAReter {
 
                     vTotal = (vTotalFerias + vTotalTercoConstitucional + vTotalDecimoTerceiro + vTotalIncidencia + vTotalIndenizacao);
 
-                    insert.InsertTotalMensalAReter(tuplas.get(j).getCodTerceirizadoContrato(), tuplas.get(j).getCod(), vTotalFerias, vTotalTercoConstitucional, vTotalDecimoTerceiro, vTotalIncidencia,
-                            vTotalIndenizacao, vTotal, vDataReferencia, pLoginAtualizacao);
+                    insereResultados(tuplas.get(j).getCodTerceirizadoContrato(), tuplas.get(j).getCod(), vTotalFerias, vTotalTercoConstitucional, vTotalDecimoTerceiro, vTotalIncidencia,
+                            vTotalIndenizacao, vTotal, vDataReferencia);
 
                 }
 
@@ -652,8 +650,8 @@ public class TotalMensalAReter {
                         vDataInicio = Date.valueOf(vDataFim.toLocalDate().plusDays(1));
                     }
                     vTotal = (vTotalFerias + vTotalTercoConstitucional + vTotalDecimoTerceiro + vTotalIncidencia + vTotalIndenizacao);
-                    insert.InsertTotalMensalAReter(tuplas.get(j).getCodTerceirizadoContrato(), tuplas.get(j).getCod(), vTotalFerias, vTotalTercoConstitucional, vTotalDecimoTerceiro, vTotalIncidencia, vTotalIndenizacao,
-                            vTotal, vDataReferencia, pLoginAtualizacao);
+                    insereResultados(tuplas.get(j).getCodTerceirizadoContrato(), tuplas.get(j).getCod(), vTotalFerias, vTotalTercoConstitucional, vTotalDecimoTerceiro, vTotalIncidencia, vTotalIndenizacao,
+                            vTotal, vDataReferencia);
                 }
             }
             /* Se existe mudança de percentual e mudança de convenção. */
@@ -845,8 +843,8 @@ public class TotalMensalAReter {
 
                     vTotal = (vTotalFerias + vTotalTercoConstitucional + vTotalDecimoTerceiro + vTotalIncidencia + vTotalIndenizacao);
 
-                    insert.InsertTotalMensalAReter(tuplas.get(j).getCodTerceirizadoContrato(), tuplas.get(j).getCod(), vTotalFerias, vTotalTercoConstitucional, vTotalDecimoTerceiro, vTotalIncidencia, vTotalIndenizacao,
-                            vTotal, vDataReferencia, pLoginAtualizacao);
+                    insereResultados(tuplas.get(j).getCodTerceirizadoContrato(), tuplas.get(j).getCod(), vTotalFerias, vTotalTercoConstitucional, vTotalDecimoTerceiro, vTotalIncidencia, vTotalIndenizacao,
+                            vTotal, vDataReferencia);
 
                 }
 
@@ -912,6 +910,38 @@ public class TotalMensalAReter {
 
         return tuplas;
 
+    }
+
+    /**
+     * Insere os resultados do cálculo do total mensal a reter no banco de dados
+     * @param pCodTerceirizadoContrato
+     * @param pCodFuncaoTerceirizadoContrato
+     * @param pTotalFerias
+     * @param pTotalTercoConstitucional
+     * @param pTotalDecimoTerceiro
+     * @param pTotalIncidencia
+     * @param pTotalIndenizacao
+     * @param pTotal
+     * @param pDataReferencia
+     */
+    void insereResultados(int pCodTerceirizadoContrato, int pCodFuncaoTerceirizadoContrato, float pTotalFerias, float pTotalTercoConstitucional, float pTotalDecimoTerceiro, float pTotalIncidencia,
+                          float pTotalIndenizacao, float pTotal, Date pDataReferencia) {
+        String sql = "INSERT INTO TB_TOTAL_MENSAL_A_RETER (COD_TERCEIRIZADO_CONTRATO, COD_FUNCAO_TERCEIRIZADO, FERIAS, TERCO_CONSTITUCIONAL," +
+                " DECIMO_TERCEIRO, INCIDENCIA_SUBMODULO_4_1, MULTA_FGTS, TOTAL, DATA_REFERENCIA, LOGIN_ATUALIZACAO, DATA_ATUALIZACAO) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'SYSTEM', CURRENT_TIMESTAMP)";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+            preparedStatement.setInt(1, pCodTerceirizadoContrato);
+            preparedStatement.setInt(2, pCodFuncaoTerceirizadoContrato);
+            preparedStatement.setFloat(3, pTotalFerias);
+            preparedStatement.setFloat(4, pTotalTercoConstitucional);
+            preparedStatement.setFloat(5, pTotalDecimoTerceiro);
+            preparedStatement.setFloat(6, pTotalIncidencia);
+            preparedStatement.setFloat(7, pTotalIndenizacao);
+            preparedStatement.setFloat(8, pTotal);
+            preparedStatement.setDate(9, pDataReferencia);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao tentar inserir os resultados do cálculo de Total Mensal a Reter no banco de dados !");
+        }
     }
 
     int contaDias(Date dataInicio, Date dataFim){

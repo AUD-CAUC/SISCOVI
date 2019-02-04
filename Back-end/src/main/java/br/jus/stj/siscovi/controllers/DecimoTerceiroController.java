@@ -1,20 +1,16 @@
 package br.jus.stj.siscovi.controllers;
 
-import br.jus.stj.siscovi.calculos.DecimoTerceiro;
 import br.jus.stj.siscovi.calculos.RestituicaoDecimoTerceiro;
 import br.jus.stj.siscovi.dao.ConnectSQLServer;
 import br.jus.stj.siscovi.dao.DecimoTerceiroDAO;
 import br.jus.stj.siscovi.helpers.ErrorMessage;
 import br.jus.stj.siscovi.model.AvaliacaoDecimoTerceiro;
-import br.jus.stj.siscovi.model.AvaliacaoFerias;
 import br.jus.stj.siscovi.model.TerceirizadoDecimoTerceiro;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
-import sun.security.pkcs11.wrapper.CK_ATTRIBUTE;
 
-import javax.validation.constraints.Null;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -27,16 +23,15 @@ import java.util.List;
 public class DecimoTerceiroController {
 
     @GET
-    @Path("/getTerceirizadosDecimoTerceiro={codigoContrato}/{tipoRestituicao}/{anoContagem}")
+    @Path("/getTerceirizadosDecimoTerceiro={codigoContrato}/{tipoRestituicao}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getTerceirizadosParaDecimoTerceiro (@PathParam("codigoContrato") int codigoContrato,
-                                                        @PathParam("tipoRestituicao") String tipoRestituicao,
-                                                        @PathParam("anoContagem") int anoContagem) {
+                                                        @PathParam("tipoRestituicao") String tipoRestituicao) {
         Gson gson = new GsonBuilder().setDateFormat("YYYY-MM-dd").create();
         ConnectSQLServer connectSQLServer = new ConnectSQLServer();
         DecimoTerceiroDAO decimoTerceiroDAO = new DecimoTerceiroDAO(connectSQLServer.dbConnect());
         String json = "";
-        json = gson.toJson(decimoTerceiroDAO.getListaTerceirizadoParaCalculoDeDecimoTerceiro(codigoContrato, anoContagem));
+            json = gson.toJson(decimoTerceiroDAO.getListaTerceirizadoParaCalculoDeDecimoTerceiro(codigoContrato));
         try {
             connectSQLServer.dbConnect().close();
         } catch (SQLException e) {
@@ -58,10 +53,10 @@ public class DecimoTerceiroController {
         for(TerceirizadoDecimoTerceiro calculo : lista) {
             Date ultimoDiaDoAno = Date.valueOf("" + calculo.getInicioContagem().toLocalDate().getYear() + "-12-31");
             try {
-                calculo.setValoresDecimoTerceiro(restituicaoDecimoTerceiro.CalculaRestituicaoDecimoTerceiro(calculo.getCodigoTerceirizadoContrato(), calculo.getParcelas(), calculo.getInicioContagem(), ultimoDiaDoAno));
+                calculo.setValoresDecimoTerceiro(restituicaoDecimoTerceiro.CalculaRestituicaoDecimoTerceiro(calculo.getCodigoTerceirizadoContrato(), calculo.getParcelas(),
+                        calculo.getInicioContagem(), ultimoDiaDoAno));
                 calculo.setFimContagem(ultimoDiaDoAno);
             }catch(NullPointerException npe) {
-                System.err.println(npe.getStackTrace());
                 ErrorMessage error = new ErrorMessage();
                 error.error = npe.getMessage();
                 json = gson.toJson(error);
@@ -72,7 +67,6 @@ public class DecimoTerceiroController {
         try {
             connectSQLServer.dbConnect().close();
         }catch(SQLException sqle) {
-            System.err.println(sqle.getStackTrace());
             return Response.accepted().status(500).build();
         }
         return Response.ok(json, MediaType.APPLICATION_JSON).build();
@@ -89,6 +83,7 @@ public class DecimoTerceiroController {
         RestituicaoDecimoTerceiro restituicaoDecimoTerceiro = new RestituicaoDecimoTerceiro(connectSQLServer.dbConnect());
         String json = "";
         for(TerceirizadoDecimoTerceiro decimoTerceiro : lista) {
+            Date ultimoDiaDoAno = Date.valueOf("" + decimoTerceiro.getInicioContagem().toLocalDate().getYear() + "-12-31");
             if(decimoTerceiro.getTipoRestituicao().equals("RESGATE")) {
                 try {
                     restituicaoDecimoTerceiro.RegistraRestituicaoDecimoTerceiro(decimoTerceiro.getCodigoTerceirizadoContrato(),
@@ -108,19 +103,24 @@ public class DecimoTerceiroController {
                 }
             }else if(decimoTerceiro.getTipoRestituicao().equals("MOVIMENTAÇÃO")) {
                 try {
+                    decimoTerceiro.setValoresDecimoTerceiro(restituicaoDecimoTerceiro.CalculaRestituicaoDecimoTerceiro(decimoTerceiro.getCodigoTerceirizadoContrato(),
+                            decimoTerceiro.getParcelas(), decimoTerceiro.getInicioContagem(), ultimoDiaDoAno));
+                    decimoTerceiro.setFimContagem(ultimoDiaDoAno);
                     restituicaoDecimoTerceiro.RegistraRestituicaoDecimoTerceiro(decimoTerceiro.getCodigoTerceirizadoContrato(),
                             decimoTerceiro.getTipoRestituicao(),
                             decimoTerceiro.getParcelas(),
                             decimoTerceiro.getInicioContagem(),
-                            0,
-                            0,
+                            decimoTerceiro.getValoresDecimoTerceiro().getValorDecimoTerceiro(),
+                            decimoTerceiro.getValoresDecimoTerceiro().getValorIncidenciaDecimoTerceiro(),
                             decimoTerceiro.getValorMovimentado(),
                             decimoTerceiro.getId());
-                }catch(NullPointerException npe) {
-                    System.err.println(npe.getStackTrace());
+                } catch(NullPointerException npe) {
                     ErrorMessage error = new ErrorMessage();
                     error.error = "Houve um erro ao tentar registrar o cálculo !";
                     json = gson.toJson(error);
+                    return Response.ok(json, MediaType.APPLICATION_JSON).build();
+                }catch (RuntimeException rte) {
+                    json = gson.toJson(ErrorMessage.handleError(rte));
                     return Response.ok(json, MediaType.APPLICATION_JSON).build();
                 }
             }
@@ -128,7 +128,6 @@ public class DecimoTerceiroController {
         try {
             connectSQLServer.dbConnect().close();
         }catch (SQLException sqle) {
-            System.err.println(sqle.getStackTrace());
             return Response.accepted().status(500).build();
         }
         JsonObject jsonObject = new JsonObject();
