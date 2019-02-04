@@ -9,9 +9,9 @@ public class TotalMensal {
     private float incidencia;
     private float multaFGTS;
     private float total;
-    private int numeroTerceirizados;
 
-    public TotalMensal (float ferias, float tercoConstitucional, float decimoTerceiro, float incidencia, float multaFGTS, float total, String funcao, int numeroTerceirizados) {
+    public TotalMensal (float ferias, float tercoConstitucional, float decimoTerceiro, float incidencia, float multaFGTS, float total, String funcao) {
+
         this.ferias = ferias;
         this.tercoConstitucional = tercoConstitucional;
         this.decimoTerceiro = decimoTerceiro;
@@ -19,7 +19,7 @@ public class TotalMensal {
         this.multaFGTS = multaFGTS;
         this.total = total;
         this.funcao = funcao;
-        this.numeroTerceirizados = numeroTerceirizados;
+
     }
 
     public String getFuncao() {
@@ -50,16 +50,4 @@ public class TotalMensal {
         return total;
     }
 
-    @Override
-    public String toString() {
-        return "TotalMensal{" +
-                "funcao='" + funcao + '\'' +
-                ", ferias=" + ferias +
-                ", tercoConstitucional=" + tercoConstitucional +
-                ", decimoTerceiro=" + decimoTerceiro +
-                ", incidencia=" + incidencia +
-                ", multaFGTS=" + multaFGTS +
-                ", total=" + total +
-                '}';
-    }
 }

@@ -10,7 +10,11 @@ public class RegistroHistRestituicaoRescisao {
     private int pCodTipoRestituicao;
     private int pCodTipoRescisao;
     private Date pDataDesligamento;
-    private Date pDataInicioFerias;
+    private Date pDataInicioFeriasIntegrais;
+    private Date pDataFimFeriasIntegrais;
+    private Date pDataInicioFeriasProporcionais;
+    private Date pDataFimFeriasProporcionais;
+    private Date pDataInicioContagemDecTer;
     private float pValorDecimoTerceiro;
     private float pIncidSubmod41DecTerceiro;
     private float pIncidMultaFgtsDecTerceiro;
@@ -26,7 +30,6 @@ public class RegistroHistRestituicaoRescisao {
     private float valorIncidenciaTercoProporcional;
     private float valorFGTSFeriasProporcional;
     private float valorFGTSTercoProporcional;
-
     private float pMultaFgtsSalario;
     private Date pDataReferencia;
     private String pAutorizado;
@@ -40,7 +43,11 @@ public class RegistroHistRestituicaoRescisao {
                                            int pCodTipoRestituicao,
                                            int pCodTipoRescisao,
                                            Date pDataDesligamento,
-                                           Date pDataInicioFerias,
+                                           Date pDataInicioFeriasIntegrais,
+                                           Date pDataFimFeriasIntegrais,
+                                           Date pDataInicioFeriasProporcionais,
+                                           Date pDataFimFeriasProporcionais,
+                                           Date pDataInicioContagemDecTer,
                                            float pValorDecimoTerceiro,
                                            float pIncidSubmod41DecTerceiro,
                                            float pIncidMultaFgtsDecTerceiro,
@@ -69,7 +76,11 @@ public class RegistroHistRestituicaoRescisao {
         this.pCodTipoRestituicao = pCodTipoRestituicao;
         this.pCodTipoRescisao = pCodTipoRescisao;
         this.pDataDesligamento = pDataDesligamento;
-        this.pDataInicioFerias = pDataInicioFerias;
+        this.pDataInicioFeriasIntegrais = pDataInicioFeriasIntegrais;
+        this.pDataFimFeriasIntegrais = pDataFimFeriasIntegrais;
+        this.pDataInicioFeriasProporcionais = pDataInicioFeriasProporcionais;
+        this.pDataFimFeriasProporcionais = pDataFimFeriasProporcionais;
+        this.pDataInicioContagemDecTer = pDataInicioContagemDecTer;
         this.pValorDecimoTerceiro = pValorDecimoTerceiro;
         this.pIncidSubmod41DecTerceiro = pIncidSubmod41DecTerceiro;
         this.pIncidMultaFgtsDecTerceiro = pIncidMultaFgtsDecTerceiro;
@@ -109,7 +120,15 @@ public class RegistroHistRestituicaoRescisao {
 
     public Date getpDataDesligamento() { return pDataDesligamento; }
 
-    public Date getpDataInicioFerias() { return pDataInicioFerias; }
+    public Date getpDataInicioFeriasIntegrais() { return pDataInicioFeriasIntegrais; }
+
+    public Date getpDataFimFeriasIntegrais() { return pDataFimFeriasIntegrais; }
+
+    public Date getpDataInicioFeriasProporcionais() { return pDataInicioFeriasProporcionais; }
+
+    public Date getpDataFimFeriasProporcionais() { return pDataFimFeriasProporcionais; }
+
+    public Date getpDataInicioContagemDecTer() { return pDataInicioContagemDecTer; }
 
     public float getpValorDecimoTerceiro() { return pValorDecimoTerceiro; }
 

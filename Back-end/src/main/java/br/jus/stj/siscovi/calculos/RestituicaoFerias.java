@@ -1,11 +1,10 @@
 package br.jus.stj.siscovi.calculos;
 
 import br.jus.stj.siscovi.model.CodFuncaoContratoECodFuncaoTerceirizadoModel;
-import br.jus.stj.siscovi.model.RegistroDeFeriasModel;
+import br.jus.stj.siscovi.model.RegistroRestituicaoFerias;
 import br.jus.stj.siscovi.model.ValorRestituicaoFeriasModel;
 import br.jus.stj.siscovi.dao.sql.*;
 
-import javax.ws.rs.DELETE;
 import java.sql.*;
 //import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -230,9 +229,9 @@ public class RestituicaoFerias {
                     /*Seleciona as datas que compõem os subperíodos gerados pelas alterações de percentual no mês.*/
 
                     List<Date> datas = consulta.RetornaSubperiodosMesPercentual(vCodContrato,
-                            vMes,
-                            vAno,
-                            vDataReferencia);
+                                                                                vMes,
+                                                                                vAno,
+                                                                                vDataReferencia);
 
                     /*Loop contendo das datas das alterações de percentuais que comporão os subperíodos.*/
 
@@ -307,10 +306,10 @@ public class RestituicaoFerias {
                     /*Seleciona as datas que compõem os subperíodos gerados pelas alterações de remuneração no mês.*/
 
                     List<Date> datas = consulta.RetornaSubperiodosMesRemuneracao(vCodContrato,
-                            vMes,
-                            vAno,
-                            tupla.getCodFuncaoContrato(),
-                            vDataReferencia);
+                                                                                 vMes,
+                                                                                 vAno,
+                                                                                 tupla.getCodFuncaoContrato(),
+                                                                                 vDataReferencia);
 
                     /*Loop contendo das datas das alterações de remuneração que comporão os subperíodos.*/
 
@@ -383,10 +382,10 @@ public class RestituicaoFerias {
                     /*Seleciona as datas que compõem os subperíodos gerados pelas alterações de percentual e remuneração no mês.*/
 
                     List<Date> datas = consulta.RetornaSubperiodosMesPercentualRemuneracao(vCodContrato,
-                            vMes,
-                            vAno,
-                            tupla.getCodFuncaoContrato(),
-                            vDataReferencia);
+                                                                                           vMes,
+                                                                                           vAno,
+                                                                                           tupla.getCodFuncaoContrato(),
+                                                                                           vDataReferencia);
 
                     /*Loop contendo das datas das alterações de percentual e remuneração que comporão os subperíodos.*/
 
@@ -516,11 +515,11 @@ public class RestituicaoFerias {
         }
 
         return new ValorRestituicaoFeriasModel(vTotalFerias,
-                vTotalTercoConstitucional,
-                vTotalIncidenciaFerias,
-                vTotalIncidenciaTerco,
-                pInicioPeriodoAquisitivo,
-                pFimPeriodoAquisitivo);
+                                               vTotalTercoConstitucional,
+                                               vTotalIncidenciaFerias,
+                                               vTotalIncidenciaTerco,
+                                               pInicioPeriodoAquisitivo,
+                                               pFimPeriodoAquisitivo);
 
     }
 
@@ -597,27 +596,27 @@ public class RestituicaoFerias {
         /*Gravação no banco*/
 
         vCodTbRestituicaoFerias = insert.InsertRestituicaoFerias(pCodTerceirizadoContrato,
-                vCodTipoRestituicao,
-                pDiasVendidos,
-                pInicioFerias,
-                pFimFerias,
-                pInicioPeriodoAquisitivo,
-                pFimPeriodoAquisitivo,
-                pParcela,
-                pTotalFerias,
-                pTotalTercoConstitucional,
-                pTotalIncidenciaFerias,
-                pTotalIncidenciaTerco,
-                pLoginAtualizacao);
+                                                                 vCodTipoRestituicao,
+                                                                 pDiasVendidos,
+                                                                 pInicioFerias,
+                                                                 pFimFerias,
+                                                                 pInicioPeriodoAquisitivo,
+                                                                 pFimPeriodoAquisitivo,
+                                                                 pParcela,
+                                                                 pTotalFerias,
+                                                                 pTotalTercoConstitucional,
+                                                                 pTotalIncidenciaFerias,
+                                                                 pTotalIncidenciaTerco,
+                                                                 pLoginAtualizacao);
 
         if (pTipoRestituicao.equals("MOVIMENTAÇÃO")) {
 
             insert.InsertSaldoResidualFerias(vCodTbRestituicaoFerias,
-                    vFerias,
-                    vTerco,
-                    vIncidenciaFerias,
-                    vIncidenciaTerco,
-                    pLoginAtualizacao);
+                                             vFerias,
+                                             vTerco,
+                                             vIncidenciaFerias,
+                                             vIncidenciaTerco,
+                                             pLoginAtualizacao);
 
         }
 
@@ -625,7 +624,7 @@ public class RestituicaoFerias {
 
     }
 
-    public Integer RecalculoRestituicaoFerias (int pCodRestituicaoFerias,
+    public void RecalculoRestituicaoFerias (int pCodRestituicaoFerias,
                                                String pTipoRestituicao,
                                                int pDiasVendidos,
                                                Date pInicioFerias,
@@ -648,7 +647,7 @@ public class RestituicaoFerias {
 
         int vCodTipoRestituicao = consulta.RetornaCodTipoRestituicao(pTipoRestituicao);
 
-        RegistroDeFeriasModel registro = consulta.RetornaRegistroRestituicaoFerias(pCodRestituicaoFerias);
+        RegistroRestituicaoFerias registro = consulta.RetornaRegistroRestituicaoFerias(pCodRestituicaoFerias);
 
         if (registro == null) {
 
@@ -659,22 +658,22 @@ public class RestituicaoFerias {
 
 
         vRetornoChavePrimaria = insert.InsertHistoricoRestituicaoFerias(registro.getpCod(),
-                registro.getpCodTipoRestituicao(),
-                registro.getpDataInicioPeriodoAquisitivo(),
-                registro.getpDataFimPeriodoAquisitivo(),
-                registro.getpDataInicioUsufruto(),
-                registro.getpDataFimUsufruto(),
-                registro.getpValorFerias(),
-                registro.getpValorTercoConstitucional(),
-                registro.getpIncidenciaSubmod41Ferias(),
-                registro.getpIncidenciaSubmod41Terco(),
-                registro.getpParcela(),
-                registro.getpDataReferencia(),
-                registro.getpDiasVendidos(),
-                registro.getpAutorizado(),
-                registro.getpRestituido(),
-                registro.getpObservacao(),
-                registro.getpLoginAtualizacao());
+                                                                        registro.getpCodTipoRestituicao(),
+                                                                        registro.getpDataInicioPeriodoAquisitivo(),
+                                                                        registro.getpDataFimPeriodoAquisitivo(),
+                                                                        registro.getpDataInicioUsufruto(),
+                                                                        registro.getpDataFimUsufruto(),
+                                                                        registro.getpValorFerias(),
+                                                                        registro.getpValorTercoConstitucional(),
+                                                                        registro.getpIncidenciaSubmod41Ferias(),
+                                                                        registro.getpIncidenciaSubmod41Terco(),
+                                                                        registro.getpParcela(),
+                                                                        registro.getpDataReferencia(),
+                                                                        registro.getpDiasVendidos(),
+                                                                        registro.getpAutorizado(),
+                                                                        registro.getpRestituido(),
+                                                                        registro.getpObservacao(),
+                                                                        registro.getpLoginAtualizacao());
 
         delete.DeleteSaldoResidualRescisao(pCodRestituicaoFerias);
 
@@ -707,21 +706,21 @@ public class RestituicaoFerias {
         }
 
         update.UpdateRestituicaoFerias(pCodRestituicaoFerias,
-                vCodTipoRestituicao,
-                pInicioPeriodoAquisitivo,
-                pFimPeriodoAquisitivo,
-                pInicioFerias,
-                pFimFerias,
-                pDiasVendidos,
-                pTotalFerias,
-                pTotalTercoConstitucional,
-                pTotalIncidenciaFerias,
-                pTotalIncidenciaTerco,
-                pParcela,
-                "",
-                "",
-                "",
-                pLoginAtualizacao);
+                                       vCodTipoRestituicao,
+                                       pInicioPeriodoAquisitivo,
+                                       pFimPeriodoAquisitivo,
+                                       pInicioFerias,
+                                       pFimFerias,
+                                       pDiasVendidos,
+                                       pTotalFerias,
+                                       pTotalTercoConstitucional,
+                                       pTotalIncidenciaFerias,
+                                       pTotalIncidenciaTerco,
+                                       pParcela,
+                                       "",
+                                       "",
+                                      "",
+                                       pLoginAtualizacao);
 
         if (pTipoRestituicao.equals("MOVIMENTAÇÃO")) {
 
@@ -733,8 +732,6 @@ public class RestituicaoFerias {
                     pLoginAtualizacao);
 
         }
-
-        return vRetornoChavePrimaria;
 
     }
 

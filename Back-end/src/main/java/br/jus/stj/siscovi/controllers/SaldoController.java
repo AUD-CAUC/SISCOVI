@@ -3,7 +3,7 @@ package br.jus.stj.siscovi.controllers;
 
 import br.jus.stj.siscovi.dao.ConnectSQLServer;
 import br.jus.stj.siscovi.dao.SaldoIndividualContaVinculadaDAO;
-import br.jus.stj.siscovi.dao.SaldoTotalContaVinculadaDAO;
+import br.jus.stj.siscovi.dao.SaldoFuncaoContaVinculadaDAO;
 import br.jus.stj.siscovi.helpers.ErrorMessage;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -20,15 +20,15 @@ import java.sql.SQLException;
 public class SaldoController {
 
     @GET
-    @Path("/getSaldoTotal/{codigoContrato}/{codigoUsuario}")
+    @Path("/getSaldoFuncao/{codigoContrato}/{codigoUsuario}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getSaldoTotal(@PathParam("codigoContrato") int codigoContrato, @PathParam("codigoUsuario") int codigoUsuario) {
         ConnectSQLServer connectSQLServer = new ConnectSQLServer();
-        SaldoTotalContaVinculadaDAO saldoTotalContaVinculadaDAO = new SaldoTotalContaVinculadaDAO(connectSQLServer.dbConnect());
+        SaldoFuncaoContaVinculadaDAO saldoFuncaoContaVinculadaDAO = new SaldoFuncaoContaVinculadaDAO(connectSQLServer.dbConnect());
         String json;
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
         try{
-            json = gson.toJson(saldoTotalContaVinculadaDAO.getSaldoContaVinculadaContrato(codigoContrato, codigoUsuario));
+            json = gson.toJson(saldoFuncaoContaVinculadaDAO.getSaldoContaVinculadaFuncao(codigoContrato, codigoUsuario));
             connectSQLServer.dbConnect().close();
         }catch (SQLException slqe) {
             ErrorMessage errorMessage = new ErrorMessage();

@@ -1,7 +1,7 @@
 package br.jus.stj.siscovi.calculos;
 
 import br.jus.stj.siscovi.model.CodFuncaoContratoECodFuncaoTerceirizadoModel;
-import br.jus.stj.siscovi.model.RegistroDeDecimoTerceiroModel;
+import br.jus.stj.siscovi.model.RegistroRestituicaoDecimoTerceiro;
 import br.jus.stj.siscovi.model.ValorRestituicaoDecimoTerceiroModel;
 import br.jus.stj.siscovi.dao.sql.*;
 
@@ -405,7 +405,7 @@ public class RestituicaoDecimoTerceiro {
         }
 
         return new ValorRestituicaoDecimoTerceiroModel(vTotalDecimoTerceiro,
-                vTotalIncidencia);
+                                                       vTotalIncidencia);
 
     }
 
@@ -420,7 +420,7 @@ public class RestituicaoDecimoTerceiro {
      * @param pValorDecimoTerceiro;
      * @param pValorIncidencia;
      * @param pLoginAtualizacao;
-     */
+    */
 
     public Integer RegistraRestituicaoDecimoTerceiro (int pCodTerceirizadoContrato,
                                                       String pTipoRestituicao,
@@ -480,19 +480,19 @@ public class RestituicaoDecimoTerceiro {
         /*Gravação no banco*/
 
         vCodTbRestituicao13 = insert.InsertRestituicaoDecimoTerceiro(pCodTerceirizadoContrato,
-                vCodTipoRestituicao,
-                pNumeroParcela,
-                pInicioContagem,
-                pValorDecimoTerceiro,
-                pValorIncidencia,
-                pLoginAtualizacao);
+                                                                     vCodTipoRestituicao,
+                                                                     pNumeroParcela,
+                                                                     pInicioContagem,
+                                                                     pValorDecimoTerceiro,
+                                                                     pValorIncidencia,
+                                                                     pLoginAtualizacao);
 
         if (pTipoRestituicao.equals("MOVIMENTAÇÃO")) {
 
             insert.InsertSaldoResidualDecimoTerceiro(vCodTbRestituicao13,
-                    vValor,
-                    vIncidencia,
-                    pLoginAtualizacao);
+                                                     vValor,
+                                                     vIncidencia,
+                                                     pLoginAtualizacao);
 
         }
 
@@ -517,7 +517,7 @@ public class RestituicaoDecimoTerceiro {
 
         int vCodTipoRestituicao = consulta.RetornaCodTipoRestituicao(pTipoRestituicao);
 
-        RegistroDeDecimoTerceiroModel registro = consulta.RetornaRegistroRestituicaoDecimoTerceiro(pCodRestituicaoDecimoTerceiro);
+        RegistroRestituicaoDecimoTerceiro registro = consulta.RetornaRegistroRestituicaoDecimoTerceiro(pCodRestituicaoDecimoTerceiro);
 
         if (registro == null) {
 
@@ -526,16 +526,16 @@ public class RestituicaoDecimoTerceiro {
         }
 
         vRetornoChavePrimaria = insert.InsertHistoricoRestituicaoDecimoTerceiro(registro.getpCod(),
-                registro.getpCodTipoRestituicao(),
-                registro.getpParcela(),
-                registro.getpDataInicioContagem(),
-                registro.getpValor(),
-                registro.getpIncidenciaSubmod41(),
-                registro.getpDataReferencia(),
-                registro.getpAutorizado(),
-                registro.getpRestituido(),
-                registro.getpObservacao(),
-                registro.getpLoginAtualizacao());
+                                                                                registro.getpCodTipoRestituicao(),
+                                                                                registro.getpParcela(),
+                                                                                registro.getpDataInicioContagem(),
+                                                                                registro.getpValor(),
+                                                                                registro.getpIncidenciaSubmodulo41(),
+                                                                                registro.getpDataReferencia(),
+                                                                                registro.getpAutorizado(),
+                                                                                registro.getpRestituido(),
+                                                                                registro.getpObservacao(),
+                                                                                registro.getpLoginAtualizacao());
 
         delete.DeleteSaldoResidualRescisao(pCodRestituicaoDecimoTerceiro);
 
@@ -566,22 +566,22 @@ public class RestituicaoDecimoTerceiro {
         }
 
         update.UpdateRestituicaoDecimoTerceiro(pCodRestituicaoDecimoTerceiro,
-                vCodTipoRestituicao,
-                pNumeroParcela,
-                pInicioContagem,
-                pValorDecimoTerceiro,
-                pValorIncidencia,
-                "",
-                "",
-                "",
-                pLoginAtualizacao);
+                                               vCodTipoRestituicao,
+                                               pNumeroParcela,
+                                               pInicioContagem,
+                                               pValorDecimoTerceiro,
+                                               pValorIncidencia,
+                                               "",
+                                               "",
+                                               "",
+                                               pLoginAtualizacao);
 
         if (pTipoRestituicao.equals("MOVIMENTAÇÃO")) {
 
             insert.InsertSaldoResidualDecimoTerceiro(pCodRestituicaoDecimoTerceiro,
-                    vValor,
-                    vIncidencia,
-                    pLoginAtualizacao);
+                                                     vValor,
+                                                     vIncidencia,
+                                                     pLoginAtualizacao);
 
         }
 

@@ -1,5 +1,7 @@
 package br.jus.stj.siscovi.calculos;
 
+import br.jus.stj.siscovi.dao.sql.ConsultaTSQL;
+
 import java.sql.*;
 
 public class DecimoTerceiro {
@@ -14,79 +16,31 @@ public class DecimoTerceiro {
 
     /**
      * Função que retorna a data de inicio da contagem do décimo terceiro
-     * de um terceirizado em um determinado contrato.
+     * de um terceirizado em um determinado contrato em determinado ano.
      * @param pCodTerceirizadoContrato
+     * @param pAnoContagem
      */
 
-    public Date RetornaDataInicioContagem (int pCodTerceirizadoContrato) {
+    public Date RetornaDataInicioContagem (int pCodTerceirizadoContrato, int pAnoContagem) {
 
-        PreparedStatement preparedStatement;
-        ResultSet resultSet;
+        ConsultaTSQL consulta = new ConsultaTSQL(connection);
 
-        Date vMaxDataCalculo = null;
+        Date vDataDisponibilizacao = null;
         Date vDataRetorno = null;
 
-        /* Seleciona a máxima data de início de contagem existente ou atribui valor nulo a variável. */
+        /* Determina se a data de inicio da contagem do 13 é a data de disponibilização ou o primeiro dia do ano de desligamento. */
 
-        try {
+        vDataDisponibilizacao = consulta.RetornaDataDisponibilizacaoTerceirizado(pCodTerceirizadoContrato);
 
-            preparedStatement = connection.prepareStatement("SELECT MAX(DATA_INICIO_CONTAGEM)" +
-                    " FROM tb_restituicao_decimo_terceiro" +
-                    " WHERE COD_TERCEIRIZADO_CONTRATO = ?" +
-                    " AND PARCELA IN (0,2);");
+        if (vDataDisponibilizacao.toLocalDate().getYear() == pAnoContagem) {
 
-            preparedStatement.setInt(1, pCodTerceirizadoContrato);
-
-            resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-
-                vMaxDataCalculo = resultSet.getDate(1);
-
-                if (vMaxDataCalculo != null) {
-
-                    vDataRetorno = Date.valueOf((vMaxDataCalculo.toLocalDate().plusYears(1).withDayOfYear(1)));
-
-                }
-
-            } else {
-
-                vMaxDataCalculo = null;
-
-            }
-
-        } catch (SQLException sqle) {
-
-            throw new NullPointerException("Falha na consulta ao Banco de Dados.");
+            vDataRetorno = vDataDisponibilizacao;
 
         }
 
-        if (vMaxDataCalculo == null) {
+        else {
 
-            try {
-
-                preparedStatement = connection.prepareStatement("SELECT DATA_DISPONIBILIZACAO\n" +
-                        " FROM tb_terceirizado_contrato\n" +
-                        " WHERE cod = ?;");
-
-                preparedStatement.setInt(1, pCodTerceirizadoContrato);
-
-                resultSet = preparedStatement.executeQuery();
-
-                if (resultSet.next()) {
-
-                    vDataRetorno = resultSet.getDate(1);
-
-                } else {
-
-                    throw new NullPointerException("Data de disponibilização do terceirizado não encontrada.");
-
-                }
-
-            } catch (SQLException e) {
-
-
-            }
+            vDataRetorno = Date.valueOf(pAnoContagem + "-01-01");
 
         }
 

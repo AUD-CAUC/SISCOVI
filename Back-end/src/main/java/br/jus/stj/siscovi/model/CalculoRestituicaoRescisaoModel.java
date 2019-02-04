@@ -1,6 +1,7 @@
 package br.jus.stj.siscovi.model;
 
 public class CalculoRestituicaoRescisaoModel {
+
     private TerceirizadoRescisao terceirizadoRescisao;
     private ValorRestituicaoRescisaoModel valorRestituicaoRescisao;
 
@@ -8,4 +9,5 @@ public class CalculoRestituicaoRescisaoModel {
         this.terceirizadoRescisao = terceirizadoRescisao;
         this.valorRestituicaoRescisao = valorRestituicaoRescisao;
     }
+
 }

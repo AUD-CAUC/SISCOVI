@@ -3,6 +3,7 @@ package br.jus.stj.siscovi.model;
 import java.sql.Date;
 
 public class TerceirizadoRescisao {
+
     private final int codTerceirizadoContrato;
     private final String nomeTerceirizado;
     private Date dataDesligamento;

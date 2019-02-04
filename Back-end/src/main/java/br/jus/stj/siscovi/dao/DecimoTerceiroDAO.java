@@ -2,10 +2,7 @@ package br.jus.stj.siscovi.dao;
 
 import br.jus.stj.siscovi.calculos.DecimoTerceiro;
 import br.jus.stj.siscovi.calculos.Saldo;
-import br.jus.stj.siscovi.model.AvaliacaoDecimoTerceiro;
-import br.jus.stj.siscovi.model.DecimoTerceiroPendenteModel;
-import br.jus.stj.siscovi.model.TerceirizadoDecimoTerceiro;
-import br.jus.stj.siscovi.model.ValorRestituicaoDecimoTerceiroModel;
+import br.jus.stj.siscovi.model.*;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -22,13 +19,13 @@ public class DecimoTerceiroDAO {
      * @param codigoContrato
      * @return
      */
-    public ArrayList<TerceirizadoDecimoTerceiro> getListaTerceirizadoParaCalculoDeDecimoTerceiro(int codigoContrato) {
+    public ArrayList<TerceirizadoDecimoTerceiro> getListaTerceirizadoParaCalculoDeDecimoTerceiro(int codigoContrato, int pAnoContagem) {
         ArrayList<TerceirizadoDecimoTerceiro> terceirizados = new ArrayList<>();
         String sql = "SELECT TC.COD, " +
-                " T.NOME" +
-                " FROM tb_terceirizado_contrato TC " +
-                " JOIN tb_terceirizado T ON T.COD = TC.COD_TERCEIRIZADO " +
-                " WHERE COD_CONTRATO = ? AND T.ATIVO = 'S'";
+                           " T.NOME" +
+                      " FROM tb_terceirizado_contrato TC " +
+                        " JOIN tb_terceirizado T ON T.COD = TC.COD_TERCEIRIZADO " +
+                      " WHERE COD_CONTRATO = ? AND T.ATIVO = 'S'";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, codigoContrato);
             DecimoTerceiro decimoTerceiro = new DecimoTerceiro(connection);
@@ -36,7 +33,7 @@ public class DecimoTerceiroDAO {
             float vSaldoDecimoTericeiro = 0; //Este saldo é correspondente ao ano da data de início da contagem.
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
-                    Date inicioContagem = decimoTerceiro.RetornaDataInicioContagem(resultSet.getInt("COD"));
+                    Date inicioContagem = decimoTerceiro.RetornaDataInicioContagem(resultSet.getInt("COD"), pAnoContagem);
                     vSaldoDecimoTericeiro = saldoDecimoTerceiro.getSaldoContaVinculada(resultSet.getInt("COD"), inicioContagem.toLocalDate().getYear(), 1, 3);
                     TerceirizadoDecimoTerceiro terceirizadoDecimoTerceiro = new TerceirizadoDecimoTerceiro(resultSet.getInt("COD"),
                             resultSet.getString("NOME"),
@@ -75,9 +72,8 @@ public class DecimoTerceiroDAO {
                     " JOIN tb_restituicao_decimo_terceiro RDT ON RDT.COD_TERCEIRIZADO_CONTRATO =TC.COD_TERCEIRIZADO" +
                     " JOIN tb_tipo_restituicao TR ON TR.COD=RDT.COD_TIPO_RESTITUICAO " +
                     " JOIN tb_funcao_terceirizado FT ON FT.COD_TERCEIRIZADO_CONTRATO= TC.cod" +
-                    " JOIN tb_funcao_contrato FC ON FC.COD=FT.COD_FUNCAO_CONTRATO" +
-                    " JOIN tb_funcao TF  ON TF.COD=FC.COD_FUNCAO" +
-                    " WHERE TC.COD_CONTRATO = ? AND T.ATIVO = 'S' AND (AUTORIZADO IS NULL)";
+                    " JOIN tb_funcao TF  ON TF.COD=FT.COD_FUNCAO_CONTRATO" +
+                    " WHERE COD_CONTRATO = ? AND T.ATIVO = 'S' AND (AUTORIZADO IS NULL)";
             try(PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 preparedStatement.setInt(1, codigoContrato);
                 try(ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -116,7 +112,7 @@ public class DecimoTerceiroDAO {
                     return "EM ANÁLISE DE EXECUÇÃO";
             case 4:
                 if(autorizado.toUpperCase().equals("S") && restituido.toUpperCase().equals("N"));
-                    return "REJEITADO";
+                return "REJEITADO";
             case 5:
                 if(autorizado.toUpperCase().equals("S") && restituido.toUpperCase().equals("S"))
                     return "RESTITUIDO";
@@ -159,9 +155,8 @@ public class DecimoTerceiroDAO {
                     " JOIN tb_restituicao_decimo_terceiro RDT ON RDT.COD_TERCEIRIZADO_CONTRATO =TC.COD_TERCEIRIZADO" +
                     " JOIN tb_tipo_restituicao TR ON TR.COD=RDT.COD_TIPO_RESTITUICAO " +
                     " JOIN tb_funcao_terceirizado FT ON FT.COD_TERCEIRIZADO_CONTRATO= TC.cod" +
-                    " JOIN tb_funcao_contrato FC ON FC.COD=FT.COD_FUNCAO_CONTRATO" +
-                    " JOIN tb_funcao TF  ON TF.COD=FC.COD_FUNCAO" +
-                    " WHERE TC.COD_CONTRATO = ? AND T.ATIVO = 'S' AND (AUTORIZADO='n' OR AUTORIZADO='N')";
+                    " JOIN tb_funcao TF  ON TF.COD=FT.COD_FUNCAO_CONTRATO" +
+                    " WHERE COD_CONTRATO = ? AND T.ATIVO = 'S' AND (AUTORIZADO='n' OR AUTORIZADO='N')";
             try(PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 preparedStatement.setInt(1, codigoContrato);
                 try(ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -211,9 +206,8 @@ public class DecimoTerceiroDAO {
                     " JOIN tb_restituicao_decimo_terceiro RDT ON RDT.COD_TERCEIRIZADO_CONTRATO =TC.COD_TERCEIRIZADO" +
                     " JOIN tb_tipo_restituicao TR ON TR.COD=RDT.COD_TIPO_RESTITUICAO " +
                     " JOIN tb_funcao_terceirizado FT ON FT.COD_TERCEIRIZADO_CONTRATO= TC.cod" +
-                    " JOIN tb_funcao_contrato FC ON FC.COD=FT.COD_FUNCAO_CONTRATO" +
-                    " JOIN tb_funcao TF  ON TF.COD=FC.COD_FUNCAO" +
-                    " WHERE TC.COD_CONTRATO = ? AND T.ATIVO = 'S' AND (AUTORIZADO='s' OR AUTORIZADO='S') AND (RESTITUIDO IS NULL)";
+                    " JOIN tb_funcao TF  ON TF.COD=FT.COD_FUNCAO_CONTRATO" +
+                    " WHERE COD_CONTRATO = ? AND T.ATIVO = 'S' AND (AUTORIZADO='s' OR AUTORIZADO='S') AND (RESTITUIDO IS NULL)";
             try(PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 preparedStatement.setInt(1, codigoContrato);
                 try(ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -263,9 +257,8 @@ public class DecimoTerceiroDAO {
                     " JOIN tb_restituicao_decimo_terceiro RDT ON RDT.COD_TERCEIRIZADO_CONTRATO =TC.COD_TERCEIRIZADO" +
                     " JOIN tb_tipo_restituicao TR ON TR.COD=RDT.COD_TIPO_RESTITUICAO " +
                     " JOIN tb_funcao_terceirizado FT ON FT.COD_TERCEIRIZADO_CONTRATO= TC.cod" +
-                    " JOIN tb_funcao_contrato FC ON FC.COD=FT.COD_FUNCAO_CONTRATO" +
-                    " JOIN tb_funcao TF  ON TF.COD=FC.COD_FUNCAO" +
-                    " WHERE TC.COD_CONTRATO = ? AND T.ATIVO = 'S' AND (AUTORIZADO='s' OR AUTORIZADO='S') AND (RESTITUIDO='n' OR RESTITUIDO='N')";
+                    " JOIN tb_funcao TF  ON TF.COD=FT.COD_FUNCAO_CONTRATO" +
+                    " WHERE COD_CONTRATO = ? AND T.ATIVO = 'S' AND (AUTORIZADO='s' OR AUTORIZADO='S') AND (RESTITUIDO='n' OR RESTITUIDO='N')";
             try(PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 preparedStatement.setInt(1, codigoContrato);
                 try(ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -323,10 +316,10 @@ public class DecimoTerceiroDAO {
         int codGestor = new ContratoDAO(connection).codigoGestorContrato(codigoUsuario, codigoContrato);
         List<TerceirizadoDecimoTerceiro> lista = new ArrayList<>();
         if(codigo == codGestor) {
-            String sql = "SELECT RDT.COD_TERCEIRIZADO_CONTRATO," +
+            String sql = "SELECT RDT.COD_TERCEIRIZADO_CONTRATO, " +
                     " T.NOME as TERCEIRIZADO," +
                     " TR.NOME as TIPO," +
-                    " TF.NOME AS FUNÇÃO," +
+                    " TF.NOME AS \"FUNÇÃO\"," +
                     " RDT.PARCELA," +
                     " RDT.DATA_INICIO_CONTAGEM," +
                     " RDT.VALOR," +
@@ -337,13 +330,12 @@ public class DecimoTerceiroDAO {
                     " RDT.COD AS CODIGO," +
                     " RDT.OBSERVACAO" +
                     " FROM tb_terceirizado_contrato TC" +
-                    " JOIN tb_terceirizado T ON T.COD = TC.COD_TERCEIRIZADO" +
-                    " JOIN tb_restituicao_decimo_terceiro RDT ON RDT.COD_TERCEIRIZADO_CONTRATO =TC.COD" +
-                    " JOIN tb_tipo_restituicao TR ON TR.COD=RDT.COD_TIPO_RESTITUICAO" +
+                    " JOIN tb_terceirizado T ON T.COD = TC.COD_TERCEIRIZADO " +
+                    " JOIN tb_restituicao_decimo_terceiro RDT ON RDT.COD_TERCEIRIZADO_CONTRATO =TC.COD_TERCEIRIZADO" +
+                    " JOIN tb_tipo_restituicao TR ON TR.COD=RDT.COD_TIPO_RESTITUICAO " +
                     " JOIN tb_funcao_terceirizado FT ON FT.COD_TERCEIRIZADO_CONTRATO= TC.cod" +
-                    " JOIN tb_funcao_contrato FC ON FC.COD=FT.COD_FUNCAO_CONTRATO" +
-                    " JOIN tb_funcao TF  ON TF.COD=FC.COD_FUNCAO" +
-                    " WHERE TC.COD_CONTRATO = ? AND T.ATIVO = 'S' AND (AUTORIZADO='s' OR AUTORIZADO='S') AND (RESTITUIDO='s' OR RESTITUIDO='S')";
+                    " JOIN tb_funcao TF  ON TF.COD=FT.COD_FUNCAO_CONTRATO" +
+                    " WHERE COD_CONTRATO = ? AND T.ATIVO = 'S' AND (AUTORIZADO='s' OR AUTORIZADO='S') AND (RESTITUIDO='S' OR RESTITUIDO='S')";
             try(PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 preparedStatement.setInt(1, codigoContrato);
                 try(ResultSet resultSet = preparedStatement.executeQuery()) {
