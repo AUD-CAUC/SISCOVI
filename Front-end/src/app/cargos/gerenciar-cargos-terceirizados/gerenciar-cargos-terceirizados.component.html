@@ -1,0 +1,376 @@
+<h2 class="center">Gerenciar Funções</h2>
+<div class="container">
+    <div class="row">
+
+        <div class="input-field col l7">
+            <select id="selecao_contrato" materialize="material_select" [materializeSelectOptions]="contratos"
+                    (change)="defineCodigoContrato($event.target.value)">
+                <option disabled>Selecione um Contrato</option>
+                <option *ngFor="let contrato of contratos" [value]="contrato.codigo">{{contrato.nomeDaEmpresa}} -
+                    Contrato nº:
+                    {{contrato.numeroDoContrato}}
+                </option>
+            </select>
+            <label for="selecao_contrato">Contrato<span class="red-text"> *</span></label>
+        </div>
+        <div class="input-field col s4">
+            <select materialize="material_select" (change)="selecionaModo($event.target.value)">
+                <option disabled>Selecione uma opção</option>
+                <option value="ALOCAÇÃO">Alocar novo terceirizado</option>
+                <option value="ALTERAÇÃO">Alteração de função</option>
+                <option value="DESATIVAÇÃO">Desativação de Terceirizado</option>
+            </select>
+        </div>
+    </div>
+    <div class="row" *ngIf="terceirizados && modoOperacao">
+        <div *ngIf="modoOperacao === 'ALOCAÇÃO'">
+            <div class="center-align divider"></div>
+            <br>
+            <div class="center-align">
+                <button class="btn waves-effect" (click)="adicionaGerenciar()">Adicionar Linha</button>
+                <button class="btn waves-effect" (click)="removerGerenciar()" [disabled]="!(gerenciar.length > 1)">
+                    Remover
+                    Linha
+                </button>
+            </div>
+            <br>
+            <form [formGroup]="gerenciaForm">
+                <div formArrayName="gerenciarTerceirizados">
+                    <table class="centered highlight hoverable">
+                        <thead>
+                        <tr>
+                            <th>CPF do Terceirizado</th>
+                            <th>Nome do Terceirizado</th>
+                            <th>Função</th>
+                            <th>Data de Início</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let formulario of gerenciar.controls; let i = index" [formGroupName]="i">
+                            <td>
+                                <div class="row">
+                                    <div class="input-field col s8">
+                                        <input id="cpf_terceirizado_nao_alocado" placeholder="Digite o CPF" type="text"
+                                               class="validate"
+                                               formControlName="cpfTerceirizado"
+                                               appKzMask="999.999.999-99" required autocomplete="off">
+                                        <label for="cpf_terceirizado_nao_alocado">CPF<span
+                                                class="mensagem-erro">*</span></label>
+                                        <div *ngIf="gerenciaForm.get('gerenciarTerceirizados').get('' + i).get('cpfTerceirizado').invalid &&
+                                        (gerenciaForm.get('gerenciarTerceirizados').get('' + i).get('cpfTerceirizado').dirty)">
+                                            <div
+                                                    *ngIf="gerenciaForm.get('gerenciarTerceirizados').get('' + i).get('cpfTerceirizado').hasError('0')">
+                                                <div
+                                                        *ngFor="let msg of gerenciaForm.get('gerenciarTerceirizados').get('' + i).get('cpfTerceirizado').errors">
+                                                    <span class="mensagem-erro">{{msg}}</span>
+                                                </div>
+                                            </div>
+                                            <div
+                                                    *ngIf="gerenciaForm.get('gerenciarTerceirizados').get('' + i).get('cpfTerceirizado').getError('mensagem')">
+                                                <div
+                                                        *ngFor="let msg of gerenciaForm.get('gerenciarTerceirizados').get('' + i).get('cpfTerceirizado').getError('mensagem')[0]">
+                                                    <span class="mensagem-erro">{{msg}}</span>
+                                                </div>
+                                            </div>
+                                            <div
+                                                    *ngIf="gerenciaForm.get('gerenciarTerceirizados').get('' + i).get('cpfTerceirizado').getError('required')">
+                                                <span class="mensagem-erro">Você deve digitar um CPF</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="row">
+                                    <div class="input-field col s8">
+                                        <input materialize id="nome_terceirizado" type="text" class="validate"
+                                               formControlName="nomeTerceirizado" placeholder="" required>
+                                        <label for="nome_terceirizado">Nome Terceirizado<span
+                                                class="mensagem-erro">*</span></label>
+                                        <div *ngIf="gerenciaForm.get('gerenciarTerceirizados').get('' + i).get('nomeTerceirizado').invalid &&
+                                        (gerenciaForm.get('gerenciarTerceirizados').get('' + i).get('nomeTerceirizado').dirty ||
+                                        gerenciaForm.get('gerenciarTerceirizados').get('' + i).get('nomeTerceirizado').touched)">
+                                            <div *ngIf="gerenciaForm.get('gerenciarTerceirizados').get('' + i).get('nomeTerceirizado').getError('mensagem') &&
+                                          !gerenciaForm.get('gerenciarTerceirizados').get('' + i).get('nomeTerceirizado').errors.required">
+                                                <div
+                                                        *ngFor="let msg of gerenciaForm.get('gerenciarTerceirizados').get('' + i).get('nomeTerceirizado').getError('mensagem')[0]">
+                                                    <span class="mensagem-erro">{{msg}}</span>
+                                                </div>
+                                            </div>
+                                            <div
+                                                    *ngIf="gerenciaForm.get('gerenciarTerceirizados').get('' + i).get('nomeTerceirizado').getError('required')">
+                                                <span class="mensagem-erro">Você deve digitar um nome !</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <!--<td>
+                              <div class="row">
+                                <div class="input-field col">
+                                  <select id="terceirizado_ativo" formControlName="ativo" materialize="material_select" required>
+                                    <option disabled>Selecione uma opção</option>
+                                    <option value="S" selected >Sim</option>
+                                    <option value="N">Não</option>
+                                  </select>
+                                  <label for="terceirizado_ativo">Ativo<span class="mensagem-erro">*</span></label>
+                                  <div *ngIf="gerenciaForm.get('gerenciarTerceirizados').get('' + i).get('ativo').invalid &&
+                                      (gerenciaForm.get('gerenciarTerceirizados').get('' + i).get('ativo').dirty ||
+                                      gerenciaForm.get('gerenciarTerceirizados').get('' + i).get('ativo').touched)">
+                                    <div *ngIf="gerenciaForm.get('gerenciarTerceirizados').get('' + i).get('ativo').getError('mensagem') &&
+                                        !gerenciaForm.get('gerenciarTerceirizados').get('' + i).get('ativo').errors.required">
+                                      <div *ngFor="let msg of gerenciaForm.get('gerenciarTerceirizados').get('' + i).get('ativo').getError('mensagem')[0]">
+                                        <span class="mensagem-erro">{{msg}}</span>
+                                      </div>
+                                    </div>
+                                    <div *ngIf="gerenciaForm.get('gerenciarTerceirizados').get('' + i).get('ativo').getError('required')">
+                                      <span class="mensagem-erro">Selecione o status do terceirizado no contrato</span>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </td> -->
+                            <td>
+                                <div class="row">
+                                    <div class="input-field col s12">
+                                        <select id="funcoes_contrato" materialize="material_select"
+                                                [materializeSelectOptions]="funcoes"
+                                                formControlName="funcao" required>
+                                            <option disabled>Selecione uma Função para o Terceirizado</option>
+                                            <option *ngFor="let funcao of funcoes" [value]="funcao.codigo">
+                                                {{funcao.nome}}
+                                            </option>
+                                        </select>
+                                        <label for="funcoes_contrato">Funções do Contrato<span
+                                                class="mensagem-erro">*</span></label>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="row">
+                                    <div class="input-field col s8">
+                                        <input id="data_inicio_funcao" formControlName="dataInicio" class="validate"
+                                               type="text" appMaskDate
+                                               required maxlength="10" minlength="10">
+                                        <label for="data_inicio_funcao">Data de Início na Função<span
+                                                class="mensagem-erro">*</span></label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+            <br>
+            <div class="center-align">
+                <button class="btn waves-effect" [disabled]="!gerenciaForm.valid"
+                        (click)="verificarFormularioGerencia()">
+                    Alocar
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="row" *ngIf="listaCargosFuncionarios && modoOperacao">
+        <div *ngIf="modoOperacao === 'ALTERAÇÃO'">
+            <div class="center-align divider"></div>
+            <br>
+            <form [formGroup]="alteracaoForm">
+                <div formArrayName="alterarFuncoesTerceirizados">
+                    <table class="hoverable centered highlight">
+                        <thead>
+                        <tr>
+                            <th>
+                                <input type="checkbox" id="test6" (change)="isSelected = !isSelected"/>
+                                <label for="test6"></label>
+                            </th>
+                            <th>Terceirizado</th>
+                            <th>Função</th>
+                            <th>Data de Início</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let lista of listaCargosFuncionarios; let k = index">
+                            <td>
+                                <div class="row">
+                                    <div class="col">
+                                        <div [formGroupName]="k">
+                                            <input type="checkbox" [checked]="isSelected" [ngModel]="isSelected"
+                                                   id="{{k}}"
+                                                   formControlName="selected"/>
+                                            <label for="{{k}}"></label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><b>{{lista.funcionario.nome}}</b></td>
+                            <td>
+                                <div [formGroupName]="k">
+                                    <div class="input-field col ">
+                                        <select id="funcoes_alteracao" formControlName="funcao"
+                                                materialize="material_select"
+                                                [materializeSelectOptions]="funcoes">
+                                            <option disabled>Selecione um Terceirizado</option>
+                                            <option *ngFor="let funcao of funcoes" [value]="funcao.codigo"
+                                                    [selected]="funcao.nome == lista.funcao.nome">{{funcao.nome}}
+                                            </option>
+                                        </select>
+                                        <label for="funcoes_alteracao">Selecione uma nova função <span
+                                                class="mensagem-erro">*</span></label>
+                                        <div *ngIf="alteracaoForm.get('alterarFuncoesTerceirizados').get('' + k).get('funcao').invalid &&
+                                            (alteracaoForm.get('alterarFuncoesTerceirizados').get('' + k).get('funcao').dirty ||
+                                alteracaoForm.get('alterarFuncoesTerceirizados').get('' + k).get('funcao').touched)">
+                                            <div
+                                                    *ngIf="alteracaoForm.get('alterarFuncoesTerceirizados').get('' + k).get('funcao').getError('mensagem')">
+                                                <div
+                                                        *ngFor="let msg of alteracaoForm.get('alterarFuncoesTerceirizados').get('' + k).get('funcao').getError('mensagem')[0]">
+                                                    <span class="mensagem-erro">{{msg}}</span>
+                                                </div>
+                                            </div>
+                                            <div
+                                                    *ngIf="alteracaoForm.get('alterarFuncoesTerceirizados').get('' + k).get('funcao').getError('required')">
+                                                <span class="mensagem-erro">Você deve alterar a função !</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div [formGroupName]="k">
+                                    <div class="input-field  ">
+                                        <input id="data_inicio_nova_funcao" class="validate" type="text" appMaskDate
+                                               required maxlength="10"
+                                               minlength="10" formControlName="dataInicio"
+                                               placeholder="Exemplo: 01/01/2000">
+                                        <label for="data_inicio_nova_funcao">Data de Início na Nova Função <span
+                                                class="mensagem-erro">*</span></label>
+                                        <div *ngIf="alteracaoForm.get('alterarFuncoesTerceirizados').get('' + k).get('dataInicio').invalid &&
+                                            (alteracaoForm.get('alterarFuncoesTerceirizados').get('' + k).get('dataInicio').dirty ||
+                                alteracaoForm.get('alterarFuncoesTerceirizados').get('' + k).get('dataInicio').touched)">
+                                            <div
+                                                    *ngIf="alteracaoForm.get('alterarFuncoesTerceirizados').get('' + k).get('dataInicio').getError('mensagem')">
+                                                <div
+                                                        *ngFor="let msg of alteracaoForm.get('alterarFuncoesTerceirizados').get('' + k).get('dataInicio').getError('mensagem')[0]">
+                                                    <span class="mensagem-erro">{{msg}}</span>
+                                                </div>
+                                            </div>
+                                            <div
+                                                    *ngIf="alteracaoForm.get('alterarFuncoesTerceirizados').get('' + k).get('dataInicio').getError('required')">
+                                                <span class="mensagem-erro">Você deve digitar uma data !</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+            <br>
+            <div class="row">
+                <div class="col center-align">
+                    <button class="btn waves-effect" (click)="verificaFormularioAlteracao()">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="modal1" class="modal" materialize="modal" [materializeParams]="[{dismissible: false}]"
+     [materializeActions]="modalActions">
+    <div class="modal-content">
+        <h4 class="center">Atenção</h4>
+        <div class="center-align">
+            <p>Selecione no mínimo um terceirizado</p>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class=" col center-align">
+            <button class="btn waves-effect" (click)="closeModal()">Ok</button>
+        </div>
+    </div>
+</div>
+<div id="modal2" class="modal" materialize="modal" [materializeParams]="[{dismissible: false}]"
+     [materializeActions]="modalActions2">
+    <div class="modal-content">
+        <h4 class="center">Confirmar</h4>
+        <div class="center-align">
+            <p>Deseja realizar as alterações ?</p>
+        </div>
+        <div class="left-align">
+            <p>As alterações não poderão ser desfeitas*</p>
+        </div>
+        <div class="center-align">
+            <div class="row">
+                <table class="highlight centered hoverable responsive-table">
+                    <thead>
+                    <tr>
+                        <th>Terceirizado</th>
+                        <th>Função</th>
+                        <th>Data de Início</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let funcaoTerceirirzado of confirmarAlteracao">
+                        <td>{{funcaoTerceirirzado.funcionario.nome}}</td>
+                        <td>{{funcaoTerceirirzado.funcao.nome}}</td>
+                        <td>{{funcaoTerceirirzado.dataDisponibilizacao | date: 'shortDate'}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn waves-effect left" (click)="closeModal2()">Cancelar</button>
+        <button class="btn waves-effect right" (click)="salvarAlteracoesFuncaoTerceirizado()">Confirmar Alterações
+        </button>
+    </div>
+</div>
+<div id="modal3" class="modal" materialize="modal" [materializeParams]="[{dismissible: false}]"
+     [materializeActions]="modalActions3">
+    <div class="modal-content">
+        <h4 class="center red-text">Atenção</h4>
+        <div class="center-align">
+            <p><b>As informações inseridas para um ou mais terceirizados não são válidas !</b></p>
+            <br>
+            <p>Confira e tente novamente !</p>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class=" col center-align">
+            <button class="btn waves-effect" (click)="closeModal3()">Ok</button>
+        </div>
+    </div>
+</div>
+<div id="modal4" class="modal" materialize="modal" [materializeParams]="[{dismissible: false}]"
+     [materializeActions]="modalActions4">
+    <div class="modal-content">
+        <h4 class="center green-text">Sucesso</h4>
+        <div class="center-align">
+            <p>As informações foram alteradas com sucesso !</p>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class=" col center-align">
+            <button class="btn waves-effect" (click)="closeModal4()">Ok</button>
+        </div>
+    </div>
+</div>
+<div id="modal5" class="modal" materialize="modal" [materializeParams]="[{dismissible: false}]"
+     [materializeActions]="modalActions5">
+    <div class="modal-content">
+        <h4 class="center red-text">Erro</h4>
+        <div class="center-align">
+            <p><b>Ocorreu algum erro !</b></p>
+            <br>
+            <p>Tente novamente mais tarde ou entre em contato com o admnistrador do sistema !</p>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class=" col center-align">
+            <button class="btn waves-effect" (click)="closeModal5()">Ok</button>
+        </div>
+    </div>
+</div>

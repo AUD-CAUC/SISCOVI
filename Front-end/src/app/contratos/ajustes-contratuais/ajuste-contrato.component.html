@@ -1,0 +1,60 @@
+<div class="container">
+  <h2 class="center">Ajustes Contratuais</h2>
+</div>
+<div class="container">
+  <div class="row">
+    <div class="valign-wrapper col s12 m12 l12">
+      <div class="left col">
+        <button materialize class="btn waves-effect right" (click)="cadastrarAjuste()">Cadastrar Ajuste</button>
+      </div>
+      <div id="select-options-ajuste" class="center input-field col s7 l7 m7">
+        <select materialize="material_select" [materializeSelectOptions]="contratos"
+                (change)="onChange($event.target.value)">
+          <option disabled>Selecione um Contrato</option>
+          <option *ngFor="let contrato of contratos" [value]="contrato.codigo">{{contrato.nomeDaEmpresa}} -
+            Contrato Nº: {{contrato.numeroDoContrato}}/{{contrato.anoDoContrato}}
+          </option>
+        </select>
+      </div>
+    </div>
+    <!--<div id="modal1" class="modal modal-fixed-footer" materialize="modal"
+         [materializeParams]="[{dismissible: false}]" [materializeActions]="modalActions">
+        <div class="modal-content">
+            <app-cadastrar-ajustes *ngIf="render" [contratos]="contratos"
+                                   (cadastroAjuste)="cadastrarAjuste($event)"></app-cadastrar-ajustes>
+        </div>
+        <div class="modal-footer">
+            <button class="btn waves-effect left" (click)="closeModal()">Cancelar</button>
+            <button class="btn waves-effect right" [disabled]="!validForm">Cadastrar</button>
+        </div>
+    </div>-->
+  </div>
+  <div class="row" *ngIf="valid && eventos.length === 0">
+    <div class="col s12 grey lighten-4">
+      <h5 class="center-align">Não há ajustes a serem exibidos ! <i class="small material-icons">mood_bad</i></h5>
+    </div>
+  </div>
+  <div class="row" *ngIf="valid && eventos.length > 0">
+    <table class="highlight centered responsive-table hoverable">
+      <thead>
+      <tr>
+        <th>Tipo de Evento</th>
+        <th>Assunto</th>
+        <th>Data de Início da Vigência</th>
+        <th>Data Fim da Vigência</th>
+        <th>Data de Assinatura</th>
+      </tr>
+      </thead>
+
+      <tbody>
+      <tr *ngFor="let evento of eventos">
+        <td>{{evento.tipo}}</td>
+        <td>{{evento.assunto}}</td>
+        <td>{{evento.dataInicioVigencia | date: 'shortDate'}}</td>
+        <td>{{evento.dataFimVigencia | date: 'shortDate'}}</td>
+        <td>{{evento.dataAssinatura | date: 'shortDate'}}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

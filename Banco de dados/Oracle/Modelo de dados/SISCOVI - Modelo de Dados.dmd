@@ -1,0 +1,9 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<OSDM_Design class="oracle.dbtools.crest.model.design.Design" name="SISCOVI - Modelo de Dados" id="8DC9A4D8-7D5F-0B4C-F01C-34B8A006B13E" version="3.5">
+<createdBy>vssousa</createdBy>
+<createdTime>2017-08-16 19:00:13 UTC</createdTime>
+<ownerDesignName>SISCOVI - Modelo de Dados</ownerDesignName>
+<modelPersistence>2</modelPersistence>
+<capitalNames>false</capitalNames>
+<designId>8DC9A4D8-7D5F-0B4C-F01C-34B8A006B13E</designId>
+</OSDM_Design>

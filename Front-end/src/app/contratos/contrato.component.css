@@ -1,0 +1,22 @@
+table.highlight tbody tr:hover {
+  background-color: #9e9e9e;
+  cursor: context-menu; }
+
+div#modal1.modal.open {
+  position: absolute;
+  top: 10ch;
+  background-color: white;
+  display: block;
+  opacity: 1;
+  transform: scaleX(1);
+  top: 10ch !important;
+  left: 10ch !important;
+  width: 210ch !important;
+  max-height: 90ch; }
+
+/*table.highlight tbody td {
+  min-width: 6em;
+  padding: 2em;
+}*/
+
+/*# sourceMappingURL=contrato.component.css.map */

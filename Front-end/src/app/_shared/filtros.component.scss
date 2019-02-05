@@ -1,0 +1,35 @@
+.card {
+	overflow: hidden;
+}
+.card-action {
+	padding: 3px 0px 0px;
+	text-align: right;
+}
+.card-body {
+	transition: all 0.25s linear;
+	/*max-height: 0px;*/
+	
+	.row {
+		/*height: 0px;*/
+		overflow: hidden;
+	}
+}
+.card-body.active {
+	/*max-height: 700px;*/
+	
+	.row {
+		height: auto;
+	}
+}
+select.browser-default {
+	height: auto;
+	margin-top: 0.7em;
+	clear: both;
+}
+select.browser-default option {
+	line-height: 2.0em;
+	height: 1.2em;
+}
+.autocomplete-content {
+	position: absolute !important;
+}

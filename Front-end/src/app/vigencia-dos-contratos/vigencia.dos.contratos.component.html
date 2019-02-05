@@ -1,0 +1,20 @@
+<div class="container">
+  <h2>Vigência do Contrato</h2>
+</div>
+<div class="container" *ngFor="let lista of vigencias">
+  <h5>Gestor: {{lista.gestor}}, Contrato: {{lista.contrato.nomeDaEmpresa}} - Contrato Nº {{lista.contrato.numeroDoContrato}}</h5>
+  <table class="hoverable centered responsive-table highlight z-depth-1 bordered">
+    <thead>
+      <tr>
+        <th>Início da Vigência</th>
+        <th>Fim da Vigência</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let vigencia of lista.vigencias">
+        <td>{{vigencia.dataInicioVigencia}}</td>
+        <td>{{vigencia.dataFimVigencia}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

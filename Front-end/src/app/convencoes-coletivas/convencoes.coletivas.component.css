@@ -1,0 +1,10 @@
+table.highlight tbody tr:hover {
+  background-color: #9e9e9e;
+  cursor: context-menu; }
+
+.row .col {
+  float: none !important;
+  margin-left: auto;
+  margin-right: auto; }
+
+/*# sourceMappingURL=convencoes.coletivas.component.css.map */

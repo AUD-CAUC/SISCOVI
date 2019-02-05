@@ -3,7 +3,11 @@ package br.jus.stj.siscovi.controllers;
 import br.jus.stj.siscovi.dao.ConnectSQLServer;
 import br.jus.stj.siscovi.dao.PerfilDAO;
 import br.jus.stj.siscovi.dao.UsuarioDAO;
+import br.jus.stj.siscovi.dao.sql.ConsultaTSQL;
+import br.jus.stj.siscovi.dao.sql.DeleteTSQL;
 import br.jus.stj.siscovi.model.CadastroUsuarioModel;
+import br.jus.stj.siscovi.model.RegistroUsuario;
+import br.jus.stj.siscovi.model.UsuarioModel;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -12,6 +16,7 @@ import org.mindrot.jbcrypt.BCrypt;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -47,6 +52,47 @@ public class UsuarioController {
             json = gson.toJson("{msg:" + "Credenciais Inválidas}");
         }
         connectSQLServer.dbConnect().close();
+        return Response.ok(json, MediaType.APPLICATION_JSON).build();
+    }
+
+    @PUT
+    @Path("/alterarUsuario")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response alterarUsuario(String object) {
+        Gson gson = new Gson();
+        CadastroUsuarioModel cadastroUsuarioModel = gson.fromJson(object, CadastroUsuarioModel.class);
+        ConnectSQLServer connectSQLServer = new ConnectSQLServer();
+        UsuarioDAO usuarioDAO = new UsuarioDAO(connectSQLServer.dbConnect());
+        String json;
+        if(usuarioDAO.alteraUsuario(cadastroUsuarioModel.getUsuario(), cadastroUsuarioModel.getCurrentUser())) {
+            json = gson.toJson("Alteração feita com sucesso !");
+        }else {
+            json = gson.toJson("Houve falha na tentativa de Salvar as Alterações");
+        }
+        try {
+            connectSQLServer.dbConnect().close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Response.ok(json, MediaType.APPLICATION_JSON).build();
+    }
+
+    @GET
+    @Path("/getUsuario/{codigo}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getUsuario(@PathParam("codigo") int codigo) {
+        ConnectSQLServer connectSQLServer = new ConnectSQLServer();
+        Gson gson = new Gson();
+        ConsultaTSQL consulta = new ConsultaTSQL(connectSQLServer.dbConnect());
+        RegistroUsuario registroUsuario = consulta.RetornaRegistroUsuario(codigo);
+        UsuarioModel usuarioModel = new UsuarioModel(registroUsuario.getpCod(),registroUsuario.getpNome(), registroUsuario.getpLogin(),registroUsuario.getpLoginAtualizacao(), Date.valueOf(registroUsuario.getpDataAtualizacao().toString()));
+        String json = gson.toJson(usuarioModel);
+        try {
+            connectSQLServer.dbConnect().close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return Response.ok(json, MediaType.APPLICATION_JSON).build();
     }
 
@@ -86,6 +132,28 @@ public class UsuarioController {
         connectSQLServer.dbConnect().close();
         return Response.ok(json, MediaType.APPLICATION_JSON).build();
     }
+
+    @DELETE
+    @Path("deleteUsuario/{codigo}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response apagarUsuario(@PathParam("codigo") int codigo) {
+        ConnectSQLServer connectSQLServer = new ConnectSQLServer();
+        DeleteTSQL delete = new DeleteTSQL(connectSQLServer.dbConnect());
+        Gson gson = new Gson();
+        String json;
+        if (delete.DeleteRegistro(codigo, "TB_USUARIO") == 0) {
+            json = gson.toJson("Usuário excluída com sucesso!");
+        }else {
+            json = gson.toJson("Houve uma falha ao tentar exluir o usuário!");
+        }
+        try {
+            connectSQLServer.dbConnect().close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Response.ok(json, MediaType.APPLICATION_JSON).build();
+    }
+
     @GET
     @Path("/getGestores")
     @Produces(MediaType.APPLICATION_JSON)
@@ -101,4 +169,5 @@ public class UsuarioController {
         }
         return Response.ok(json, MediaType.APPLICATION_JSON).build();
     }
+
 }

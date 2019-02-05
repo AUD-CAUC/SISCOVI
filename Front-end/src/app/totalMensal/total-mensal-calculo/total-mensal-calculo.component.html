@@ -1,0 +1,105 @@
+<div class="divider"></div>
+<div class="section">
+
+</div>
+<div class="row">
+  <form [formGroup]="myForm">
+    <div class="row">
+      <div class="input-field col l7 center-align">
+        <select class="black-text" name="contrato" formControlName="contrato" materialize="material_select"
+                [ngModel]="contratos" (change)="onChange($event.target.value)" required>
+          <option disabled>Selecione</option>
+          <option class="black-text" *ngFor="let contrato of contratos" [value]="contrato.codigo">
+            {{contrato.nomeDaEmpresa}} - Contrato nº: {{contrato.numeroDoContrato}}
+          </option>
+        </select>
+        <label style="font-size: 0.85vw">Selecione um Contrato</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field col l2  center-align">
+        <select class="center center-align centered" name="ano" id="select-year" materialize="material_select"
+                formControlName="ano" [materializeSelectOptions]="years"
+                required (change)="otherChange($event.target.value)">
+          <option *ngFor="let year of years" class="center-align center" [value]="year"
+                  [selected]="year === currentYear">{{year}}
+          </option>
+        </select>
+        <label style="font-size: 0.85vw">Selecione um ano</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field col l4 center-align">
+        <select name="mes" materialize="material_select" formControlName="mes" required
+                [materializeSelectOptions]="meses">
+          <option *ngFor="let mes of meses" [value]="mes.valor" [selected]="mes.valor === currentMonth">{{ mes.mes }}
+          </option>
+        </select>
+        <label style="font-size: 0.85vw">Selecione um mês</label>
+        <div *ngIf="myForm.get('mes').invalid &&
+                                        (myForm.get('mes').dirty ||
+                                        myForm.get('mes').touched)">
+          <div *ngIf="myForm.getError('mensagem') &&
+                                          !myForm.get('mes').errors.required">
+            <div *ngFor="let msg of myForm.get('mes').getError('mensagem')[0]">
+              <span class="mensagem-erro">{{msg}}</span>
+            </div>
+          </div>
+          <div *ngIf="myForm.get('mes').getError('required')">
+            <span class="mensagem-erro">Você deve selecionar um mês para o cálculo</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<br>
+<div class="row">
+  <div class="center-align">
+    <button class="waves-effect waves-light btn-large blue-grey darken-3" type="submit" [disabled]="validate"
+            (click)="calculoTotalMensal()">Calcular
+    </button>
+    <div *ngIf="myForm.invalid && (myForm.dirty || myForm.touched)">
+      <div *ngIf="myForm.getError('mensagem')">
+        <span class="mensagem-erro">{{myForm.getError('mensagem')}}</span>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="modal1" class="modal bottom-fixed-footer" materialize="modal" [materializeParams]="[{dismissible: false}]"
+     [materializeActions]="modalActions">
+  <div class="modal-content">
+    <h4 class="center">Cálculo realizado </h4>
+    <div *ngIf="resultado">
+      <table class="highlight centered">
+        <thead>
+        <tr>
+          <th>Função</th>
+          <th>Férias</th>
+          <th>Terço Constitucional</th>
+          <th>Décimo Terceiro</th>
+          <th>Incidência Retido</th>
+          <th>Multa do FGTS</th>
+          <th>Total</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr *ngFor="let total of resultado">
+          <td>{{total.funcao}}</td>
+          <td>{{total.ferias | currency:'BRL':true:'1.2-2'}}</td>
+          <td>{{total.tercoConstitucional | currency:'BRL':true:'1.2-2'}}</td>
+          <td>{{total.decimoTerceiro | currency:'BRL':true:'1.2-2'}}</td>
+          <td>{{total.incidencia | currency:'BRL':true:'1.2-2'}}</td>
+          <td>{{total.multaFGTS | currency:'BRL':true:'1.2-2'}}</td>
+          <td>{{total.total | currency:'BRL':true:'1.2-2'}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn waves-effect left" (click)="closeModal()">Confirmar cálculo</button>
+    <button class="btn waves-effect right" (click)="apagarCalculo()">Cancelar</button>
+  </div>
+</div>

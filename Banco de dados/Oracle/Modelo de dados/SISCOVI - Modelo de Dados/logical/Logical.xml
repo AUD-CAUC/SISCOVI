@@ -1,0 +1,7 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<LogicalDesign class="oracle.dbtools.crest.model.design.logical.LogicalDesign" name="Logical" id="A7F70A0A-6931-43D4-D818-EA2A999A3595" mainViewID="4A692A5F-B733-9B6C-4907-E9B4ADBEC053">
+<createdBy>vssousa</createdBy>
+<createdTime>2018-10-11 18:36:22 UTC</createdTime>
+<ownerDesignName>SISCOVI - Modelo de Dados</ownerDesignName>
+<shouldBeOpen>false</shouldBeOpen>
+</LogicalDesign>

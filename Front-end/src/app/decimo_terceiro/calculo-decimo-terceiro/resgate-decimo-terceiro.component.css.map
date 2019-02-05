@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AAAA,SAAS;EACP,KAAK,EAAE,eAAe;EACtB,WAAW,EAAE,IAAI;EACjB,YAAY,EAAE,IAAI;;AAEpB,cAAe;EACb,KAAK,EAAE,GAAG;EACV,SAAS,EAAE,GAAG;;AAEhB,6BAA8B;EAC5B,aAAa,EAAE,aAAa;EAC5B,UAAU,EAAE,aAAa;;AAE3B,qCAAsC;EACpC,aAAa,EAAE,aAAa;EAC5B,UAAU,EAAE,aAAa;;AAE3B,8CAA+C;EAC7C,aAAa,EAAE,aAAa;EAC5B,UAAU,EAAE,aAAa;;AAE3B,6BAA6B;AAC7B,2BAA4B;EAC1B,KAAK,EAAE,GAAG",
+"sources": ["resgate-decimo-terceiro.component.scss"],
+"names": [],
+"file": "resgate-decimo-terceiro.component.css"
+}

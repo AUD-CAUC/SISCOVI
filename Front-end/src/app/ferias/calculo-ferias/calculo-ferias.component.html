@@ -1,0 +1,24 @@
+<br>
+<div class="row">
+    <div class="input-field col l7">
+        <select id="selecao_contrato"materialize="material_select" [materializeSelectOptions]="contratos" (change)="defineCodigoContrato($event.target.value)">
+            <option disabled>Selecione um Contrato</option>
+            <option *ngFor="let contrato of contratos" [value]="contrato.codigo">{{contrato.nomeDaEmpresa}} - Contrato nº: {{contrato.numeroDoContrato}}</option>
+        </select>
+        <label for="selecao_contrato">Contrato<span class="red-text"> *</span></label>
+    </div>
+    <div class="input-field col l3">
+        <select id="selecao_tipo_restituicao" materialize="material_select" (change)="defineTipoMovimentacao($event.target.value)">
+            <option disabled selected>Selecione o tipo de restituição</option>
+            <option value="RESGATE">Resgate</option>
+            <option value="MOVIMENTACAO">Movimentação</option>
+        </select>
+        <label for="selecao_tipo_restituicao">Tipo de Restituição<span class="red-text"> *</span></label>
+    </div>
+</div>
+<div  *ngIf="terceirizados && (tipoRestituicao == 'MOVIMENTACAO')">
+    <app-movimentacao-ferias-component [tipoRestituicao]="tipoRestituicao" [codigoContrato]="codigo" [terceirizados]="terceirizados" (navegaParaViewDeCalculos)="eventNav($event)"></app-movimentacao-ferias-component>
+</div>
+<div *ngIf="terceirizados && (tipoRestituicao == 'RESGATE')">
+    <app-resgate-ferias-component [tipoRestituicao]="tipoRestituicao" [codigoContrato]="codigo" [terceirizados]="terceirizados" (navegaParaViewDeCalculos)="eventNav($event)"></app-resgate-ferias-component>
+</div>

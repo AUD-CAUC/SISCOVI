@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AAAA,8BAA+B;EAC7B,gBAAgB,EAAE,OAAO;EACzB,MAAM,EAAE,YAAY",
+"sources": ["vigencia.dos.contratos.component.scss"],
+"names": [],
+"file": "vigencia.dos.contratos.component.css"
+}

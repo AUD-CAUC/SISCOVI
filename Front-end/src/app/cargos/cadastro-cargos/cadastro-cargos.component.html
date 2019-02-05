@@ -1,0 +1,74 @@
+<div class="container">
+    <h2 class="center">Cadastro de Cargos</h2>
+    <div class="divider"></div>
+    <div class="row">
+        <div class="col s12">
+            <div class="row">
+                <div class="input-field col s6">
+                    <select materialize="material_select" id="opcao" [(ngModel)]="opcao">
+                        <option disabled>Selecione uma forma de cadastrar o(s) cargo(s)</option>
+                        <option value="1">Cadastar Manualmente</option>
+                        <option value="2">Cadastrar através de uma planilha modelo</option>
+                    </select>
+                    <label for="opcao">Opção de Entrada</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" *ngIf="opcao == 1">
+        <h4>Cargos</h4>
+        <form class="col s12" [formGroup]="cargosForm" autocomplete="off">
+            <div formArrayName="cargos">
+                <div materialize *ngFor="let cargo of cargos.controls; let i = index" [formGroupName]="i" class="form-group">
+                    <div class="row">
+                        <div class="col l12 panel-content darken-1">
+                            <div class=" row titulo-modal">
+                                <p class="white-text center-align ">Função {{i + 1}}</p>
+                            </div>
+                            <div class=" valign-wrapper col offset-l11">
+                                <h6 class="botao-fechar" (click)="removeCargo(i)" *ngIf="cargosForm.get('cargos').value.length > 1"><a class="black-text"><i class="material-icons">close</i></a></h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="input-field col">
+                                <input placeholder="Nome" id="nome" class="validate" formControlName="nome" type="text" autocomplete="off">
+                                <label for="nome">Nome Do Cargo</label>
+                            </div>
+                        </div>
+                        <div class="col s12">
+                            <div class="input-field col s12 ">
+                                <textarea materialize placeholder="Descricao" id="descricao" class="materialize-textarea" formControlName="nome" data-length="200"></textarea>
+                                <label for="descricao">Descrição</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn waves-effect btn-floating" (click)="adicionaCargo()"><i class="material-icons">add</i></button>
+            </div>
+        </form>
+    </div>
+    <div class="row" *ngIf="opcao == 2">
+        <div class="row">
+        <span>Baixe a seguinte planilha <a href="/assets/sheets/modelo-cadastro-cargos.xlsx" download>aqui</a>, preencha-a e a envie preenchida pelo campo abaixo: </span>
+            <form>
+                <div class="file-field input-field">
+                    <button class="btn waves-effect" >
+                        <span>File</span>
+                        <input type="file" (change)="uploadFile($event)" accept=".xlsx">
+                    </button>
+                    <div class="file-path-wrapper">
+                        <input class="file-path validate" type="text">
+                        <button class="btn waves-effect right" (click)="uploadData()" [disabled]="buttonDisabled">Enviar planilha</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <app-loading *ngIf="cargoService.loading"></app-loading>
+        <div >
+            <app-visualiza-cargo-cadastro *ngIf="listaCargos && cargoService.displayCargos" [cargos]="listaCargos"></app-visualiza-cargo-cadastro>
+        </div>
+    </div>
+</div>

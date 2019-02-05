@@ -1,0 +1,52 @@
+<div class="container">
+    <h2 class="center">Cadastrar Rubrica</h2>
+    <div class = row *ngIf="id">
+        <button class="btn waves-effect right" (click)="openModal()">Apagar Rubrica</button>
+        <div id="modal1" class="modal" materialize="modal" [materializeParams]="[{dismissible: false}]" [materializeActions]="modalActions">
+            <div class="modal-content">
+                <div class="container">
+                    <div class="row">
+                        <h1 class="center">Alerta</h1>
+                    </div>
+                    <div class="row">
+                        <h5 class="center">Tem certeza que deseja APAGAR esta Rubrica ?</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn waves-effect right" (click)="deletarRubrica()">Sim</button>
+                <button class="btn waves-effect left" (click)="closeModal()">Não</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <form #form="ngForm" materialize class="col s12" [formGroup]="rubricaForm" autocomplete="off">
+            <div class="row">
+                <div class="col input-field s6 m6 l4">
+                    <input placeholder="Digite um Nome" id="nome" (keyup)="validateForm(); activateButton()" formControlName="nome" type="text" class="validate">
+                    <label for="nome">Nome da Rubrica</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col input-field s6 m6 l4" >
+                    <label for="sigla">Sigla da Rubrica</label>
+                    <input id="sigla" placeholder="Digite um Sigla" type="text" (keyup)="validateForm(); activateButton()" formControlName="sigla" class="validate">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col input-field s12 m12 l12">
+                    <textarea materialize class="materialize-textarea" data-length="200" id="textarea1"(keyup)="validateForm(); activateButton()" formControlName="descricao"></textarea>
+                    <label for="textarea1">Descrição</label>
+                </div>
+            </div>
+        </form>
+        <div class="row" *ngIf="id">
+            <button class="btn waves-effect right" [disabled]="(!notValidEdit && rubricaService.getValidity()) || (notValidEdit)" (click)="salvarAlteracao()">Salvar</button>
+            <button class="btn waves-effect left"(click)="disableButton()" routerLink="/rubricas">
+                Voltar
+            </button>
+        </div>
+    </div>
+</div>

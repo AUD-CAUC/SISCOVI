@@ -1,0 +1,19 @@
+:host {
+	width: 21cm;
+	min-height: 29.7cm;
+}
+
+@media screen {
+	:host {
+		display: block;
+		border: 1px solid #ccc;
+		margin: 0 auto;
+		padding: 1.0cm 1.0cm 1.5cm;
+	}
+}
+
+@media print {
+	:host {
+		padding: 0;
+	}
+}

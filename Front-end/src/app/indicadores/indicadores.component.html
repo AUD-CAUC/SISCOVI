@@ -1,0 +1,23 @@
+
+<div class="container">
+	<h2>Indicadores</h2>
+	<div class="row">
+		<div class="col s12 l6">
+			<div class="card medium">
+				<div class="card-content">
+					<span class="card-title">Atendimento de Recomendações</span>
+					<app-loading *ngIf="!dados.recomendasGeral"></app-loading>
+				</div>
+			</div>
+		</div>
+
+		<div class="col s12 l6" *ngFor="let item of dados.recomendasArea">
+			<div class="card medium">
+				<app-loading *ngIf="!item.dados"></app-loading>
+				<div class="card-content" *ngIf="item.dados">
+					<span class="card-title">Recomendações por Área ({{item.area.sigla}})</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

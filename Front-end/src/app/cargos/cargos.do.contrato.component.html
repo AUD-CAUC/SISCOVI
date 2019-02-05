@@ -1,0 +1,20 @@
+<div class="container">
+  <h2>Cargos do Contrato</h2>
+</div>
+<div class="container" *ngFor="let lista of listaCargos">
+  <h5>Gestor: {{lista.gestor}}, Contrato: {{lista.contrato.nomeDaEmpresa}} - Contrato Nº {{lista.contrato.numeroDoContrato}}</h5>
+  <table class="centered highlight responsive-table z-depth-2 hoverable bordered">
+    <thead>
+      <tr>
+        <th>Cargo</th>
+        <th>Descrição</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let cargo of lista.cargos">
+        <td>{{cargo.nome}}</td>
+        <td>{{cargo.descricao}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

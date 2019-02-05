@@ -1,0 +1,212 @@
+<br>
+<div class="row">
+    <div class="input-field col l7">
+        <select id="selecao_contrato"materialize="material_select" [materializeSelectOptions]="contratos" (change)="defineCodigoContrato($event.target.value)">
+            <option disabled>Selecione um Contrato</option>
+            <option *ngFor="let contrato of contratos" [value]="contrato.codigo" [selected]="codigoContrato == contrato.codigo">{{contrato.nomeDaEmpresa}} - Contrato nº: {{contrato.numeroDoContrato}}</option>
+        </select>
+        <label for="selecao_contrato">Contrato<span class="red-text"> *</span></label>
+    </div>
+</div>
+<div class="row" *ngIf="codigoContrato && (calculosNegados.length > 0) && config.user.perfil.sigla == 'ADMINISTRADOR'">
+    <div class="col tooltip" *ngIf="calculosNegados.length > 0">
+        <span class="tooltiptext">Cálculos Negados</span>
+        <a (click)="openModal4()" class="left badge1" [attr.data-badge]="notifications" >
+            <i class="material-icons left small">announcement</i>
+        </a>
+    </div>
+</div>
+<div class="container" *ngIf="!calculosPendentesExecucao && codigoContrato">
+    <div class="row">
+        <div class="col s12 grey lighten-4" style="margin-top: 1em">
+            <br>
+            <h5 class="center-align">Nada pendente aqui ! <i class="small material-icons">mood</i></h5>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <form [formGroup]="decimoTerceiroForm" *ngIf="calculosPendentesExecucao">
+        <div class="col  l12" formArrayName="avaliacaoCalculoDecimoTerceiro">
+            <table *ngIf="codigoContrato && calculosPendentesExecucao" class="highlight centered responsive-table">
+                <thead>
+                <tr>
+                    <th *ngIf="config.user.perfil.sigla == 'ADMINISTRADOR'">
+                        <input type="checkbox" class="checkbox-black" id="test5" (change)="isSelected = !isSelected"/>
+                        <label for="test5"></label>
+                    </th>
+                    <th *ngIf="config.user.perfil.sigla == 'ADMINISTRADOR'">Avaliação</th>
+                    <th *ngIf="config.user.perfil.sigla == 'USUÁRIO'">Status</th>
+                    <th >Terceirizado</th>
+                    <th >Função</th>
+                    <th>Tipo de Restituição</th>
+                    <th>Parcela</th>
+                    <th>Data para Início da Contagem</th>
+                    <th>Valor de Décimo Terceiro</th>
+                    <th>Valor de Incidência</th>
+                    <th>Total</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let calculos of calculosPendentesExecucao; let k = index">
+                    <td *ngIf="config.user.perfil.sigla == 'ADMINISTRADOR'">
+                        <div [formGroupName]="k">
+                            <input type="checkbox" class="checkbox-black" [checked]="isSelected" [ngModel]="isSelected" formControlName="selected" id="{{k}}"/>
+                            <label for="{{k}}"></label>
+                        </div>
+                    </td>
+                    <td *ngIf="config.user.perfil.sigla == 'ADMINISTRADOR'">
+                        <div [formGroupName]="k">
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <select materialize="material_select" formControlName="avaliacao">
+                                        <option value="S">EXECUTAR</option>
+                                        <option value="N">REJEITAR</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td *ngIf="config.user.perfil.sigla == 'USUÁRIO'">{{calculos.status}}</td>
+                    <td >{{calculos.terceirizadoDecTer.nomeTerceirizado}}</td>
+                    <td >{{calculos.terceirizadoDecTer.nomeCargo}}</td>
+                    <td >{{calculos.terceirizadoDecTer.tipoRestituicao}}</td>
+                    <td >{{calculos.terceirizadoDecTer.parcelas | parcelaPipe}}</td>
+                    <td >{{calculos.terceirizadoDecTer.inicioContagem | date: 'shortDate'}}</td>
+                    <td >{{calculos.terceirizadoDecTer.valoresDecimoTerceiro.valorDecimoTerceiro | currency:'BRL':true:'1.2-2'}}</td>
+                    <td >{{calculos.terceirizadoDecTer.valoresDecimoTerceiro.valorIncidenciaDecimoTerceiro | currency:'BRL':true:'1.2-2'}}</td>
+                    <td >{{calculos.terceirizadoDecTer.valoresDecimoTerceiro.valorDecimoTerceiro + calculos.terceirizadoDecTer.valoresDecimoTerceiro.valorIncidenciaDecimoTerceiro
+                        | currency:'BRL':true:'1.2-2'}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </form>
+</div>
+<div class="row" *ngIf="config.user.perfil.sigla == 'ADMINISTRADOR' && calculosPendentesExecucao">
+    <div class="col">
+        <div class="center">
+            <button class="btn waves-effect center" (click)="verificaFormulario()">Salvar Alterações</button>
+        </div>
+    </div>
+</div>
+<div id="modal1" class="modal" materialize="modal" [materializeParams]="[{dismissible: false}]" [materializeActions]="modalActions">
+    <div class="modal-content">
+        <h4 class="center">Atenção</h4>
+        <br>
+        <h5 class=" center">No mínimo uma pessoa deve ser selecionada !</h5>
+    </div>
+    <div class="modal-footer">
+        <button class="btn waves-effect center"  (click)="closeModal()">Ok</button>
+    </div>
+</div>
+<div id="modal2" class="modal" materialize="modal" [materializeParams]="[{dismissible: false}]" [materializeActions]="modalActions2" >
+    <div class="modal-content">
+        <h4 class="center">Confirma Operação</h4>
+        <br>
+        <table  class="highlight centered responsive-table">
+            <thead>
+            <tr>
+                <th>Status</th>
+                <th >Terceirizado</th>
+                <th >Função</th>
+                <th>Tipo de Restituição</th>
+                <th>Parcela</th>
+                <th>Data para Início da Contagem</th>
+                <th>Valor de Décimo Terceiro</th>
+                <th>Valor de Incidência</th>
+                <th>Total</th>
+                <th>Observações</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let calculos of calculosAvaliados; let k = index">
+                <td>{{calculos.status | pendentePipe}}</td>
+                <td >{{calculos.terceirizadoDecTer.nomeTerceirizado}}</td>
+                <td >{{calculos.terceirizadoDecTer.nomeCargo}}</td>
+                <td >{{calculos.terceirizadoDecTer.tipoRestituicao}}</td>
+                <td >{{calculos.terceirizadoDecTer.parcelas | parcelaPipe}}</td>
+                <td >{{calculos.terceirizadoDecTer.inicioContagem | date: 'shortDate'}}</td>
+                <td >{{calculos.terceirizadoDecTer.valoresDecimoTerceiro.valorDecimoTerceiro | currency:'BRL':true:'1.2-2'}}</td>
+                <td >{{calculos.terceirizadoDecTer.valoresDecimoTerceiro.valorIncidenciaDecimoTerceiro | currency:'BRL':true:'1.2-2'}}</td>
+                <td >{{calculos.terceirizadoDecTer.valoresDecimoTerceiro.valorDecimoTerceiro + calculos.terceirizadoDecTer.valoresDecimoTerceiro.valorIncidenciaDecimoTerceiro
+                    | currency:'BRL':true:'1.2-2'}}</td>
+                <td>
+                    <div class="row">
+                        <form [formGroup]="decimoTerceiroFormAfter" class="col">
+                            <div class="row" formArrayName="calculosAvaliados">
+                                <div class="input-field col s12" [formGroupName]="k">
+                                    <textarea id="textarea1" class="materialize-textarea" formControlName="observacoes"></textarea>
+                                    <label for="textarea1">Observações</label>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="modal-footer">
+        <button class="btn waves-effect left"  (click)="closeModal2()">Cancelar</button>
+        <button class="btn waves-effect right" (click)="salvarAlteracoes()">Confirmar</button>
+    </div>
+</div>
+<div id="modal3" class="modal" materialize="modal" [materializeParams]="[{dismissible: false}]" [materializeActions]="modalActions3">
+    <div class="modal-content">
+        <h4 class="center">Atenção</h4>
+        <br>
+        <h5 class=" center">As alterações foram feitas com sucesso !</h5>
+    </div>
+    <div class="modal-footer">
+        <button class="btn waves-effect center"  (click)="navegaViewRestituicoes()">Ok</button>
+    </div>
+</div>
+<div id="modal4" class="modal" materialize="modal" [materializeParams]="[{dismissible: false}]" [materializeActions]="modalActions4">
+    <div class="modal-content">
+        <h4 class="center">Histórico de Cálculos Negados</h4>
+        <table  class="highlight centered responsive-table">
+            <thead>
+            <tr>
+                <th>Status</th>
+                <th >Terceirizado</th>
+                <th >Função</th>
+                <th>Tipo de Restituição</th>
+                <th>Parcela</th>
+                <th>Data para Início da Contagem</th>
+                <th>Valor de Décimo Terceiro</th>
+                <th>Valor de Incidência</th>
+                <th>Total</th>
+                <th>Observações</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let calculos of calculosNegados">
+                <td>{{calculos.status}}</td>
+                <td class="hoverable">{{calculos.terceirizadoDecTer.nomeTerceirizado}}</td>
+                <td class="hoverable">{{calculos.terceirizadoDecTer.nomeCargo}}</td>
+                <td class="hoverable">{{calculos.terceirizadoDecTer.tipoRestituicao}}</td>
+                <td class="hoverable">{{calculos.terceirizadoDecTer.parcelas | parcelaPipe}}</td>
+                <td class="hoverable">{{calculos.terceirizadoDecTer.inicioContagem| date: 'shortDate'}}</td>
+                <td class="hoverable">{{calculos.terceirizadoDecTer.valoresDecimoTerceiro.valorDecimoTerceiro | currency:'BRL':true:'1.2-2'}}</td>
+                <td class="hoverable">{{calculos.terceirizadoDecTer.valoresDecimoTerceiro.valorIncidenciaDecimoTerceiro | currency:'BRL':true:'1.2-2'}}</td>
+                <td class="hoverable"><b>{{calculos.terceirizadoDecTer.valoresDecimoTerceiro.valorDecimoTerceiro + calculos.terceirizadoDecTer.valoresDecimoTerceiro.valorIncidenciaDecimoTerceiro
+                    | currency:'BRL':true:'1.2-2'}}</b></td>
+                <td class="hoverable">{{calculos.observacoes}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="modal-footer">
+        <button class="btn waves-effect center"  (click)="closeModal4()">Ok</button>
+    </div>
+</div>
+<div id="modal5" class="modal" materialize="modal" [materializeParams]="[{dismissible: false}]" [materializeActions]="modalActions5">
+    <div class="modal-content">
+        <h4 class="center">Atenção</h4>
+        <br>
+        <h5 class=" center">Houve um erro ao tentar avaliar os cálculos !</h5>
+    </div>
+    <div class="modal-footer">
+        <button class="btn waves-effect center"  (click)="closeModal5()">Ok</button>
+    </div>
+</div>

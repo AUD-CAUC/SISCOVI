@@ -1,0 +1,68 @@
+<div class="container">
+    <h4 class="center-align">Cadastrar Percentuais de Um Contrato</h4>
+    <div class="divider"></div>
+    <br>
+</div>
+<div class="container">
+    <div class="row">
+        <form #form="ngForm" class="col s12" [formGroup]="percentuaisForm">
+            <div class="row">
+                <div class="input-field col l6">
+                    <select id="contrato" materialize="material_select" class="validate" [materializeSelectOptions]="contratos" formControlName="contrato">
+                        <option disabled>Selecione um Contrato</option>
+                        <option *ngFor="let contrato of contratos" [value]="contrato.codigo">{{contrato.nomeDaEmpresa}} - Contrato nº {{contrato.numeroDoContrato}}</option>
+                    </select>
+                    <label for="contrato">Contrato</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col">
+                    <input placeholder="Data de Início" id="data_inicio" type="text" class="validate" maxlength="10" minlength="10" formControlName="dataInicio" appMaskDate>
+                    <label label="data_inicio">Data de Início</label>
+                    <div *ngIf="percentuaisForm.get('dataInicio').invalid && (percentuaisForm.get('dataInicio').dirty || percentuaisForm.get('dataInicio').touched)">
+                        <div *ngIf="percentuaisForm.get('dataInicio').getError('mensagem')">
+                            <div *ngIf="percentuaisForm.get('dataInicio').getError('mensagem')[0]">
+                                <div *ngFor="let error of percentuaisForm.get('dataInicio').getError('mensagem')[0]">
+                                    <span class="mensagem-erro">{{error}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-field col">
+                    <input placeholder="Data de Aditamento" id="data_aditamento" type="text" class="validate" formControlName="dataFim" appMaskDate maxlength="10" minlength="10">
+                    <label for="data_aditamento">Data de Aditamento</label>
+                    <div *ngIf="percentuaisForm.get('dataFim').invalid && (percentuaisForm.get('dataFim').dirty || percentuaisForm.get('dataFim').touched)">
+                        <div *ngIf="percentuaisForm.get('dataFim').getError('mensagem')">
+                            <div *ngFor="let msg of percentuaisForm.get('dataFim').getError('mensagem')[0]">
+                                <span class="mensagem-erro">{{msg}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col l3">
+                    <select id="percentual_decimo_terceiro" materialize="material_select" formControlName="percentualDecTer">
+                        <option disabled> Selecione um Percentual para 13º</option>
+                        <option value="1/12">8,33%</option>
+                        <option value="1/11">9,09%</option>
+                    </select>
+                    <label for="percentual_decimo_terceiro">Percentual de Décimo Terceiro</label>
+                </div>
+                <div class="input-field col l4">
+                    <select id="percentual_ferias" formControlName="percentualFerias" materialize="material_select">
+                        <option disabled>Selecione um Percentual para Férias</option>
+                        <option value="1/12">8,33%</option>
+                        <option value="1/11">9,09%</option>
+                    </select>
+                    <label for="percentual_ferias">Percentual de Férias</label>
+                </div>
+                <div class="input-field col l5">
+                    <input id="percentual_incidência" placeholder="Digite o percentual de incidência do Submódulo 4.1" formControlName="percentualInc" type="text" class="validate" appMaskPercentual>
+                    <label for="percentual_incidência">Percentual de Incidência</label>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

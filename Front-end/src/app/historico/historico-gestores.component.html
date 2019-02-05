@@ -1,0 +1,44 @@
+<div class="container">
+    <div class="row">
+        <h2 class="center">Histórico de Gestores</h2>
+    </div>
+    <div>
+        <button class="btn waves-effect" (click)="cadastroGestorContrato()">Cadastrar Gestor no Contrato</button>
+    </div>
+    <div class="row center">
+        <div class="input-field col s7 center">
+            <select materialize="material_select" [materializeSelectOptions]="contratos" (change)="selecionarContrato($event.target.value)">
+                <option disabled>Selecione um Contrato</option>
+                <option *ngFor="let contrato of contratos" [value]="contrato.codigo">{{contrato.nomeDaEmpresa}} - Contrato Nº: {{contrato.numeroDoContrato}}</option>
+            </select>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row" *ngIf="historicoGestor">
+        <div class="col">
+            <table class="hoverable highlight centered">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Gestor</th>
+                        <th>Início</th>
+                        <th>Fim</th>
+                        <th>Atualizado por...</th>
+                        <th>Última Atualização</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let historico of historicoGestor; let i=index" >
+                        <td>{{i + 1}}</td>
+                        <td>{{historico.gestor}}</td>
+                        <td>{{historico.inicio}}</td>
+                        <td>{{historico.fim | datePipe}}</td>
+                        <td>{{historico.loginAtualizacao}}</td>
+                        <td>{{historico.dataAtualizacao}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

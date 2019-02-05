@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AAAA,aAAc;EACZ,KAAK,EAAE,gBAAe;EACtB,gBAAgB,EAAE,kBAAiB;;AAErC,kBAAmB;EACjB,gBAAgB,EAAE,kBAAiB;EACnC,KAAK,EAAE,gBAAe;;AAExB,YAAa;EACX,KAAK,EAAE,kBAAiB;;AAE1B,4BAA6B;EAC3B,gBAAgB,EAAE,gBAAe;;AAEnC,SAAS;EACP,KAAK,EAAE,eAAe;EACtB,WAAW,EAAE,IAAI;EACjB,YAAY,EAAE,IAAI",
+"sources": ["rescisao.component.scss"],
+"names": [],
+"file": "rescisao.component.css"
+}

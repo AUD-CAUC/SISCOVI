@@ -1,0 +1,29 @@
+<div class="container">
+  <h2 class="center">Percentuais Estáticos</h2>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="center">
+            <table class="bordered highlight centered z-depth-2 hoverable">
+                <thead>
+                    <tr>
+                        <th>Rubrica</th>
+                        <th>Percentual</th>
+                        <th>Data de Início</th>
+                        <th>Data Fim</th>
+                        <th> Data Aditamento</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let percentual of staticPercent">
+                        <td>{{percentual.nome}}</td>
+                        <td>{{percentual.percentual}}%</td>
+                        <td>{{percentual.dataInicio}}</td>
+                        <td>{{percentual.dataFim | datePipe}}</td>
+                        <td>{{percentual.dataAditamento}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

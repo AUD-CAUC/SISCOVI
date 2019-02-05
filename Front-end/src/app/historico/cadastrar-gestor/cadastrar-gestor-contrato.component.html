@@ -1,0 +1,47 @@
+<h2 class="center" *ngIf="!id">Cadastro de Substituto</h2>
+<h2 class="center" *ngIf="id">Edição de Histórico</h2>
+<br>
+<div class="container" *ngIf="!id">
+    <div class="row">
+        <div class="col">
+            <form [formGroup]="gestorContratoForm">
+                <div class="row">
+                    <div class="input-field l7 col center-align">
+                        <select id="contrato" materialize="material_select" [materializeSelectOptions]="contratos" formControlName="contrato">
+                            <option disabled>Selecione um contrato</option>
+                            <option *ngFor="let contrato of contratos" [value]="contrato.codigo">{{contrato.nomeDaEmpresa}} - Contrato nº: {{contrato.numeroDoContrato}}</option>
+                        </select>
+                        <label for="contrato">Contrato <span class="red-text">*</span></label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col l5" >
+                        <select id="usuarios" materialize="material_select" [materializeSelectOptions]="usuarios" formControlName="servidor">
+                            <option disabled>Selecione um usuário</option>
+                            <option *ngFor="let usuario of usuarios" [value]="usuario.nome">{{usuario.nome}}</option>
+                        </select>
+                        <label for="usuarios">Usuário <span class="red-text">*</span></label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col l3">
+                        <select id="perfil_gestao" materialize="material_select" [materializeSelectOptions]="perfisGestao" formControlName="perfil">
+                            <option disabled>Selecione um perfil</option>
+                            <option *ngFor="let perfil of perfisGestao" [value]="perfil.cod">{{perfil.sigla}}</option>
+                        </select>
+                        <label for="perfil_gestao">Perfil <span class="red-text">*</span></label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col l3">
+                        <input id="data_inicio" formControlName="dataInicio" class="validate" type="text" placeholder="Exemplo: 01/02/2015" required appMaskDate maxlength="10" minlength="10">
+                        <label for="data_inicio">Data de início <span class="red-text">*</span></label>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="center-align">
+            <button class="btn waves-effect" [disabled]="!gestorContratoForm.valid" (click)="cadastrarGestorNoContrato()">Cadastrar</button>
+        </div>
+    </div>
+</div>

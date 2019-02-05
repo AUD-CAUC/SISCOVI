@@ -1,0 +1,299 @@
+<div class="container">
+  <div class="section">
+    <h2 class="center">Cadastro de Contrato</h2>
+    <div class="divider"></div>
+  </div>
+  <h5>Informações Gerais</h5>
+  <form [formGroup]="myForm2" autocomplete="off">
+    <div class="row">
+      <div class="input-field col s4">
+        <select [materializeSelectOptions]="usuarios" materialize="material_select" placeholder="Nome Completo"
+                id="nomeGestor" formControlName="nomeGestor" (change)="isValid()"
+                (blur)="isValid()" required>
+          <option disabled>Selecione um usuário</option>
+          <option *ngFor="let usuario of usuarios" [value]="usuario.nome">{{usuario.nome}}</option>
+        </select>
+        <label for="nomeGestor">Gestor<span class="mensagem-erro">*</span></label>
+      </div>
+      <div class="input-field col s2">
+        <input id="nome_empresa" placeholder="Nome da Empresa" type="text" class="validate"
+               formControlName="nomeEmpresa" (input)="isValid()" (blur)="isValid()" appTitleCase required>
+        <label for="nome_empresa">Nome da Empresa<span class="mensagem-erro">*</span></label>
+        <div
+          *ngIf="myForm2.get('nomeEmpresa').invalid && (myForm2.get('nomeEmpresa').dirty || myForm2.get('nomeEmpresa').touched)">
+          <div *ngIf="myForm2.get('nomeEmpresa').getError('mensagem') && !myForm2.get('nomeEmpresa').errors.required">
+            <div *ngFor="let msg of myForm2.get('nomeEmpresa').getError('mensagem')[0]">
+              <span class="mensagem-erro">{{msg}}</span>
+            </div>
+          </div>
+          <div *ngIf="myForm2.get('nomeEmpresa').getError('required')">
+            <span class="mensagem-erro">Você deve Digitar o Nome da Empresa</span>
+          </div>
+        </div>
+      </div>
+      <div class="input-field col s2">
+        <input id="cnpj" placeholder="CNPJ" type="text" class="validate" formControlName="cnpj"
+               appKzMask="99.999.999/9999-99" (input)="isValid()" (blur)="isValid()" required>
+        <label for="cnpj">CNPJ<span class="mensagem-erro">*</span></label>
+        <div *ngIf="myForm2.get('cnpj').invalid && (myForm2.get('cnpj').dirty || myForm2.get('cnpj').touched)">
+          <div *ngIf="myForm2.get('cnpj').getError('mensagem') && !myForm2.get('cnpj').errors.required">
+            <div *ngFor="let msg of myForm2.get('cnpj').getError('mensagem')[0]">
+              <span class="mensagem-erro">{{msg}}</span>
+            </div>
+          </div>
+          <div *ngIf="myForm2.get('cnpj').getError('required')">
+            <span class="mensagem-erro">Você deve Digitar o número do CNPJ</span>
+          </div>
+        </div>
+      </div>
+      <div class="input-field col s2">
+        <input id="numero_contrato" placeholder="Número do Contrato" type="number" class="validate"
+               formControlName="numeroContrato" (input)="isValid()" (blur)="isValid()" required>
+        <label for="numero_contrato">Número do Contrato<span class="mensagem-erro">*</span></label>
+        <div
+          *ngIf="myForm2.get('numeroContrato').invalid && (myForm2.get('numeroContrato').dirty || myForm2.get('numeroContrato').touched)">
+          <div *ngIf="myForm2.get('numeroContrato').getError('required')">
+            <span class="mensagem-erro">Você deve Digitar um número para o contrato</span>
+          </div>
+        </div>
+      </div>
+      <div class="input-field col s2">
+        <input id="numero_processo_stj" placeholder="Número do Processo" type="number" class="validate"
+               formControlName="numeroProcessoSTJ" (input)="isValid()" (blur)="isValid()" required>
+        <label for="numero_processo_stj">Número do Prcesso no STJ<span class="mensagem-erro">*</span></label>
+        <div
+          *ngIf="myForm2.get('numeroProcessoSTJ').invalid && (myForm2.get('numeroProcessoSTJ').dirty || myForm2.get('numeroProcessoSTJ').touched)">
+          <div *ngIf="myForm2.get('numeroProcessoSTJ').getError('required')">
+            <span class="mensagem-erro">Você deve Digitar o número do processo</span>
+          </div>
+        </div>
+      </div>
+      <!--<div class="input-field col">
+          <select materialize="material_select" formControlName="ativo" (change)="isValid()" (blur)="isValid()">
+              <option disabled>Selecione uma Opção</option>
+              <option selected value="S">SIM</option>
+              <option value="N">NÃO</option>
+          </select>
+          <label>Ativo<span class="mensagem-erro">*</span></label>
+      </div> -->
+      <div class="input-field col s12">
+        <textarea materialize id="textarea1" class="materialize-textarea" data-length="120" formControlName="objeto"
+                  (input)="isValid()" (blur)="isValid()"></textarea>
+        <label for="textarea1">Objeto</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field col s3">
+        <select [materializeSelectOptions]="usuarios" materialize="material_select" id="primeiroSubstituto"
+                formControlName="primeiroSubstituto" (change)="isValid()" (blur)="isValid()">
+          <option disabled>Selecione um Substituto</option>
+          <option *ngFor="let usuario of usuarios" [value]="usuario.nome">{{usuario.nome}}</option>
+        </select>
+        <label for="primeiroSubstituto">Primeiro Substituto</label>
+      </div>
+      <div class="input-field col s3">
+        <select [materializeSelectOptions]="usuarios" materialize="material_select" id="segundoSubstituto"
+                formControlName="segundoSubstituto" (change)="isValid()" (blur)="isValid()">
+          <option disabled>Selecione um Substituto</option>
+          <option *ngFor="let usuario of usuarios" [value]="usuario.nome">{{usuario.nome}}</option>
+        </select>
+        <label for="segundoSubstituto">Segundo Substituto</label>
+      </div>
+    </div>
+    <h5>Vigência</h5>
+    <div class="row">
+      <div class="input-field col">
+        <input formControlName="inicioVigencia" id="inicio_vigencia" placeholder="Ex.: 02/01/2000" type="text"
+               class="validate" required minlength="10" maxlength="10" appMaskDate
+               (blur)="isValid()" (input)="isValid()">
+        <label for="inicio_vigencia">Data de Início da Vigência<span class="mensagem-erro">*</span></label>
+        <div
+          *ngIf="myForm2.get('inicioVigencia').invalid && (myForm2.get('inicioVigencia').dirty || myForm2.get('inicioVigencia').touched)">
+          <div
+            *ngIf="myForm2.get('inicioVigencia').getError('mensagem') && !myForm2.get('inicioVigencia').errors.required">
+            <div *ngFor="let msg of myForm2.get('inicioVigencia').getError('mensagem')[0]">
+              <span class="mensagem-erro">{{msg}}</span>
+            </div>
+          </div>
+          <div *ngIf="myForm2.get('inicioVigencia').getError('required')">
+            <span class="mensagem-erro">Você deve digitar uma data</span>
+          </div>
+        </div>
+      </div>
+      <div class="input-field col l2">
+        <input formControlName="fimVigencia" id="fim_vigencia" placeholder="Fim da Vigência" type="text" maxlength="10"
+               class="validate" minlength="10" maxlength="10" required
+               appMaskDate (blur)="isValid()" (input)="isValid()">
+        <label for="fim_vigencia">Data Fim da Vigência<span class="mensagem-erro">*</span></label>
+        <div
+          *ngIf="myForm2.get('fimVigencia').invalid && (myForm2.get('fimVigencia').dirty || myForm2.get('fimVigencia').touched)">
+          <div *ngIf="myForm2.get('fimVigencia').getError('mensagem') && !myForm2.get('fimVigencia').errors.required">
+            <div *ngFor="let msg of myForm2.get('fimVigencia').getError('mensagem')[0]">
+              <span class="mensagem-erro">{{msg}}</span>
+            </div>
+          </div>
+          <div *ngIf="myForm2.get('fimVigencia').getError('required')">
+            <span class="mensagem-erro">Você deve digitar uma data</span>
+          </div>
+        </div>
+      </div>
+      <div class="input-field col l2">
+        <input formControlName="assinatura" id="data_assinatura" placeholder="Data de Assinatura" type="text"
+               class="validate" required minlength="10" maxlength="10" appMaskDate
+               (blur)="isValid()" (input)="isValid()">
+        <label for="data_assinatura">Data de Assinatura<span class="mensagem-erro">*</span></label>
+        <div
+          *ngIf="myForm2.get('assinatura').invalid && (myForm2.get('assinatura').dirty || myForm2.get('assinatura').touched)">
+          <div *ngIf="myForm2.get('assinatura').getError('mensagem') && !myForm2.get('assinatura').errors.required">
+            <div *ngFor="let msg of myForm2.get('assinatura').getError('mensagem')[0]">
+              <span class="mensagem-erro">{{msg}}</span>
+            </div>
+          </div>
+          <div *ngIf="myForm2.get('assinatura').getError('required')">
+            <span class="mensagem-erro">Você deve digitar uma data</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <h5>Percentuais</h5>
+    <div class="row">
+      <div class="input-field col l3">
+        <select materialize="material_select" formControlName="percentualFerias" (change)="isValid()"
+                (blur)="isValid()">
+          <option disabled>Selecione um percentual para Férias</option>
+          <option value="8.33">8.33%</option>
+          <option value="9.09">9.09%</option>
+        </select>
+        <label>Percentual de Férias<span class="mensagem-erro">*</span></label>
+      </div>
+      <div class="input-field col l4">
+        <select materialize="material_select" formControlName="percentualDecimoTerceiro" (change)="isValid()"
+                (blur)="isValid()">
+          <option disabled>Selecione um percentual para Décimo Terceiro</option>
+          <option value="8.33">8.33%</option>
+          <option value="9.33">9.09%</option>
+        </select>
+        <label>Percentual de Décimo Terceiro<span class="mensagem-erro">*</span></label>
+      </div>
+      <div class="input-field col l2">
+        <input placeholder="Submódulo 4.1" id="percentual_incidencia" type="text" class="validate"
+               formControlName="percentualIncidencia" currencyMask
+               [options]="{ prefix: '', thousands: '.', decimal: ',', allowNegative: 'false', suffix: '%'}"
+               (input)="isValid()" (blur)="isValid()">
+        <label for="percentual_incidencia">Percentual de Incidência do Submódulo 4.1<span class="mensagem-erro">*</span></label>
+        <div
+          *ngIf="myForm2.get('percentualIncidencia').invalid && (myForm2.get('percentualIncidencia').dirty || myForm2.get('percentualIncidencia').touched)">
+          <div *ngIf="myForm2.get('percentualIncidencia').getError('mensagem')">
+            <div *ngFor="let msg of myForm2.get('percentualIncidencia').getError('mensagem')[0]">
+              <span class="mensagem-erro">{{msg}}</span>
+            </div>
+          </div>
+          <div *ngIf="myForm2.get('percentualIncidencia').getError('required')">
+            <span class="mensagem-erro">Você deve digitar um percentual</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+  <form [formGroup]="myForm" autocomplete="off">
+    <h5>Funções</h5>
+    <div formArrayName="cargos" class="row">
+      <div *ngFor="let cargo of getFormArrayItems(); let i = index">
+        <div [formGroupName]="i">
+          <div class="row">
+            <div class="col s12 panel-content darken-1">
+              <div class="valign-wrapper">
+                <div class="titulo-modal">
+                  <p class="white-text ">Função {{i + 1}}</p>
+                </div>
+                <div class=" col offset-l11">
+                  <h6 class="botao-fechar" (click)="removeCargo(i)" *ngIf="formArrayLength() > 1"><a class="white-text"><i
+                    class="material-icons right">close</i></a></h6>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="input-field col s5 form-group">
+            <select [materializeSelectOptions]="cargosCadastrados" formControlName="nome" materialize="material_select"
+                    class="cargos validate" [ngModel]="cargosCadastrados"
+                    (change)="isValid()" (blur)="isValid()">
+              <option disabled>Selecione uma função</option>
+              <option *ngFor="let cargoCadastrado of cargosCadastrados" [value]="cargoCadastrado.nome">
+                {{cargoCadastrado.nome}}
+              </option>
+            </select>
+            <label>Nome da Função<span class="mensagem-erro">*</span></label>
+          </div>
+          <div class="input-field col form-group">
+            <input id="remuneracao_field" formControlName="remuneracao" type="text" currencyMask
+                   [options]="{prefix: 'R$', thousands: '.', decimal: ',', allowNegative: 'false'}"
+                   (change)="isValid()" (blur)="isValid()" required>
+            <label for="remuneracao_field">Salário Base<span class="mensagem-erro">*</span></label>
+          </div>
+          <div class="input-field col form-group">
+            <input id="adicionais" formControlName="adicionais" type="text" currencyMask
+                   [options]="{prefix: 'R$', thousands: '.', decimal: ',', allowNegative: 'false'}"
+                   (change)="isValid()" (blur)="isValid()" required>
+            <label for="adicionais">Adicionais<span class="mensagem-erro">*</span></label>
+          </div>
+          <div class="input-field col form-group">
+            <input id="trienios" formControlName="trienios" type="text" currencyMask
+                   [options]="{prefix: 'R$', thousands: '.', decimal: ',', allowNegative: 'false'}"
+                   (change)="isValid()" (blur)="isValid()" required>
+            <label for="trienios">Triênios<span class="mensagem-erro">*</span></label>
+          </div>
+          <div class="col s12">
+            <div class="row">
+              <div class="input-field col s8 form-group">
+                <select [materializeSelectOptions]="convencoesColetivas" formControlName="convencao"
+                        materialize="material_select" class="cargos validate" [ngModel]="cargosCadastrados"
+                        (change)="isValid()" (blur)="isValid()">
+                  <option disabled>Selecione uma convenção</option>
+                  <option *ngFor="let convencao of convencoesColetivas" [value]="convencao.codigo">{{convencao.nome}} -
+                    {{convencao.sigla}}
+                  </option>
+                </select>
+                <label>Convenção Coletiva<span class="mensagem-erro">*</span></label>
+              </div>
+            </div>
+          </div>
+          <div class="input-field col form-group">
+            <input id="dataBase" placeholder="Ex.: 01/01/2000" formControlName="dataBase" class="validate" type="text"
+                   appMaskDate (change)="isValid()" (blur)="isValid()" required minlength="10"
+                   maxlength="10">
+            <label for="dataBase">Data Base da Convenção<span class="mensagem-erro">*</span></label>
+          </div>
+          <!-- <div class="row">
+             <h5 class="col m2 l3 convencao offset-l1">Convenção Coletiva: </h5>
+             <div class="input-field col l1 s3 m2 xl1">
+               <input id="dia" placeholder="Dia" type="number" class="validate" min="1" max="31" formControlName="dia" (input)="isValid()" (blur)="isValid()" required>
+               <label for="dia">Dia<span class="mensagem-erro">*</span></label>
+             </div>
+             <div class="input-field col l2 s3 m2 xl1 mes">
+               <select name="mes" materialize="material_select" class="validate" formControlName="mes" (change)="isValid()" (blur)="isValid()" required>
+                 <option *ngFor="let mes of meses" [value]="mes.valor">{{ mes.mes }}</option>
+               </select>
+               <label >Selecione um mês<span class="mensagem-erro">*</span></label>
+             </div>
+           </div> -->
+          <!--<div class="input-field col l12 form-group">
+              <textarea placeholder="Descrição" class="materialize-textarea" data-length="200" id="textarea2" formControlName="descricao" (input)="isValid()"></textarea>
+              <label for="textarea2">Descrição do Cargo</label>
+          </div> -->
+        </div>
+      </div>
+    </div>
+    <button class="btn waves-effect waves-light" (click)="adicionaCargo(); $event.preventDefault();"><a
+      class="white-text">Adicionar Outro Cargo</a><i class="material-icons left">add</i></button>
+  </form>
+  <br>
+  <div class="divider"></div>
+  <br>
+  <div class="row">
+    <div class="center-align">
+      <button class="btn waves-effect" [disabled]="!(myForm.valid && myForm2.valid)" (click)="enviarCadastroContrato()">
+        Cadastrar
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,20 @@
+.tab a.active {
+  color: white !important;
+  background-color: #eceff1 !important; }
+
+.tabs .tab a:hover {
+  background-color: #404f54 !important;
+  color: white !important; }
+
+.tabs .tab a {
+  color: #212121 !important; }
+
+ul > .tabs > li > .indicator {
+  background-color: black !important; }
+
+.row .col {
+  float: none !important;
+  margin-left: auto;
+  margin-right: auto; }
+
+/*# sourceMappingURL=ferias.component.css.map */

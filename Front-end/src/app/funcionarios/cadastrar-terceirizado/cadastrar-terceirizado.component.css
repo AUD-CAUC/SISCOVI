@@ -1,0 +1,28 @@
+.row .col {
+  float: none !important;
+  margin-left: auto;
+  margin-right: auto; }
+
+.panel-content {
+  background-color: #37474f;
+  -webkit-border-radius: 50px !important;
+  -moz-border-radius: 50px !important;
+  border-radius: 50px !important; }
+
+div .row .titulo-modal {
+  padding-top: 0.4em; }
+
+div .row .titulo-modal i.right {
+  top: -5px !important;
+  position: relative !important;
+  color: white; }
+
+.mensagem-erro {
+  color: red;
+  font-size: 1em; }
+
+.validate.ng-dirty.ng-invalid {
+  border-bottom: 1px solid red;
+  box-shadow: 0 1px 0 0 red; }
+
+/*# sourceMappingURL=cadastrar-terceirizado.component.css.map */

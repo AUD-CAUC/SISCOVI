@@ -22,7 +22,7 @@ public class DecimoTerceiroDAO {
      * @param codigoContrato
      * @return
      */
-    public ArrayList<TerceirizadoDecimoTerceiro> getListaTerceirizadoParaCalculoDeDecimoTerceiro(int codigoContrato) {
+    public ArrayList<TerceirizadoDecimoTerceiro> getListaTerceirizadoParaCalculoDeDecimoTerceiro(int codigoContrato, int pAnoContagem) {
         ArrayList<TerceirizadoDecimoTerceiro> terceirizados = new ArrayList<>();
         String sql = "SELECT TC.COD, " +
                 " T.NOME" +
@@ -36,7 +36,7 @@ public class DecimoTerceiroDAO {
             float vSaldoDecimoTericeiro = 0; //Este saldo é correspondente ao ano da data de início da contagem.
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
-                    Date inicioContagem = decimoTerceiro.RetornaDataInicioContagem(resultSet.getInt("COD"));
+                    Date inicioContagem = decimoTerceiro.RetornaDataInicioContagem(resultSet.getInt("COD"), pAnoContagem);
                     vSaldoDecimoTericeiro = saldoDecimoTerceiro.getSaldoContaVinculada(resultSet.getInt("COD"), inicioContagem.toLocalDate().getYear(), 1, 3);
                     TerceirizadoDecimoTerceiro terceirizadoDecimoTerceiro = new TerceirizadoDecimoTerceiro(resultSet.getInt("COD"),
                             resultSet.getString("NOME"),

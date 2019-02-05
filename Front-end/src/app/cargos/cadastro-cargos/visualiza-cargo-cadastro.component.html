@@ -1,0 +1,16 @@
+<div class="row">
+    <table class="centered highlight z-depth-2 hoverable">
+        <thead>
+        <tr>
+            <th>Nome da Função</th>
+            <th>Descrição</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let cargo of cargos; let i = index">
+            <td (click)="editarCampo($event)" (blur)="editarNomeCargo($event, i)">{{cargo.nome}}</td>
+            <td (click)="editarCampo($event)" (blur)="editarDescricao($event, i)">{{cargo.descricao}}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>

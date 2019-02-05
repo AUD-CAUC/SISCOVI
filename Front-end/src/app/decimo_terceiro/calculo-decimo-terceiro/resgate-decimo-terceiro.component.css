@@ -1,0 +1,26 @@
+.row .col {
+  float: none !important;
+  margin-left: auto;
+  margin-right: auto; }
+
+.mensagem-erro {
+  color: red;
+  font-size: 1em; }
+
+.validate.ng-dirty.ng-invalid {
+  border-bottom: 1px solid red;
+  box-shadow: 0 1px 0 0 red; }
+
+.input-field input[type=text].invalid {
+  border-bottom: 1px solid red;
+  box-shadow: 0 1px 0 0 red; }
+
+.input-field input[type=text].valid.ng-invalid {
+  border-bottom: 1px solid red;
+  box-shadow: 0 1px 0 0 red; }
+
+/* icon prefix focus color */
+.input-field .prefix.active {
+  color: red; }
+
+/*# sourceMappingURL=resgate-decimo-terceiro.component.css.map */

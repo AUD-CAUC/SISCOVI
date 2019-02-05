@@ -1,4 +1,6 @@
 package br.jus.stj.siscovi.dao;
+import br.jus.stj.siscovi.dao.sql.ConsultaTSQL;
+import br.jus.stj.siscovi.dao.sql.UpdateTSQL;
 import br.jus.stj.siscovi.model.UsuarioModel;
 
 
@@ -217,4 +219,24 @@ public class UsuarioDAO {
         }
         return false;
     }
+
+    public boolean alteraUsuario(UsuarioModel usuario, String currentUser) {
+        ConsultaTSQL consulta = new ConsultaTSQL(connection);
+        UpdateTSQL update = new UpdateTSQL(connection);
+
+        try {
+
+            update.UpdateUsuario(usuario.getCodigo(),consulta.RetornaCodPerfilUsuario(usuario.getPerfil()), usuario.getNome(), usuario.getLogin(), "SYSTEM");
+
+            return true;
+
+        } catch (Exception exception) {
+
+            throw new NullPointerException("Não foi possível atualizar o uusuário.");
+
+        }
+
+    }
+
 }
+

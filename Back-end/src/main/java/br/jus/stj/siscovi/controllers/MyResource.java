@@ -8,8 +8,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-
-
 @ApplicationPath("/rest")
 public class MyResource extends Application {
     @Override

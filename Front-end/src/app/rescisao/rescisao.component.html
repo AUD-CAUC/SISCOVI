@@ -1,0 +1,17 @@
+<div class="container">
+    <h2 class="center">Rescisão</h2>
+    <div class="row">
+        <br>
+        <div class="col s12">
+            <ul class="tabs tabs-fixed-width" materialize="tabs" [materializeParams]="tabSelectionParams">
+                <li class="tab col s3 text-grey text-darken-1" ><a [class.active]="testeRetencoes()"(click)="setRetencoesActive()">Restituições</a></li>
+                <li class="tab col s3 text-grey text-darken-1"><a [class.active]="testeCalculo()" (click)="setCalcularActive()" >Calcular</a></li>
+                <li class="tab col s3 text-grey text-darken-1"><a [class.active]="testePendentes()" (click)="setPendentesActive()">Cálculos Pendentes de Aprovação</a></li>
+                <li class="tab col s3 text-grey text-darken-1"><a [class.active]="testeExecutados()" (click)="setExecutadosActive()">Cálculos Pendentes de Execução</a></li>
+            </ul>
+        </div>
+        <div id="test1" class="col s12" active="testeRetencoes()"><app-relatorio-retencoes-ferias-component *ngIf="testeRetencoes()"></app-relatorio-retencoes-ferias-component></div>
+        <div id="test2" class="col s12" active="testeCalculo()"><app-calculo-rescisao-component *ngIf="testeCalculo()" (navegaParaViewDeCalculos)="calculosPendentes($event)"></app-calculo-rescisao-component></div>
+        <div id="test3" class="col s12" active="testePendentes()"><app-rescisao-pendente-component *ngIf="testePendentes()" [codigoContrato]="codigoContrato"></app-rescisao-pendente-component></div>
+    </div>
+</div>

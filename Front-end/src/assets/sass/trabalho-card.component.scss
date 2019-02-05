@@ -1,0 +1,14 @@
+.card {
+	.card-content {
+		height: 100%;
+		padding-bottom: 77px;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		
+		.desc {
+			flex-grow: 10;
+			align-items: flex-start;
+		}
+	}
+}

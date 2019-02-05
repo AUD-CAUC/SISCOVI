@@ -67,7 +67,7 @@ public class TotalMensalController {
         Gson gson = new Gson();
         String json = null;
         try {
-            new TotalMensalAReter(connectSQLServer.dbConnect()).CalculaTotalMensal(codigoContrato, mes, ano);
+            new TotalMensalAReter(connectSQLServer.dbConnect()).CalculaTotalMensal(codigoContrato, mes, ano, "SYSTEM");
             TotalMensalDAO totalMensalDAO = new TotalMensalDAO(connectSQLServer.dbConnect());
             ArrayList<TotalMensal> totais = totalMensalDAO.getCalculoRealizado(new ContratoDAO(connectSQLServer.dbConnect()).codigoGestorContrato(codigoUsuario, codigoContrato), codigoContrato, mes, ano);
 

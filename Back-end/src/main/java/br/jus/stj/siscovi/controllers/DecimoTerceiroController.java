@@ -23,15 +23,16 @@ import java.util.List;
 public class DecimoTerceiroController {
 
     @GET
-    @Path("/getTerceirizadosDecimoTerceiro={codigoContrato}/{tipoRestituicao}")
+    @Path("/getTerceirizadosDecimoTerceiro={codigoContrato}/{tipoRestituicao}/{anoContagem}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getTerceirizadosParaDecimoTerceiro (@PathParam("codigoContrato") int codigoContrato,
-                                                        @PathParam("tipoRestituicao") String tipoRestituicao) {
+                                                        @PathParam("tipoRestituicao") String tipoRestituicao,
+                                                        @PathParam("anoContagem") int anoContagem) {
         Gson gson = new GsonBuilder().setDateFormat("YYYY-MM-dd").create();
         ConnectSQLServer connectSQLServer = new ConnectSQLServer();
         DecimoTerceiroDAO decimoTerceiroDAO = new DecimoTerceiroDAO(connectSQLServer.dbConnect());
         String json = "";
-            json = gson.toJson(decimoTerceiroDAO.getListaTerceirizadoParaCalculoDeDecimoTerceiro(codigoContrato));
+            json = gson.toJson(decimoTerceiroDAO.getListaTerceirizadoParaCalculoDeDecimoTerceiro(codigoContrato, anoContagem));
         try {
             connectSQLServer.dbConnect().close();
         } catch (SQLException e) {

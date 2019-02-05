@@ -1,0 +1,229 @@
+<div class="container">
+  <h2 class="center">Cadastar Ajuste</h2>
+  <div class="row">
+    <h4 class="center">Contrato</h4>
+    <div class="row">
+      <div class="col s8" id="selected-contrato-center">
+        <select materialize="material_select" [materializeSelectOptions]="contratos"
+                (change)="enableField($event.target.value)" class="center center-align">
+          <option disabled>Selecione um Contrato</option>
+          <option *ngFor="let contrato of contratos" [value]="contrato.codigo">
+            {{contrato.nomeDaEmpresa}} - Contrato Nº: {{contrato.numeroDoContrato}}
+          </option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container">
+  <div class="row" *ngIf="contrato">
+    <form [formGroup]="myForm" materialize class="col s12">
+      <h5 class="left-align">Informações Gerais</h5>
+      <div class="row">
+        <div class="input-field col s5">
+          <select materialize="material_select" [materializeSelectOptions]="tiposEventosContratuais" id="tipo_ajuste" formControlName="tipoAjuste" required>
+            <option disabled>Selecione o tipo de Ajuste</option>
+           <option *ngFor="let tipoEvento of tiposEventosContratuais" [value]="tipoEvento.cod">{{tipoEvento.tipo}}</option>
+          </select>
+          <label for="tipo_ajuste">Tipo de Ajuste<span class="mensagem-erro">*</span></label>
+        </div>
+        <div class="input-field col s5">
+          <select materialize="material_select" id="prorrogacao" formControlName="prorrogacao" required>
+            <option value="N" selected>Não</option>
+            <option value="S">Sim</option>
+          </select>
+          <label for="prorrogacao">Prorrogação<span class="mensagem-erro">*</span></label>
+        </div>
+        <div class="input-field col ">
+          <input class="validate" id="ativo" type="text" formControlName="ativo" disabled>
+          <label for="ativo">Ativo</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s4">
+          <select materialize="material_select" id="nome_gestor" [materializeSelectOptions]="usuarios"
+                  formControlName="gestor">
+            <option disabled>Selecione o Nome do Gestor</option>
+            <option *ngFor="let usuario of usuarios" [value]="usuario.nome"
+                    [selected]="usuario.nome == nomeGestorContrato ">{{usuario.nome}}
+            </option>
+          </select>
+          <label for="nome_gestor">Nome Do Gestor</label>
+        </div>
+        <div class="input-field col s4">
+          <select materialize="material_select" id="nome_substituto_1" [materializeSelectOptions]="usuarios"
+                  formControlName="primeiroSubstituto">
+            <option disabled>Opcional</option>
+            <option *ngFor="let usuario of usuarios" [value]="usuario.nome"
+                    [selected]="usuario.nome == primeiroSubstituto">{{usuario.nome}}
+            </option>
+          </select>
+          <label for="nome_substituto_1">Primeiro Substituto</label>
+        </div>
+        <div class="input-field col s4">
+          <select materialize="material_select" id="nome_substituto_2" class="validate"
+                  [materializeSelectOptions]="usuarios" formControlName="segundoSubstituto">
+            <option disabled>Opcional</option>
+            <option *ngFor="let usuario of usuarios" [value]="usuario.nome"
+                    [selected]="usuario.nome == segundoSubstituto">{{usuario.nome}}
+            </option>
+          </select>
+          <label for="nome_substituto_2">Segundo Substituto</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col ">
+          <input placeholder="Ex.: 70/2013" id="numero_contrato" type="text" class="validate"
+                 formControlName="numeroContrato" disabled>
+          <label for="numero_contrato">Número do Contrato</label>
+        </div>
+        <div class="input-field col s6">
+          <input id="nome_empresa" class="validate" placeholder="" type="text" formControlName="nomeEmpresa"
+                 disabled>
+          <label for="nome_empresa">Nome da Empresa</label>
+        </div>
+        <div class="input-field col ">
+          <input placeholder="Ex.: 03677085700013" id="cnpj" type="text" class="validate"
+                 formControlName="cnpj" disabled>
+          <label for="cnpj">CNPJ</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col ">
+          <input placeholder="dd/mm/aaaa" type="text" id="data_inicio" class="validate"
+                 formControlName="inicioVigencia" appMaskDate>
+          <label for="data_inicio">Inicio da Vigência<span class="mensagem-erro">*</span></label>
+        </div>
+        <div class="input-field col ">
+          <input class="validate" placeholder="dd/mm/aaaa" id="data_fim" type="text"
+                 formControlName="fimVigencia" appMaskDate>
+          <label for="data_fim">Fim da Vigência<span class="mensagem-erro">*</span></label>
+        </div>
+        <div class="input-field col ">
+          <input class=" validate" placeholder="dd/mm/aaaa" id="data_assinatura" formControlName="assinatura"
+                 type="text" appMaskDate>
+          <label for="data_assinatura">Data de Assinatura<span class="mensagem-erro">*</span></label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+                    <textarea materialize id="objeto" data-length="200" formControlName="objeto"
+                              class="materialize-textarea" disabled></textarea>
+          <label for="objeto">Objeto</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+                    <textarea class="materialize-textarea" (input)="verificaAjusteASerCadastrado()" materialize id="assunto" formControlName="assunto"
+                              data-length="120"></textarea>
+          <label for="assunto">Assunto</label>
+        </div>
+      </div>
+      <h5 class="left-align">Percentuais</h5>
+      <div class="row">
+        <div class="input-field col s4">
+          <select id="percentual_ferias" materialize="material_select" formControlName="percentualFerias"
+                  [materializeSelectOptions]="percentuaisFerias">
+            <option disabled>Selecione um percentual para Férias</option>
+            <option *ngFor="let percentual of percentuaisFerias" [value]="percentual.percentual"
+                    [selected]="percentual.percentual == percentualFerias">{{percentual.percentual / 100 |
+              percent}}
+            </option>
+          </select>
+          <label for="percentual_ferias">Percentual de Férias<span class="mensagem-erro">*</span></label>
+        </div>
+        <div class="input-field col s5">
+          <select id="percentual_decimo_terceiro" materialize="material_select"
+                  formControlName="percentualDecimoTerceiro"
+                  [materializeSelectOptions]="percentuaisDecimoTerceiro">
+            <option disabled>Selecione um percentual para Décimo Terceiro</option>
+            <option *ngFor="let percentual of percentuaisDecimoTerceiro" [value]="percentual.percentual"
+                    [selected]="percentual.percentual == percentualDecimoTerceiro">{{percentual.percentual /
+              100 | percent}}
+            </option>
+          </select>
+          <label for="percentual_decimo_terceiro">Percentual de Décimo Terceiro<span class="mensagem-erro">*</span></label>
+        </div>
+        <div class="input-field col s3">
+          <input id="percentual_incidencia" class="validate" currencyMask
+                 [options]="{ prefix: '', thousands: '.', decimal: ',', allowNegative: 'false', suffix: '%'}"
+                 type="text" formControlName="percentualIncidencia">
+          <label for="percentual_incidencia">Percentual de Incidência do Submódulo 4.1<span class="mensagem-erro">*</span></label>
+        </div>
+      </div>
+      <h5 class="left-align">Funções do Contrato</h5>
+      <div formArrayName="cargos" class="row">
+        <div *ngFor="let cargo of getFormArrayItems(); let i = index">
+          <div [formGroupName]="i">
+            <div class="row">
+              <div class="col s12 panel-content darken-1">
+                <div class="valign-wrapper">
+                  <div class="titulo-modal">
+                    <p class="white-text ">Função {{i + 1}}</p>
+                  </div>
+                  <!--<div class=" col offset-l11">
+                      <h6 class="botao-fechar" (click)="removeCargo(i)" *ngIf="formArrayLength() > 1"><a class="white-text"><i class="material-icons right">close</i></a></h6>
+                  </div> -->
+                </div>
+              </div>
+            </div>
+            <div class="input-field col s5 form-group">
+              <input id="ajuste_funcoes" formControlName="nome" type="text" class="validate">
+              <label for="ajuste_funcoes">Nome do Cargo<span class="mensagem-erro">*</span></label>
+            </div>
+            <div class="input-field col form-group">
+              <input id="remuneracao_field" formControlName="remuneracao" type="text" currencyMask
+                     [options]="{prefix: 'R$', thousands: '.', decimal: ',', allowNegative: 'false'}"
+                     required>
+              <label for="remuneracao_field">Salário Base<span class="mensagem-erro">*</span></label>
+            </div>
+            <div class="input-field col form-group">
+              <input id="trienios_field" formControlName="trienios" type="text" currencyMask
+                     [options]="{prefix: 'R$', thousands: '.', decimal: ',', allowNegative: 'false'}"
+              >
+              <label for="trienios_field">Triênios</label>
+            </div>
+            <div class="input-field col form-group">
+              <input id="adicionais_field" formControlName="adicionais" type="text" currencyMask
+                     [options]="{prefix: 'R$', thousands: '.', decimal: ',', allowNegative: 'false'}"
+                     required>
+              <label for="adicionais_field">Adicionais<span class="mensagem-erro">*</span></label>
+            </div>
+            <div class="col s12">
+              <div class="row">
+                <div class="input-field col s12 form-group">
+                  <select [materializeSelectOptions]="convencoesColetivas" formControlName="convencao"
+                          materialize="material_select" class="cargos validate"
+                          (change)="selectConvencao($event.target.value, i)">
+                    <option disabled>Selecione uma convenção</option>
+                    <option *ngFor="let convencao of convencoesColetivas" [value]="convencao.codigo"
+                            [selected]="convencao.codigo == this.myForm.get('cargos').get('' + i).get('convencao').value"
+                    >{{convencao.sigla}} - {{convencao.nome}}
+                    </option>
+                  </select>
+                  <label>Convenção Coletiva<span class="mensagem-erro">*</span></label>
+                </div>
+              </div>
+            </div>
+            <div class="input-field col form-group">
+              <input class="validate" placeholder="Ex.:01/01/2000" id="data-base"
+                     formControlName="dataBase" type="text" appMaskDate disabled>
+              <label for="data-base">Data Base<span class="mensagem-erro">*</span></label>
+            </div>
+            <!--<div class="input-field col l12 form-group">
+                <textarea placeholder="Descrição" class="materialize-textarea" data-length="200"
+                          id="textarea2" formControlName="descricao"></textarea>
+                <label for="textarea2">Descrição do Cargo</label>
+            </div> -->
+          </div>
+        </div>
+      </div>
+      <!--<button class="btn waves-effect waves-light" (click)="adicionaCargo(); $event.preventDefault();">Adicionar
+          Outro Cargo
+      </button> -->
+    </form>
+    <div class="center-align">
+      <button class="btn waves-effect" [disabled]="myForm.invalid" (click)="verificaAjusteASerCadastrado()">Cadastrar Contrato</button>
+    </div>
+  </div>
+</div>

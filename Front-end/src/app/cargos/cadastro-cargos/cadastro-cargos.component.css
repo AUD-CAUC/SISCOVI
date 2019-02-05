@@ -1,0 +1,52 @@
+.mensagem-erro {
+  color: red;
+  font-size: 1em; }
+
+.validate.ng-dirty.ng-invalid {
+  border-bottom: 1px solid red;
+  box-shadow: 0 1px 0 0 red; }
+
+.panel-content {
+  width: 81rem;
+  height: 2em;
+  display: flex;
+  padding-top: 0.2em;
+  margin-botton: 2em !important;
+  border-radius: 1em 1em 1em 1em;
+  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.3);
+  -webkit-perspective: -15em;
+  -webkit-transform-style: preserve-3d;
+  background-color: #404f54; }
+
+select > .cargos {
+  max-height: 0.5em !important; }
+
+p .white-text {
+  padding-bottom: 0.5em; }
+
+div > .valign-wrapper > .col > .offset-l11 {
+  margin-top: 0 !important; }
+
+h6 {
+  margin-top: 0 !important; }
+
+.titulo-modal {
+  margin-left: 0.5em;
+  min-width: 5em; }
+
+.row .col {
+  margin-top: 0.5em !important; }
+
+form p {
+  margin-top: 0 !important; }
+
+div .mes {
+  margin-left: 0 !important; }
+
+.file-field .input-field {
+  cursor: pointer !important; }
+
+table.highlight tbody tr:hover {
+  background-color: #9e9e9e; }
+
+/*# sourceMappingURL=cadastro-cargos.component.css.map */

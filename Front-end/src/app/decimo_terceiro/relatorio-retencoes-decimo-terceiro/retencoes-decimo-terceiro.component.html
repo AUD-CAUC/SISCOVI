@@ -1,0 +1,42 @@
+<br>
+<div class="row">
+    <div class="input-field col l7">
+        <select id="selecao_contrato"materialize="material_select" [materializeSelectOptions]="contratos" (change)="defineCodigoContrato($event.target.value)">
+            <option disabled>Selecione um Contrato</option>
+            <option *ngFor="let contrato of contratos" [value]="contrato.codigo" [selected]="codigoContrato == contrato.codigo">{{contrato.nomeDaEmpresa}} - Contrato nº: {{contrato.numeroDoContrato}}</option>
+        </select>
+        <label for="selecao_contrato">Contrato<span class="red-text"> *</span></label>
+    </div>
+</div>
+<div class="row" *ngIf="!calculos && codigoContrato">
+    <div class="col s12 grey lighten-4" style="margin-top: 1em">
+        <br>
+        <h5 class="center-align">Não há cálculos realizados ainda ! <i class="small material-icons">mood_bad</i></h5>
+    </div>
+</div>
+<table  class="highlight centered responsive-table" *ngIf="calculos && codigoContrato">
+    <thead>
+    <tr>
+        <th >Terceirizado</th>
+        <th >Função</th>
+        <th>Tipo de Restituição</th>
+        <th>Parcela</th>
+        <th>Data para Início da Contagem</th>
+        <th>Valor de Décimo Terceiro</th>
+        <th>Valor de Incidência</th>
+        <th>Total</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let calculo of calculos; let k = index">
+        <td >{{calculo.nomeTerceirizado}}</td>
+        <td >{{calculo.nomeCargo}}</td>
+        <td >{{calculo.tipoRestituicao}}</td>
+        <td >{{calculo.parcelas | parcelaPipe}}</td>
+        <td >{{calculo.inicioContagem | date: 'shortDate'}}</td>
+        <td >{{calculo.valoresDecimoTerceiro.valorDecimoTerceiro | currency:'BRL':true:'1.2-2'}}</td>
+        <td >{{calculo.valoresDecimoTerceiro.valorIncidenciaDecimoTerceiro | currency:'BRL':true:'1.2-2'}}</td>
+        <td >{{calculo.valoresDecimoTerceiro.valorDecimoTerceiro + calculo.valoresDecimoTerceiro.valorIncidenciaDecimoTerceiro | currency:'BRL':true:'1.2-2'}}</td>
+    </tr>
+    </tbody>
+</table>

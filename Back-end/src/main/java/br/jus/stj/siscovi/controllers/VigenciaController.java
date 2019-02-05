@@ -44,4 +44,5 @@ public class VigenciaController {
         String json = gson.toJson(listaVigencias);
         return Response.ok(json, MediaType.APPLICATION_JSON).build();
     }
+
 }
