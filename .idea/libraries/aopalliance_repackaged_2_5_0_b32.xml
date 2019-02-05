@@ -1,0 +1,40 @@
+<component name="libraryTable">
+  <library name="aopalliance-repackaged-2.5.0-b32">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/Back-end/lib/aopalliance-repackaged-2.5.0-b32.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Back-end/lib/gson-2.8.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Back-end/lib/hk2-api-2.5.0-b32.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Back-end/lib/hk2-locator-2.5.0-b32.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Back-end/lib/hk2-utils-2.5.0-b32.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Back-end/lib/jackson-annotations-2.7.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Back-end/lib/jackson-core-2.7.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Back-end/lib/jackson-databind-2.7.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Back-end/lib/javassist-3.20.0-GA.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Back-end/lib/javax.annotation-api-1.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Back-end/lib/javax.inject-2.5.0-b32.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Back-end/lib/javax.servlet-api-3.0.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Back-end/lib/javax.ws.rs-api-2.0.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Back-end/lib/javax.ws.rs-api-2.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Back-end/lib/jaxb-api-2.2.7.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Back-end/lib/jbcrypt-1.0.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Back-end/lib/jersey-client.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Back-end/lib/jersey-common.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Back-end/lib/jersey-container-servlet-core.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Back-end/lib/jersey-container-servlet.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Back-end/lib/jersey-guava-2.25.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Back-end/lib/jersey-media-jaxb.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Back-end/lib/jersey-server.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Back-end/lib/jjwt-0.9.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Back-end/lib/mssql-jdbc-6.2.2.jre8.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Back-end/lib/osgi-resource-locator-1.0.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Back-end/lib/persistence-api-1.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Back-end/lib/validation-api-1.1.0.Final.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Back-end/lib/org.osgi.core-4.2.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/Back-end/lib/jjwt-0.9.0-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Back-end/lib/org.osgi.core-4.2.0.jar!/OSGI-OPT/src" />
+    </SOURCES>
+  </library>
+</component>
