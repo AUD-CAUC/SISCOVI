@@ -478,4 +478,58 @@ public class Ferias {
 
     }
 
+    /**
+     * Função que retorna se aparcela de 14 dias foi concedida em um determinado período aquisitivo.
+     * @param pCodTerceirizadoContrato
+     * @param pDataInicio
+     * @param pDataFim
+     * @return float
+     */
+
+    public boolean RetornaParcela14DiasFeriasPeriodo (int pCodTerceirizadoContrato, Date pDataInicio, Date pDataFim) {
+
+        boolean vParcela14Dias = false;
+        int vRetorno = 0;
+
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+
+        try {
+
+            preparedStatement = connection.prepareStatement("SELECT COUNT(cod)\n" +
+                    "    FROM tb_restituicao_ferias\n" +
+                    "    WHERE cod_terceirizado_contrato = ?\n" +
+                    "    AND data_inicio_periodo_aquisitivo = ?\n" +
+                    "    AND data_fim_periodo_aquisitivo = ?\n" +
+                    "    AND (DATEDIFF(day, DATA_INICIO_USUFRUTO, DATA_FIM_USUFRUTO) + 1) >= 14;");
+
+            preparedStatement.setInt(1, pCodTerceirizadoContrato);
+            preparedStatement.setDate(2, pDataInicio);
+            preparedStatement.setDate(3, pDataFim);
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+
+                vRetorno = resultSet.getInt(1);
+
+            }
+
+        } catch (SQLException sqle) {
+
+            sqle.printStackTrace();
+
+            throw new NullPointerException("Não foi possível identificar se já houve registro da parcela de 14 dias.");
+
+        }
+
+        if(vRetorno > 0) {
+
+            vParcela14Dias = true;
+
+        }
+
+        return vParcela14Dias;
+
+    }
+
 }
