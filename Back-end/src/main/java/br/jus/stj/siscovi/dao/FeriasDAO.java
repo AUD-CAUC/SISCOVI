@@ -45,6 +45,7 @@ public class FeriasDAO {
                     Date fimPeriodoAquisitivo = ferias.DataPeriodoAquisitivo(resultSet.getInt("COD"), 2);
                     int diasUsufruidos = ferias.RetornaDiasFeriasUsufruidosPeriodo(resultSet.getInt("COD"), inicioPeriodoAquisitivo, fimPeriodoAquisitivo);
                     boolean parcela14Dias = ferias.RetornaParcela14DiasFeriasPeriodo(resultSet.getInt("COD"), inicioPeriodoAquisitivo, fimPeriodoAquisitivo);
+                    String parcelaAnterior = ferias.RetornaMaiorParcelaConcedidaFeriasPeriodo(resultSet.getInt("COD"), inicioPeriodoAquisitivo, fimPeriodoAquisitivo);
 
                     TerceirizadoFerias terceirizadoFerias = new TerceirizadoFerias(resultSet.getInt("COD"),
                             resultSet.getString("NOME"),
@@ -52,7 +53,8 @@ public class FeriasDAO {
                             fimPeriodoAquisitivo,
                             diasUsufruidos,
                             parcela14Dias,
-                            ferias.ExisteFeriasTerceirizado(resultSet.getInt("COD")));
+                            ferias.ExisteFeriasTerceirizado(resultSet.getInt("COD"))
+                            parcelaAnterior);
                     terceirizados.add(terceirizadoFerias);
                 }
             }

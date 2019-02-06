@@ -481,7 +481,7 @@ public class Ferias {
     }
 
     /**
-     * Função que retorna se aparcela de 14 dias foi concedida em um determinado período aquisitivo.
+     * Função que retorna se a parcela de 14 dias foi concedida em um determinado período aquisitivo.
      * @param pCodTerceirizadoContrato
      * @param pDataInicio
      * @param pDataFim
@@ -533,6 +533,54 @@ public class Ferias {
         }
 
         return vParcela14Dias;
+
+    }
+
+    /**
+     * Função que retorna a maior parcela concedida em determinado período aquisitivo.
+     * @param pCodTerceirizadoContrato
+     * @param pDataInicio
+     * @param pDataFim
+     * @return float
+     */
+
+    public String RetornaMaiorParcelaConcedidaFeriasPeriodo (int pCodTerceirizadoContrato, Date pDataInicio, Date pDataFim) {
+
+        String vParcela = null;
+
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+
+        try {
+
+            preparedStatement = connection.prepareStatement("SELECT MAX(parcela)\n" +
+                    "    FROM tb_restituicao_ferias\n" +
+                    "    WHERE cod_terceirizado_contrato = ?\n" +
+                    "    AND data_inicio_periodo_aquisitivo = ?\n" +
+                    "    AND data_fim_periodo_aquisitivo = ?\n" +
+                    "    AND (autorizado IS null OR autorizado != 'N')\n" +
+                    "    AND (restituido IS null OR restituido != 'N');");
+
+            preparedStatement.setInt(1, pCodTerceirizadoContrato);
+            preparedStatement.setDate(2, pDataInicio);
+            preparedStatement.setDate(3, pDataFim);
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+
+                vParcela = resultSet.getString(1);
+
+            }
+
+        } catch (SQLException sqle) {
+
+            sqle.printStackTrace();
+
+            throw new NullPointerException("Não foi possível identificar se já houve registro da parcela de 14 dias.");
+
+        }
+
+        return vParcela;
 
     }
 
