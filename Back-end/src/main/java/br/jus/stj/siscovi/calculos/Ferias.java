@@ -447,7 +447,9 @@ public class Ferias {
                     " FROM tb_restituicao_ferias\n" +
                     " WHERE cod_terceirizado_contrato = ?\n" +
                     "   AND data_inicio_periodo_aquisitivo = ?\n" +
-                    "   AND data_fim_periodo_aquisitivo = ?;");
+                    "   AND data_fim_periodo_aquisitivo = ? \n" +
+                    "   AND (autorizado IS null OR autorizado != 'N') \n" +
+                    "   AND (restituido IS null OR restituido != 'N');");
 
             preparedStatement.setInt(1, pCodTerceirizadoContrato);
             preparedStatement.setDate(2, pDataInicio);
@@ -501,7 +503,9 @@ public class Ferias {
                     "    WHERE cod_terceirizado_contrato = ?\n" +
                     "    AND data_inicio_periodo_aquisitivo = ?\n" +
                     "    AND data_fim_periodo_aquisitivo = ?\n" +
-                    "    AND (DATEDIFF(day, DATA_INICIO_USUFRUTO, DATA_FIM_USUFRUTO) + 1) >= 14;");
+                    "    AND (DATEDIFF(day, DATA_INICIO_USUFRUTO, DATA_FIM_USUFRUTO) + 1) >= 14" +
+                    "    AND (autorizado IS null OR autorizado != 'N')\n" +
+                    "    AND (restituido IS null OR restituido != 'N');");
 
             preparedStatement.setInt(1, pCodTerceirizadoContrato);
             preparedStatement.setDate(2, pDataInicio);
