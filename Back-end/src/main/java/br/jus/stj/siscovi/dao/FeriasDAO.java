@@ -53,7 +53,7 @@ public class FeriasDAO {
                             fimPeriodoAquisitivo,
                             diasUsufruidos,
                             parcela14Dias,
-                            ferias.ExisteFeriasTerceirizado(resultSet.getInt("COD"))
+                            ferias.ExisteFeriasTerceirizado(resultSet.getInt("COD")),
                             parcelaAnterior);
                     terceirizados.add(terceirizadoFerias);
                 }
