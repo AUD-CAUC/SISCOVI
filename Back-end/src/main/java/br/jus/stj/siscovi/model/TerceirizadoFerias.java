@@ -10,6 +10,7 @@ public class TerceirizadoFerias {
     private final int diasUsufruidos;
     private final boolean parcela14Dias;
     private final boolean existeCalculoAnterior;
+    private final String parcelaAnterior;
 
     public TerceirizadoFerias(int codigoTerceirizadoContrato,
                               String nomeTerceirizado,
@@ -17,7 +18,8 @@ public class TerceirizadoFerias {
                               Date fimPeriodoAquisitivo,
                               int diasUsufruidos,
                               boolean parcela14Dias,
-                              boolean existeCalculoAnterior) {
+                              boolean existeCalculoAnterior,
+                              String parcelaAnterior) {
         this.codigoTerceirizadoContrato = codigoTerceirizadoContrato;
         this.nomeTerceirizado = nomeTerceirizado;
         this.inicioPeriodoAquisitivo = inicioPeriodoAquisitivo;
@@ -25,5 +27,6 @@ public class TerceirizadoFerias {
         this.diasUsufruidos = diasUsufruidos;
         this.parcela14Dias = parcela14Dias;
         this.existeCalculoAnterior = existeCalculoAnterior;
+        this.parcelaAnterior = parcelaAnterior;
     }
 }
