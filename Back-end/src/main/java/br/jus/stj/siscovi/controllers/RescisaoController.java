@@ -70,5 +70,26 @@ public class RescisaoController {
         json = gson.toJson(lista1);
         return Response.ok(json, MediaType.APPLICATION_JSON).build();
     }
+    @GET
+    @Path("/getRestituicoesRescisao/{codigoContrato}/{codigoUsuario}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getCalculosRestituidos(@PathParam("codigoContrato") int codigoContrato, @PathParam("codigoUsuario") int codigoUsuario) {
+        Gson gson = new GsonBuilder().serializeNulls().setDateFormat("yyyy-MM-dd").create();
+        ConnectSQLServer connectSQLServer = new ConnectSQLServer();
+        RescisaoDAO rescisaoDAO = new RescisaoDAO(connectSQLServer.dbConnect());
+        String json = "";
+        try {
+            json = gson.toJson(rescisaoDAO.getRestituicoesRescisao(codigoContrato, codigoUsuario));
+            connectSQLServer.dbConnect().close();
+        }catch(NullPointerException exception) {
+            exception.printStackTrace();
+            ErrorMessage error = new ErrorMessage();
+            error.error = exception.getMessage();
+            json = gson.toJson(error);
+        }catch(SQLException sqle) {
+            sqle.printStackTrace();
+        }
+        return Response.ok(json, MediaType.APPLICATION_JSON).build();
+    }
 
 }
