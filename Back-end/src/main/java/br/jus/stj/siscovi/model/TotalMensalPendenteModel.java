@@ -4,6 +4,7 @@ public class TotalMensalPendenteModel {
     private final ListaTotalMensalData totaisMensais;
     private final String status;
     private String observacoes;
+    private int codigoContrato;
     public TotalMensalPendenteModel(ListaTotalMensalData totaisMensais, String status) {
         this.totaisMensais = totaisMensais;
         this.status = status;
@@ -26,6 +27,7 @@ public class TotalMensalPendenteModel {
                 "totaisMensais=" + totaisMensais +
                 ", status='" + status + '\'' +
                 ", observacoes='" + observacoes + '\'' +
+                ", codigoContrato='" + '\'' +
                 '}';
     }
 }
