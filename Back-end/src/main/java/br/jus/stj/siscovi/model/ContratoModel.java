@@ -164,7 +164,10 @@ public class ContratoModel {
                 ", funcoes=" + funcoes +
                 ", dataAssinatura=" + dataAssinatura +
                 ", percentuais=" + percentuais +
-                ", numeroProcessoSTJ=" + numeroProcessoSTJ +
+                ", numeroProcessoSTJ='" + numeroProcessoSTJ + '\'' +
+                ", loginAtualizacao='" + loginAtualizacao + '\'' +
+                ", dataAtualizacao=" + dataAtualizacao +
+                ", eventoContratual=" + eventoContratual +
                 '}';
     }
 }

@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.time.LocalDate;
 
 public class UpdateTSQL {
 
@@ -36,22 +37,22 @@ public class UpdateTSQL {
      * @param pLoginAtualizacao;
      */
 
-    public void UpdateRestituicaoFerias (int pCodRestituicaoFerias,
-                                         int pCodTipoRestituicao,
-                                         Date pInicioPeriodoAquisitivo,
-                                         Date pFimPeriodoAquisitivo,
-                                         Date pInicioFerias,
-                                         Date pFimFerias,
-                                         int pDiasVendidos,
-                                         float pTotalFerias,
-                                         float pTotalTercoConstitucional,
-                                         float pTotalIncidenciaFerias,
-                                         float pTotalIncidenciaTerco,
-                                         int pParcela,
-                                         String pAutorizado,
-                                         String pRestituido,
-                                         String pObservacao,
-                                         String pLoginAtualizacao) {
+    public void UpdateRestituicaoFerias(int pCodRestituicaoFerias,
+                                        int pCodTipoRestituicao,
+                                        Date pInicioPeriodoAquisitivo,
+                                        Date pFimPeriodoAquisitivo,
+                                        Date pInicioFerias,
+                                        Date pFimFerias,
+                                        int pDiasVendidos,
+                                        float pTotalFerias,
+                                        float pTotalTercoConstitucional,
+                                        float pTotalIncidenciaFerias,
+                                        float pTotalIncidenciaTerco,
+                                        int pParcela,
+                                        String pAutorizado,
+                                        String pRestituido,
+                                        String pObservacao,
+                                        String pLoginAtualizacao) {
 
         PreparedStatement preparedStatement;
 
@@ -128,16 +129,16 @@ public class UpdateTSQL {
      * @param pLoginAtualizacao;
      */
 
-    public void UpdateRestituicaoDecimoTerceiro (int pCodRestituicaoDecimoTerceiro,
-                                                 int pTipoRestituicao,
-                                                 int pParcela,
-                                                 Date pInicioContagem,
-                                                 float pValorDecimoTerceiro,
-                                                 float pValorIncidencia,
-                                                 String pAutorizado,
-                                                 String pRestituido,
-                                                 String pObservacao,
-                                                 String pLoginAtualizacao) {
+    public void UpdateRestituicaoDecimoTerceiro(int pCodRestituicaoDecimoTerceiro,
+                                                int pTipoRestituicao,
+                                                int pParcela,
+                                                Date pInicioContagem,
+                                                float pValorDecimoTerceiro,
+                                                float pValorIncidencia,
+                                                String pAutorizado,
+                                                String pRestituido,
+                                                String pObservacao,
+                                                String pLoginAtualizacao) {
 
         PreparedStatement preparedStatement;
 
@@ -213,35 +214,35 @@ public class UpdateTSQL {
      * @param pLoginAtualizacao;
      */
 
-    public void UpdateRestituicaoRescisao (int pCodRestituicaoRescisao,
-                                           int pCodTipoRestituicao,
-                                           int pCodTipoRescisao,
-                                           Date pDataDesligamento,
-                                           Date pDataInicioFeriasIntegrais,
-                                           Date pDataFimFeriasIntegrais,
-                                           Date pDataInicioFeriasProporcionais,
-                                           Date pDataFimFeriasProporcionais,
-                                           Date pDataInicioContagemDecTer,
-                                           float pValorDecimoTerceiro,
-                                           float pValorIncidenciaDecimoTerceiro,
-                                           float pValorFGTSDecimoTerceiro,
-                                           float pValorFerias,
-                                           float pValorTerco,
-                                           float pValorIncidenciaFerias,
-                                           float pValorIncidenciaTerco,
-                                           float pValorFGTSFerias,
-                                           float pValorFGTSTerco,
-                                           float pValorFeriasProporcional,
-                                           float pValorTercoProporcional,
-                                           float pValorIncidenciaFeriasProporcional,
-                                           float pValorIncidenciaTercoProporcional,
-                                           float pValorFGTSFeriasProporcional,
-                                           float pValorFGTSTercoProporcional,
-                                           float pValorFGTSSalario,
-                                           String pAutorizado,
-                                           String pRestituido,
-                                           String pObservacao,
-                                           String pLoginAtualizacao) {
+    public void UpdateRestituicaoRescisao(int pCodRestituicaoRescisao,
+                                          int pCodTipoRestituicao,
+                                          int pCodTipoRescisao,
+                                          Date pDataDesligamento,
+                                          Date pDataInicioFeriasIntegrais,
+                                          Date pDataFimFeriasIntegrais,
+                                          Date pDataInicioFeriasProporcionais,
+                                          Date pDataFimFeriasProporcionais,
+                                          Date pDataInicioContagemDecTer,
+                                          float pValorDecimoTerceiro,
+                                          float pValorIncidenciaDecimoTerceiro,
+                                          float pValorFGTSDecimoTerceiro,
+                                          float pValorFerias,
+                                          float pValorTerco,
+                                          float pValorIncidenciaFerias,
+                                          float pValorIncidenciaTerco,
+                                          float pValorFGTSFerias,
+                                          float pValorFGTSTerco,
+                                          float pValorFeriasProporcional,
+                                          float pValorTercoProporcional,
+                                          float pValorIncidenciaFeriasProporcional,
+                                          float pValorIncidenciaTercoProporcional,
+                                          float pValorFGTSFeriasProporcional,
+                                          float pValorFGTSTercoProporcional,
+                                          float pValorFGTSSalario,
+                                          String pAutorizado,
+                                          String pRestituido,
+                                          String pObservacao,
+                                          String pLoginAtualizacao) {
 
         PreparedStatement preparedStatement;
 
@@ -305,7 +306,7 @@ public class UpdateTSQL {
             preparedStatement.setFloat(22, pValorFGTSFeriasProporcional);
             preparedStatement.setFloat(23, pValorFGTSTercoProporcional);
             preparedStatement.setFloat(24, pValorFGTSSalario);
-            preparedStatement.setString(25,String.valueOf(pAutorizado));
+            preparedStatement.setString(25, String.valueOf(pAutorizado));
             preparedStatement.setString(26, String.valueOf(pRestituido));
             preparedStatement.setString(27, pObservacao);
             preparedStatement.setString(28, pLoginAtualizacao);
@@ -321,22 +322,22 @@ public class UpdateTSQL {
 
     }
 
-    public void UpdateRubrica (int pCodRubrica,
-                               String pNome,
-                               String pSigla,
-                               String pDescricao,
-                               String pLoginAtualizacao) {
+    public void UpdateRubrica(int pCodRubrica,
+                              String pNome,
+                              String pSigla,
+                              String pDescricao,
+                              String pLoginAtualizacao) {
 
         PreparedStatement preparedStatement;
 
         try {
 
             String sql = "UPDATE TB_RUBRICA" +
-                           " SET NOME = ?," +
-                               " SIGLA = ?," +
-                               " DESCRICAO = ?," +
-                               " LOGIN_ATUALIZACAO = ?" +
-                           " WHERE COD = ?";
+                    " SET NOME = ?," +
+                    " SIGLA = ?," +
+                    " DESCRICAO = ?," +
+                    " LOGIN_ATUALIZACAO = ?" +
+                    " WHERE COD = ?";
 
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, pNome);
@@ -357,14 +358,14 @@ public class UpdateTSQL {
 
     }
 
-    public int UpdateContrato (int pCodContrato,
-                               String pNomeEmpresa,
-                               String pCnpj,
-                               String pNumeroContrato,
-                               String pNumeroProcessoSTJ,
-                               String pSeAtivo,
-                               String pObjeto,
-                               String pLoginAtualizacao) {
+    public int UpdateContrato(int pCodContrato,
+                              String pNomeEmpresa,
+                              String pCnpj,
+                              String pNumeroContrato,
+                              String pNumeroProcessoSTJ,
+                              String pSeAtivo,
+                              String pObjeto,
+                              String pLoginAtualizacao) {
 
         PreparedStatement preparedStatement;
         int vRetorno = -1;
@@ -372,15 +373,15 @@ public class UpdateTSQL {
         try {
 
             String sql = "UPDATE TB_CONTRATO" +
-                            " SET NOME_EMPRESA = ?," +
-                                " CNPJ = ?," +
-                                " NUMERO_CONTRATO = ?," +
-                                " NUMERO_PROCESSO_STJ = ?," +
-                                " SE_ATIVO = ?," +
-                                " OBJETO = ?," +
-                                " LOGIN_ATUALIZACAO = ?," +
-                                " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
-                            " WHERE COD = ?";
+                    " SET NOME_EMPRESA = ?," +
+                    " CNPJ = ?," +
+                    " NUMERO_CONTRATO = ?," +
+                    " NUMERO_PROCESSO_STJ = ?," +
+                    " SE_ATIVO = ?," +
+                    " OBJETO = ?," +
+                    " LOGIN_ATUALIZACAO = ?," +
+                    " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
+                    " WHERE COD = ?";
 
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, pNomeEmpresa);
@@ -408,12 +409,12 @@ public class UpdateTSQL {
 
     }
 
-    public int UpdateConvencaoColetiva (int pCodConvencaoColetiva,
-                                        String pNome,
-                                        String pSigla,
-                                        Date pDataBase,
-                                        String pDescricao,
-                                        String pLoginAtualizacao) {
+    public int UpdateConvencaoColetiva(int pCodConvencaoColetiva,
+                                       String pNome,
+                                       String pSigla,
+                                       Date pDataBase,
+                                       String pDescricao,
+                                       String pLoginAtualizacao) {
 
         PreparedStatement preparedStatement;
         int vRetorno = -1;
@@ -421,13 +422,13 @@ public class UpdateTSQL {
         try {
 
             String sql = "UPDATE TB_CONVENCAO_COLETIVA" +
-                            " SET NOME = ?," +
-                                " SIGLA = ?," +
-                                " DATA_BASE = ?," +
-                                " DESCRICAO = ?," +
-                                " LOGIN_ATUALIZACAO = ?," +
-                                " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
-                            " WHERE COD = ?";
+                    " SET NOME = ?," +
+                    " SIGLA = ?," +
+                    " DATA_BASE = ?," +
+                    " DESCRICAO = ?," +
+                    " LOGIN_ATUALIZACAO = ?," +
+                    " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
+                    " WHERE COD = ?";
 
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, pNome);
@@ -453,15 +454,15 @@ public class UpdateTSQL {
 
     }
 
-    public int UpdateEventoContratual (int pCodEventoContratual,
-                                       int pCodContrato,
-                                       int pCodTipoEvento,
-                                       String pProrrogacao,
-                                       String pAssunto,
-                                       Date pDataInicioVigencia,
-                                       Date pDataFimVigencia,
-                                       Date pDataAssinatura,
-                                       String pLoginAtualizacao) {
+    public int UpdateEventoContratual(int pCodEventoContratual,
+                                      int pCodContrato,
+                                      int pCodTipoEvento,
+                                      String pProrrogacao,
+                                      String pAssunto,
+                                      Date pDataInicioVigencia,
+                                      Date pDataFimVigencia,
+                                      Date pDataAssinatura,
+                                      String pLoginAtualizacao) {
 
         PreparedStatement preparedStatement;
         int vRetorno = -1;
@@ -469,16 +470,16 @@ public class UpdateTSQL {
         try {
 
             String sql = "UPDATE TB_EVENTO_CONTRATUAL" +
-                            " SET COD_CONTRATO = ?," +
-                                " COD_TIPO_EVENTO = ?," +
-                                " PRORROGACAO = ?," +
-                                " ASSUNTO = ?," +
-                                " DATA_INICIO_VIGENCIA = ?," +
-                                " DATA_FIM_VIGENCIA = ?," +
-                                " DATA_ASSINATURA = ?," +
-                                " LOGIN_ATUALIZACAO = ?," +
-                                " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
-                            " WHERE COD = ?";
+                    " SET COD_CONTRATO = ?," +
+                    " COD_TIPO_EVENTO = ?," +
+                    " PRORROGACAO = ?," +
+                    " ASSUNTO = ?," +
+                    " DATA_INICIO_VIGENCIA = ?," +
+                    " DATA_FIM_VIGENCIA = ?," +
+                    " DATA_ASSINATURA = ?," +
+                    " LOGIN_ATUALIZACAO = ?," +
+                    " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
+                    " WHERE COD = ?";
 
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, pCodContrato);
@@ -507,10 +508,10 @@ public class UpdateTSQL {
 
     }
 
-    public int UpdateFuncao (int pCodFuncao,
-                             String pNome,
-                             String pDescricao,
-                             String pLoginAtualizacao) {
+    public int UpdateFuncao(int pCodFuncao,
+                            String pNome,
+                            String pDescricao,
+                            String pLoginAtualizacao) {
 
         PreparedStatement preparedStatement;
         int vRetorno = -1;
@@ -518,11 +519,11 @@ public class UpdateTSQL {
         try {
 
             String sql = "UPDATE TB_FUNCAO" +
-                            " SET NOME = ?," +
-                                " DESCRICAO = ?," +
-                                " LOGIN_ATUALIZACAO = ?," +
-                                " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
-                            " WHERE COD = ?";
+                    " SET NOME = ?," +
+                    " DESCRICAO = ?," +
+                    " LOGIN_ATUALIZACAO = ?," +
+                    " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
+                    " WHERE COD = ?";
 
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, pNome);
@@ -546,11 +547,11 @@ public class UpdateTSQL {
 
     }
 
-    public int UpdateFuncaoContrato (int pCodFuncaoContrato,
-                                     int pCodContrato,
-                                     int pCodFuncao,
-                                     String pDescricao,
-                                     String pLoginAtualizacao) {
+    public int UpdateFuncaoContrato(int pCodFuncaoContrato,
+                                    int pCodContrato,
+                                    int pCodFuncao,
+                                    String pDescricao,
+                                    String pLoginAtualizacao) {
 
         PreparedStatement preparedStatement;
         int vRetorno = -1;
@@ -558,12 +559,12 @@ public class UpdateTSQL {
         try {
 
             String sql = "UPDATE TB_FUNCAO_CONTRATO" +
-                            " SET COD_CONTRATO = ?," +
-                                " COD_FUNCAO = ?," +
-                                " DESCRICAO = ?," +
-                                " LOGIN_ATUALIZACAO = ?," +
-                                " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
-                            " WHERE COD = ?";
+                    " SET COD_CONTRATO = ?," +
+                    " COD_FUNCAO = ?," +
+                    " DESCRICAO = ?," +
+                    " LOGIN_ATUALIZACAO = ?," +
+                    " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
+                    " WHERE COD = ?";
 
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, pCodContrato);
@@ -588,12 +589,12 @@ public class UpdateTSQL {
 
     }
 
-    public int UpdateFuncaoTerceirizado (int pCodFuncaoTerceirizado,
-                                         int pCodTerceirizadoContrato,
-                                         int pCodFuncaoContrato,
-                                         Date pDataInicio,
-                                         Date pDataFim,
-                                         String pLoginAtualizacao) {
+    public int UpdateFuncaoTerceirizado(int pCodFuncaoTerceirizado,
+                                        int pCodTerceirizadoContrato,
+                                        int pCodFuncaoContrato,
+                                        Date pDataInicio,
+                                        Date pDataFim,
+                                        String pLoginAtualizacao) {
 
         PreparedStatement preparedStatement;
         int vRetorno = -1;
@@ -601,13 +602,13 @@ public class UpdateTSQL {
         try {
 
             String sql = "UPDATE TB_FUNCAO_TERCEIRIZADO" +
-                            " SET COD_TERCEIRIZADO_CONTRATO = ?," +
-                                " COD_FUNCAO_CONTRATO = ?," +
-                                " DATA_INICIO = ?," +
-                                " DATA_FIM = ?," +
-                                " LOGIN_ATUALIZACAO = ?," +
-                                " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
-                            " WHERE COD = ?";
+                    " SET COD_TERCEIRIZADO_CONTRATO = ?," +
+                    " COD_FUNCAO_CONTRATO = ?," +
+                    " DATA_INICIO = ?," +
+                    " DATA_FIM = ?," +
+                    " LOGIN_ATUALIZACAO = ?," +
+                    " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
+                    " WHERE COD = ?";
 
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, pCodTerceirizadoContrato);
@@ -633,13 +634,13 @@ public class UpdateTSQL {
 
     }
 
-    public int UpdateHistoricoGestaoContrato (int pCodHistoricoGestaoContrato,
-                                              int pCodContrato,
-                                              int pCodUsuario,
-                                              int pCodPerfilGestao,
-                                              Date pDataInicio,
-                                              Date pDataFim,
-                                              String pLoginAtualizacao) {
+    public int UpdateHistoricoGestaoContrato(int pCodHistoricoGestaoContrato,
+                                             int pCodContrato,
+                                             int pCodUsuario,
+                                             int pCodPerfilGestao,
+                                             Date pDataInicio,
+                                             Date pDataFim,
+                                             String pLoginAtualizacao) {
 
         PreparedStatement preparedStatement;
         int vRetorno = -1;
@@ -647,14 +648,14 @@ public class UpdateTSQL {
         try {
 
             String sql = "UPDATE TB_HISTORICO_GESTAO_CONTRATO" +
-                            " SET COD_CONTRATO = ?," +
-                                " COD_USUARIO = ?," +
-                                " COD_PERFIL_GESTAO = ?," +
-                                " DATA_INICIO = ?," +
-                                " DATA_FIM = ?," +
-                                " LOGIN_ATUALIZACAO = ?," +
-                                " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
-                            " WHERE COD = ?";
+                    " SET COD_CONTRATO = ?," +
+                    " COD_USUARIO = ?," +
+                    " COD_PERFIL_GESTAO = ?," +
+                    " DATA_INICIO = ?," +
+                    " DATA_FIM = ?," +
+                    " LOGIN_ATUALIZACAO = ?," +
+                    " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
+                    " WHERE COD = ?";
 
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, pCodContrato);
@@ -681,14 +682,14 @@ public class UpdateTSQL {
 
     }
 
-    public int UpdatePercentualContrato (int pCodPercentualContrato,
-                                         int pCodContrato,
-                                         int pCodRubrica,
-                                         float pPercentual,
-                                         Date pDataInicio,
-                                         Date pDataFim,
-                                         Date pDataAditamento,
-                                         String pLoginAtualizacao) {
+    public int UpdatePercentualContrato(int pCodPercentualContrato,
+                                        int pCodContrato,
+                                        int pCodRubrica,
+                                        float pPercentual,
+                                        Date pDataInicio,
+                                        Date pDataFim,
+                                        Date pDataAditamento,
+                                        String pLoginAtualizacao) {
 
         PreparedStatement preparedStatement;
         int vRetorno = -1;
@@ -696,15 +697,15 @@ public class UpdateTSQL {
         try {
 
             String sql = "UPDATE TB_PERCENTUAL_CONTRATO" +
-                            " SET COD_CONTRATO = ?," +
-                                " COD_RUBRICA = ?," +
-                                " PERCENTUAL = ?," +
-                                " DATA_INICIO = ?," +
-                                " DATA_FIM = ?," +
-                                " DATA_ADITAMENTO = ?," +
-                                " LOGIN_ATUALIZACAO = ?," +
-                                " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
-                            " WHERE COD = ?";
+                    " SET COD_CONTRATO = ?," +
+                    " COD_RUBRICA = ?," +
+                    " PERCENTUAL = ?," +
+                    " DATA_INICIO = ?," +
+                    " DATA_FIM = ?," +
+                    " DATA_ADITAMENTO = ?," +
+                    " LOGIN_ATUALIZACAO = ?," +
+                    " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
+                    " WHERE COD = ?";
 
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, pCodContrato);
@@ -732,13 +733,13 @@ public class UpdateTSQL {
 
     }
 
-    public int UpdatePercentualEstatico (int pCodPercentualEstatico,
-                                         int pCodRubrica,
-                                         float pPercentual,
-                                         Date pDataInicio,
-                                         Date pDataFim,
-                                         Date pDataAditamento,
-                                         String pLoginAtualizacao) {
+    public int UpdatePercentualEstatico(int pCodPercentualEstatico,
+                                        int pCodRubrica,
+                                        float pPercentual,
+                                        Date pDataInicio,
+                                        Date pDataFim,
+                                        Date pDataAditamento,
+                                        String pLoginAtualizacao) {
 
         PreparedStatement preparedStatement;
         int vRetorno = -1;
@@ -746,14 +747,14 @@ public class UpdateTSQL {
         try {
 
             String sql = "UPDATE TB_PERCENTUAL_ESTATICO" +
-                            " SET COD_RUBRICA = ?," +
-                                " PERCENTUAL = ?," +
-                                " DATA_INICIO = ?," +
-                                " DATA_FIM = ?," +
-                                " DATA_ADITAMENTO = ?," +
-                                " LOGIN_ATUALIZACAO = ?," +
-                                " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
-                            " WHERE COD = ?";
+                    " SET COD_RUBRICA = ?," +
+                    " PERCENTUAL = ?," +
+                    " DATA_INICIO = ?," +
+                    " DATA_FIM = ?," +
+                    " DATA_ADITAMENTO = ?," +
+                    " LOGIN_ATUALIZACAO = ?," +
+                    " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
+                    " WHERE COD = ?";
 
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, pCodRubrica);
@@ -780,11 +781,11 @@ public class UpdateTSQL {
 
     }
 
-    public int UpdatePerfilGestao (int pCodPerfilGestao,
-                                   String pNome,
-                                   String pSigla,
-                                   String pDescricao,
-                                   String pLoginAtualizacao) {
+    public int UpdatePerfilGestao(int pCodPerfilGestao,
+                                  String pNome,
+                                  String pSigla,
+                                  String pDescricao,
+                                  String pLoginAtualizacao) {
 
         PreparedStatement preparedStatement;
         int vRetorno = -1;
@@ -792,12 +793,12 @@ public class UpdateTSQL {
         try {
 
             String sql = "UPDATE TB_PERFIL_GESTAO" +
-                            " SET NOME = ?," +
-                                " SIGLA = ?," +
-                                " DESCRICAO = ?," +
-                                " LOGIN_ATUALIZACAO = ?," +
-                                " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
-                            " WHERE COD = ?";
+                    " SET NOME = ?," +
+                    " SIGLA = ?," +
+                    " DESCRICAO = ?," +
+                    " LOGIN_ATUALIZACAO = ?," +
+                    " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
+                    " WHERE COD = ?";
 
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, pNome);
@@ -822,11 +823,11 @@ public class UpdateTSQL {
 
     }
 
-    public int UpdatePerfilUsuario (int pCodPerfilUsuario,
-                                    String pNome,
-                                    String pSigla,
-                                    String pDescricao,
-                                    String pLoginAtualizacao) {
+    public int UpdatePerfilUsuario(int pCodPerfilUsuario,
+                                   String pNome,
+                                   String pSigla,
+                                   String pDescricao,
+                                   String pLoginAtualizacao) {
 
         PreparedStatement preparedStatement;
         int vRetorno = -1;
@@ -834,12 +835,12 @@ public class UpdateTSQL {
         try {
 
             String sql = "UPDATE TB_PERFIL_USUARIO" +
-                            " SET NOME = ?," +
-                                " SIGLA = ?," +
-                                " DESCRICAO = ?," +
-                                " LOGIN_ATUALIZACAO = ?," +
-                                " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
-                            " WHERE COD = ?";
+                    " SET NOME = ?," +
+                    " SIGLA = ?," +
+                    " DESCRICAO = ?," +
+                    " LOGIN_ATUALIZACAO = ?," +
+                    " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
+                    " WHERE COD = ?";
 
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, pNome);
@@ -864,16 +865,16 @@ public class UpdateTSQL {
 
     }
 
-    public int UpdateRemuneracaoFunCon (int pCodRemuneracaoFunCon,
-                                        int pCodFuncaoContrato,
-                                        Integer pCodConvencaoColetiva,
-                                        Date pDataInicio,
-                                        Date pDataFim,
-                                        Date pDataAditamento,
-                                        float pRemuneracao,
-                                        float pAdicionais,
-                                        float pTrienios,
-                                        String pLoginAtualizacao) {
+    public int UpdateRemuneracaoFunCon(int pCodRemuneracaoFunCon,
+                                       int pCodFuncaoContrato,
+                                       Integer pCodConvencaoColetiva,
+                                       Date pDataInicio,
+                                       Date pDataFim,
+                                       Date pDataAditamento,
+                                       float pRemuneracao,
+                                       float pAdicionais,
+                                       float pTrienios,
+                                       String pLoginAtualizacao) {
 
         PreparedStatement preparedStatement;
         int vRetorno = -1;
@@ -881,17 +882,17 @@ public class UpdateTSQL {
         try {
 
             String sql = "UPDATE TB_REMUNERACAO_FUN_CON" +
-                            " SET COD_FUNCAO_CONTRATO = ?," +
-                                " COD_CONVENCAO_COLETIVA = ?," +
-                                " DATA_INICIO = ?," +
-                                " DATA_FIM = ?," +
-                                " DATA_ADITAMENTO = ?," +
-                                " REMUNERACAO = ?," +
-                                " ADICIONAIS = ?," +
-                                " TRIENIOS = ?," +
-                                " LOGIN_ATUALIZACAO = ?," +
-                                " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
-                            " WHERE COD = ?";
+                    " SET COD_FUNCAO_CONTRATO = ?," +
+                    " COD_CONVENCAO_COLETIVA = ?," +
+                    " DATA_INICIO = ?," +
+                    " DATA_FIM = ?," +
+                    " DATA_ADITAMENTO = ?," +
+                    " REMUNERACAO = ?," +
+                    " ADICIONAIS = ?," +
+                    " TRIENIOS = ?," +
+                    " LOGIN_ATUALIZACAO = ?," +
+                    " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
+                    " WHERE COD = ?";
 
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, pCodFuncaoContrato);
@@ -900,9 +901,7 @@ public class UpdateTSQL {
 
                 preparedStatement.setNull(2, java.sql.Types.INTEGER);
 
-            }
-
-            else {
+            } else {
 
                 preparedStatement.setInt(2, pCodConvencaoColetiva);
 
@@ -933,13 +932,13 @@ public class UpdateTSQL {
 
     }
 
-    public int UpdateRetroPercentualEstatico (int pCodRetroPercentualEstatico,
-                                              int pCodContrato,
-                                              int pCodPercentualEstatico,
-                                              Date pInicio,
-                                              Date pFim,
-                                              Date pDataCobranca,
-                                              String pLoginAtualizacao) {
+    public int UpdateRetroPercentualEstatico(int pCodRetroPercentualEstatico,
+                                             int pCodContrato,
+                                             int pCodPercentualEstatico,
+                                             Date pInicio,
+                                             Date pFim,
+                                             Date pDataCobranca,
+                                             String pLoginAtualizacao) {
 
         PreparedStatement preparedStatement;
         int vRetorno = -1;
@@ -947,14 +946,14 @@ public class UpdateTSQL {
         try {
 
             String sql = "UPDATE TB_RETRO_PERCENTUAL_ESTATICO" +
-                            " SET COD_CONTRATO = ?," +
-                                " COD_PERCENTUAL_ESTATICO = ?," +
-                                " INICIO = ?," +
-                                " FIM = ?," +
-                                " DATA_COBRANCA = ?," +
-                                " LOGIN_ATUALIZACAO = ?," +
-                                " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
-                            " WHERE COD = ?";
+                    " SET COD_CONTRATO = ?," +
+                    " COD_PERCENTUAL_ESTATICO = ?," +
+                    " INICIO = ?," +
+                    " FIM = ?," +
+                    " DATA_COBRANCA = ?," +
+                    " LOGIN_ATUALIZACAO = ?," +
+                    " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
+                    " WHERE COD = ?";
 
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, pCodContrato);
@@ -981,12 +980,12 @@ public class UpdateTSQL {
 
     }
 
-    public int UpdateRetroatividadePercentual (int pCodRetroatividadePercentual,
-                                               int pCodPercentualContrato,
-                                               Date pInicio,
-                                               Date pFim,
-                                               Date pDataCobranca,
-                                               String pLoginAtualizacao) {
+    public int UpdateRetroatividadePercentual(int pCodRetroatividadePercentual,
+                                              int pCodPercentualContrato,
+                                              Date pInicio,
+                                              Date pFim,
+                                              Date pDataCobranca,
+                                              String pLoginAtualizacao) {
 
         PreparedStatement preparedStatement;
         int vRetorno = -1;
@@ -994,13 +993,13 @@ public class UpdateTSQL {
         try {
 
             String sql = "UPDATE TB_RETROATIVIDADE_PERCENTUAL" +
-                            " SET COD_PERCENTUAL_CONTRATO = ?," +
-                                " INICIO = ?," +
-                                " FIM = ?," +
-                                " DATA_COBRANCA = ?," +
-                                " LOGIN_ATUALIZACAO = ?," +
-                                " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
-                            " WHERE COD = ?";
+                    " SET COD_PERCENTUAL_CONTRATO = ?," +
+                    " INICIO = ?," +
+                    " FIM = ?," +
+                    " DATA_COBRANCA = ?," +
+                    " LOGIN_ATUALIZACAO = ?," +
+                    " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
+                    " WHERE COD = ?";
 
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, pCodPercentualContrato);
@@ -1026,12 +1025,12 @@ public class UpdateTSQL {
 
     }
 
-    public int UpdateRetroatividadeRemuneracao (int pCodRetroatividadeRemuneracao,
-                                                int pCodRemFuncaoContrato,
-                                                Date pInicio,
-                                                Date pFim,
-                                                Date pDataCobranca,
-                                                String pLoginAtualizacao) {
+    public int UpdateRetroatividadeRemuneracao(int pCodRetroatividadeRemuneracao,
+                                               int pCodRemFuncaoContrato,
+                                               Date pInicio,
+                                               Date pFim,
+                                               Date pDataCobranca,
+                                               String pLoginAtualizacao) {
 
         PreparedStatement preparedStatement;
         int vRetorno = -1;
@@ -1039,13 +1038,13 @@ public class UpdateTSQL {
         try {
 
             String sql = "UPDATE TB_RETROATIVIDADE_REMUNERACAO" +
-                            " SET COD_REM_FUNCAO_CONTRATO = ?," +
-                                " INICIO = ?," +
-                                " FIM = ?," +
-                                " DATA_COBRANCA = ?," +
-                                " LOGIN_ATUALIZACAO = ?," +
-                                " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
-                            " WHERE COD = ?";
+                    " SET COD_REM_FUNCAO_CONTRATO = ?," +
+                    " INICIO = ?," +
+                    " FIM = ?," +
+                    " DATA_COBRANCA = ?," +
+                    " LOGIN_ATUALIZACAO = ?," +
+                    " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
+                    " WHERE COD = ?";
 
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, pCodRemFuncaoContrato);
@@ -1071,15 +1070,15 @@ public class UpdateTSQL {
 
     }
 
-    public int UpdateRetroatividadeTotalMensal (int pCodRetroatividadeTotalMensal,
-                                                int pCodTotalMensalAReter,
-                                                float pFerias,
-                                                float pTercoConstitucional,
-                                                float pDecimoTerceiro,
-                                                float pIncidenciaSubmodulo41,
-                                                float pMultaFgts,
-                                                float pTotal,
-                                                String pLoginAtualizacao) {
+    public int UpdateRetroatividadeTotalMensal(int pCodRetroatividadeTotalMensal,
+                                               int pCodTotalMensalAReter,
+                                               float pFerias,
+                                               float pTercoConstitucional,
+                                               float pDecimoTerceiro,
+                                               float pIncidenciaSubmodulo41,
+                                               float pMultaFgts,
+                                               float pTotal,
+                                               String pLoginAtualizacao) {
 
         PreparedStatement preparedStatement;
         int vRetorno = -1;
@@ -1087,16 +1086,16 @@ public class UpdateTSQL {
         try {
 
             String sql = "UPDATE TB_RETROATIVIDADE_TOTAL_MENSAL" +
-                            " SET COD_TOTAL_MENSAL_A_RETER = ?," +
-                                " FERIAS = ?," +
-                                " TERCO_CONSTITUCIONAL = ?," +
-                                " DECIMO_TERCEIRO = ?," +
-                                " INCIDENCIA_SUBMODULO_4_1 = ?," +
-                                " MULTA_FGTS = ?," +
-                                " TOTAL = ?," +
-                                " LOGIN_ATUALIZACAO = ?," +
-                                " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
-                            " WHERE COD = ?";
+                    " SET COD_TOTAL_MENSAL_A_RETER = ?," +
+                    " FERIAS = ?," +
+                    " TERCO_CONSTITUCIONAL = ?," +
+                    " DECIMO_TERCEIRO = ?," +
+                    " INCIDENCIA_SUBMODULO_4_1 = ?," +
+                    " MULTA_FGTS = ?," +
+                    " TOTAL = ?," +
+                    " LOGIN_ATUALIZACAO = ?," +
+                    " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
+                    " WHERE COD = ?";
 
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, pCodTotalMensalAReter);
@@ -1125,11 +1124,11 @@ public class UpdateTSQL {
 
     }
 
-    public int UpdateTerceirizado (int pCodTerceirizado,
-                                   String pNome,
-                                   String pCpf,
-                                   String pAtivo,
-                                   String pLoginAtualizacao) {
+    public int UpdateTerceirizado(int pCodTerceirizado,
+                                  String pNome,
+                                  String pCpf,
+                                  String pAtivo,
+                                  String pLoginAtualizacao) {
 
         PreparedStatement preparedStatement;
         int vRetorno = -1;
@@ -1137,12 +1136,12 @@ public class UpdateTSQL {
         try {
 
             String sql = "UPDATE TB_TERCEIRIZADO" +
-                            " SET NOME = ?," +
-                                " CPF = ?," +
-                                " ATIVO = ?," +
-                                " LOGIN_ATUALIZACAO = ?," +
-                                " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
-                            " WHERE COD = ?";
+                    " SET NOME = ?," +
+                    " CPF = ?," +
+                    " ATIVO = ?," +
+                    " LOGIN_ATUALIZACAO = ?," +
+                    " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
+                    " WHERE COD = ?";
 
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, pNome);
@@ -1167,12 +1166,12 @@ public class UpdateTSQL {
 
     }
 
-    public int UpdateTerceirizadoContrato (int pCodTerceirizadoContrato,
-                                           int pCodContrato,
-                                           int pCodTerceirizado,
-                                           Date pDataDisponibilizacao,
-                                           Date pDataDesligamento,
-                                           String pLoginAtualizacao) {
+    public int UpdateTerceirizadoContrato(int pCodTerceirizadoContrato,
+                                          int pCodContrato,
+                                          int pCodTerceirizado,
+                                          Date pDataDisponibilizacao,
+                                          Date pDataDesligamento,
+                                          String pLoginAtualizacao) {
 
         PreparedStatement preparedStatement;
         int vRetorno = -1;
@@ -1180,13 +1179,13 @@ public class UpdateTSQL {
         try {
 
             String sql = "UPDATE TB_TERCEIRIZADO_CONTRATO" +
-                            " SET COD_CONTRATO = ?," +
-                                " COD_TERCEIRIZADO = ?," +
-                                " DATA_DISPONIBILIZACAO = ?," +
-                                " DATA_DESLIGAMENTO = ?," +
-                                " LOGIN_ATUALIZACAO = ?," +
-                                " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
-                            " WHERE COD = ?";
+                    " SET COD_CONTRATO = ?," +
+                    " COD_TERCEIRIZADO = ?," +
+                    " DATA_DISPONIBILIZACAO = ?," +
+                    " DATA_DESLIGAMENTO = ?," +
+                    " LOGIN_ATUALIZACAO = ?," +
+                    " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
+                    " WHERE COD = ?";
 
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, pCodContrato);
@@ -1212,9 +1211,9 @@ public class UpdateTSQL {
 
     }
 
-    public int UpdateTipoEventoContratual (int pCodTipoEventoContratual,
-                                           String pTipo,
-                                           String pLoginAtualizacao) {
+    public int UpdateTipoEventoContratual(int pCodTipoEventoContratual,
+                                          String pTipo,
+                                          String pLoginAtualizacao) {
 
         PreparedStatement preparedStatement;
         int vRetorno = -1;
@@ -1222,10 +1221,10 @@ public class UpdateTSQL {
         try {
 
             String sql = "UPDATE TB_TIPO_EVENTO_CONTRATUAL" +
-                            " SET TIPO = ?," +
-                                " LOGIN_ATUALIZACAO = ?," +
-                                " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
-                            " WHERE COD = ?";
+                    " SET TIPO = ?," +
+                    " LOGIN_ATUALIZACAO = ?," +
+                    " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
+                    " WHERE COD = ?";
 
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, pTipo);
@@ -1248,9 +1247,9 @@ public class UpdateTSQL {
 
     }
 
-    public int UpdateTipoRescisao (int pCodTipoRescisao,
-                                   String pTipoRescisao,
-                                   String pLoginAtualizacao) {
+    public int UpdateTipoRescisao(int pCodTipoRescisao,
+                                  String pTipoRescisao,
+                                  String pLoginAtualizacao) {
 
         PreparedStatement preparedStatement;
         int vRetorno = -1;
@@ -1258,10 +1257,10 @@ public class UpdateTSQL {
         try {
 
             String sql = "UPDATE TB_TIPO_RESCISAO" +
-                            " SET TIPO_RESCISAO = ?," +
-                                " LOGIN_ATUALIZACAO = ?," +
-                                " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
-                            " WHERE COD = ?";
+                    " SET TIPO_RESCISAO = ?," +
+                    " LOGIN_ATUALIZACAO = ?," +
+                    " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
+                    " WHERE COD = ?";
 
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, pTipoRescisao);
@@ -1284,9 +1283,9 @@ public class UpdateTSQL {
 
     }
 
-    public int UpdateTipoRestituicao (int pCodTipoRestituicao,
-                                      String pNome,
-                                      String pLoginAtualizacao) {
+    public int UpdateTipoRestituicao(int pCodTipoRestituicao,
+                                     String pNome,
+                                     String pLoginAtualizacao) {
 
         PreparedStatement preparedStatement;
         int vRetorno = -1;
@@ -1294,10 +1293,10 @@ public class UpdateTSQL {
         try {
 
             String sql = "UPDATE TB_TIPO_RESTITUICAO" +
-                            " SET NOME = ?," +
-                                " LOGIN_ATUALIZACAO = ?," +
-                                " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
-                            " WHERE COD = ?";
+                    " SET NOME = ?," +
+                    " LOGIN_ATUALIZACAO = ?," +
+                    " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
+                    " WHERE COD = ?";
 
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, pNome);
@@ -1320,12 +1319,12 @@ public class UpdateTSQL {
 
     }
 
-    public int UpdateTrienioTercContrato (int pCodTrienioTercContrato,
-                                          int pCodTerceirizadoContrato,
-                                          int pNumeroDeTrienios,
-                                          Date pDataInicio,
-                                          Date pDataFim,
-                                          String pLoginAtualizacao) {
+    public int UpdateTrienioTercContrato(int pCodTrienioTercContrato,
+                                         int pCodTerceirizadoContrato,
+                                         int pNumeroDeTrienios,
+                                         Date pDataInicio,
+                                         Date pDataFim,
+                                         String pLoginAtualizacao) {
 
         PreparedStatement preparedStatement;
         int vRetorno = -1;
@@ -1333,13 +1332,13 @@ public class UpdateTSQL {
         try {
 
             String sql = "UPDATE TB_TRIENIO_TERC_CONTRATO" +
-                            " SET COD_TERCEIRIZADO_CONTRATO = ?," +
-                                " NUMERO_DE_TRIENIOS = ?," +
-                                " DATA_INICIO = ?," +
-                                " DATA_FIM = ?," +
-                                " LOGIN_ATUALIZACAO = ?," +
-                                " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
-                            " WHERE COD = ?";
+                    " SET COD_TERCEIRIZADO_CONTRATO = ?," +
+                    " NUMERO_DE_TRIENIOS = ?," +
+                    " DATA_INICIO = ?," +
+                    " DATA_FIM = ?," +
+                    " LOGIN_ATUALIZACAO = ?," +
+                    " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
+                    " WHERE COD = ?";
 
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, pCodTerceirizadoContrato);
@@ -1365,11 +1364,11 @@ public class UpdateTSQL {
 
     }
 
-    public int UpdateUsuario (int pCodUsuario,
-                              int pCodPerfil,
-                              String pNome,
-                              String pLogin,
-                              String pLoginAtualizacao) {
+    public int UpdateUsuario(int pCodUsuario,
+                             int pCodPerfil,
+                             String pNome,
+                             String pLogin,
+                             String pLoginAtualizacao) {
 
         PreparedStatement preparedStatement;
         int vRetorno = -1;
@@ -1377,12 +1376,12 @@ public class UpdateTSQL {
         try {
 
             String sql = "UPDATE TB_USUARIO" +
-                            " SET COD_PERFIL = ?," +
-                                " NOME = ?," +
-                                " LOGIN = ?," +
-                                " LOGIN_ATUALIZACAO = ?," +
-                                " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
-                            " WHERE COD = ?";
+                    " SET COD_PERFIL = ?," +
+                    " NOME = ?," +
+                    " LOGIN = ?," +
+                    " LOGIN_ATUALIZACAO = ?," +
+                    " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
+                    " WHERE COD = ?";
 
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, pCodPerfil);
@@ -1407,18 +1406,18 @@ public class UpdateTSQL {
 
     }
 
-    public Integer UpdateHistoricoRestituicaoDecimoTerceiro (int pCodHistoricoRestituicaoDecimoTerceiro,
-                                                             int pCodTbRestituicaoDecTer,
-                                                             int pCodTipoRestituicao,
-                                                             int pParcela,
-                                                             Date pDataInicioContagem,
-                                                             float pValor,
-                                                             float pIncidenciaSubmodulo41,
-                                                             Date pDataReferencia,
-                                                             String pAutorizado,
-                                                             String pRestituido,
-                                                             String pObservacao,
-                                                             String pLoginAtualizacao) {
+    public Integer UpdateHistoricoRestituicaoDecimoTerceiro(int pCodHistoricoRestituicaoDecimoTerceiro,
+                                                            int pCodTbRestituicaoDecTer,
+                                                            int pCodTipoRestituicao,
+                                                            int pParcela,
+                                                            Date pDataInicioContagem,
+                                                            float pValor,
+                                                            float pIncidenciaSubmodulo41,
+                                                            Date pDataReferencia,
+                                                            String pAutorizado,
+                                                            String pRestituido,
+                                                            String pObservacao,
+                                                            String pLoginAtualizacao) {
 
         PreparedStatement preparedStatement;
         int vRetorno = -1;
@@ -1427,19 +1426,19 @@ public class UpdateTSQL {
         try {
 
             String sql = "UPDATE TB_HIST_RESTITUICAO_DEC_TER" +
-                            " SET COD_RESTITUICAO_DEC_TERCEIRO = ?," +
-                                " COD_TIPO_RESTITUICAO = ?," +
-                                " PARCELA = ?," +
-                                " DATA_INICIO_CONTAGEM = ?," +
-                                " VALOR = ?," +
-                                " INCIDENCIA_SUBMODULO_4_1 = ?," +
-                                " DATA_REFERENCIA = ?," +
-                                " AUTORIZADO = ?," +
-                                " RESTITUIDO = ?," +
-                                " OBSERVACAO = ?," +
-                                " LOGIN_ATUALIZACAO = ?," +
-                                " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
-                            " WHERE COD = ?";
+                    " SET COD_RESTITUICAO_DEC_TERCEIRO = ?," +
+                    " COD_TIPO_RESTITUICAO = ?," +
+                    " PARCELA = ?," +
+                    " DATA_INICIO_CONTAGEM = ?," +
+                    " VALOR = ?," +
+                    " INCIDENCIA_SUBMODULO_4_1 = ?," +
+                    " DATA_REFERENCIA = ?," +
+                    " AUTORIZADO = ?," +
+                    " RESTITUIDO = ?," +
+                    " OBSERVACAO = ?," +
+                    " LOGIN_ATUALIZACAO = ?," +
+                    " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
+                    " WHERE COD = ?";
 
             preparedStatement = connection.prepareStatement(sql);
 
@@ -1472,37 +1471,37 @@ public class UpdateTSQL {
 
     }
 
-    public Integer UpdateHistoricoRestituicaoRescisao (int pCodHistoricoRestituicaoRescisao,
-                                                       int pCodTbRestituicaoRescisao,
-                                                       int pCodTipoRestituicao,
-                                                       int pCodTipoRescisao,
-                                                       Date pDataDesligamento,
-                                                       Date pDataInicioFeriasIntegrais,
-                                                       Date pDataFimFeriasIntegrais,
-                                                       Date pDataInicioFeriasProporcionais,
-                                                       Date pDataFimFeriasProporcionais,
-                                                       Date pDataInicioContagemDecTer,
-                                                       float pValorDecimoTerceiro,
-                                                       float pIncidSubmod41DecTerceiro,
-                                                       float pIncidMultaFGTSDecTeceriro,
-                                                       float pValorFerias,
-                                                       float pValorTerco,
-                                                       float pIncidSubmod41Ferias,
-                                                       float pIncidSubmod41Terco,
-                                                       float pIncidMultaFGTSFerias,
-                                                       float pIncidMultaFGTSTerco,
-                                                       float pValorFeriasProporcional,
-                                                       float pValorTercoProporcional,
-                                                       float pIncidSubmod41FeriasProporcional,
-                                                       float pIncidSubmod41TercoProporcional,
-                                                       float pIncidMultaFGTSFeriasProporcional,
-                                                       float pIncidMultaFGTSTercoProporcional,
-                                                       float pMultaFGTSSalario,
-                                                       Date pDataReferencia,
-                                                       String pAutorizado,
-                                                       String pRestituido,
-                                                       String pObservacao,
-                                                       String pLoginAtualizacao) {
+    public Integer UpdateHistoricoRestituicaoRescisao(int pCodHistoricoRestituicaoRescisao,
+                                                      int pCodTbRestituicaoRescisao,
+                                                      int pCodTipoRestituicao,
+                                                      int pCodTipoRescisao,
+                                                      Date pDataDesligamento,
+                                                      Date pDataInicioFeriasIntegrais,
+                                                      Date pDataFimFeriasIntegrais,
+                                                      Date pDataInicioFeriasProporcionais,
+                                                      Date pDataFimFeriasProporcionais,
+                                                      Date pDataInicioContagemDecTer,
+                                                      float pValorDecimoTerceiro,
+                                                      float pIncidSubmod41DecTerceiro,
+                                                      float pIncidMultaFGTSDecTeceriro,
+                                                      float pValorFerias,
+                                                      float pValorTerco,
+                                                      float pIncidSubmod41Ferias,
+                                                      float pIncidSubmod41Terco,
+                                                      float pIncidMultaFGTSFerias,
+                                                      float pIncidMultaFGTSTerco,
+                                                      float pValorFeriasProporcional,
+                                                      float pValorTercoProporcional,
+                                                      float pIncidSubmod41FeriasProporcional,
+                                                      float pIncidSubmod41TercoProporcional,
+                                                      float pIncidMultaFGTSFeriasProporcional,
+                                                      float pIncidMultaFGTSTercoProporcional,
+                                                      float pMultaFGTSSalario,
+                                                      Date pDataReferencia,
+                                                      String pAutorizado,
+                                                      String pRestituido,
+                                                      String pObservacao,
+                                                      String pLoginAtualizacao) {
 
         PreparedStatement preparedStatement;
         int vRetorno = -1;
@@ -1511,38 +1510,38 @@ public class UpdateTSQL {
         try {
 
             String sql = "UPDATE TB_HIST_RESTITUICAO_RESCISAO" +
-                            " SET COD_RESTITUICAO_RESCISAO = ?," +
-                                " COD_TIPO_RESTITUICAO = ?," +
-                                " COD_TIPO_RESCISAO = ?," +
-                                " DATA_DESLIGAMENTO = ?," +
-                                " DATA_INICIO_FERIAS = ?," +
-                                " DATA_FIM_FERIAS = ?," +
-                                " DATA_INICIO_FERIAS_PROP = ?," +
-                                " DATA_FIM_FERIAS_PROP = ?," +
-                                " DATA_INICIO_CONTAGEM_DEC_TER = ?," +
-                                " VALOR_DECIMO_TERCEIRO = ?," +
-                                " INCID_SUBMOD_4_1_DEC_TERCEIRO = ?," +
-                                " INCID_MULTA_FGTS_DEC_TERCEIRO = ?," +
-                                " VALOR_FERIAS = ?," +
-                                " VALOR_TERCO = ?," +
-                                " INCID_SUBMOD_4_1_FERIAS = ?," +
-                                " INCID_SUBMOD_4_1_TERCO = ?," +
-                                " INCID_MULTA_FGTS_FERIAS = ?," +
-                                " INCID_MULTA_FGTS_TERCO = ?," +
-                                " VALOR_FERIAS_PROP = ?," +
-                                " VALOR_TERCO_PROP = ?," +
-                                " INCID_SUBMOD_4_1_FERIAS_PROP = ?," +
-                                " INCID_SUBMOD_4_1_TERCO_PROP = ?," +
-                                " INCID_MULTA_FGTS_FERIAS_PROP = ?," +
-                                " INCID_MULTA_FGTS_TERCO_PROP = ?," +
-                                " MULTA_FGTS_SALARIO = ?," +
-                                " DATA_REFERENCIA = ?," +
-                                " AUTORIZADO = ?," +
-                                " RESTITUIDO = ?," +
-                                " OBSERVACAO = ?," +
-                                " LOGIN_ATUALIZACAO = ?," +
-                                " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
-                            " WHERE COD = ?";
+                    " SET COD_RESTITUICAO_RESCISAO = ?," +
+                    " COD_TIPO_RESTITUICAO = ?," +
+                    " COD_TIPO_RESCISAO = ?," +
+                    " DATA_DESLIGAMENTO = ?," +
+                    " DATA_INICIO_FERIAS = ?," +
+                    " DATA_FIM_FERIAS = ?," +
+                    " DATA_INICIO_FERIAS_PROP = ?," +
+                    " DATA_FIM_FERIAS_PROP = ?," +
+                    " DATA_INICIO_CONTAGEM_DEC_TER = ?," +
+                    " VALOR_DECIMO_TERCEIRO = ?," +
+                    " INCID_SUBMOD_4_1_DEC_TERCEIRO = ?," +
+                    " INCID_MULTA_FGTS_DEC_TERCEIRO = ?," +
+                    " VALOR_FERIAS = ?," +
+                    " VALOR_TERCO = ?," +
+                    " INCID_SUBMOD_4_1_FERIAS = ?," +
+                    " INCID_SUBMOD_4_1_TERCO = ?," +
+                    " INCID_MULTA_FGTS_FERIAS = ?," +
+                    " INCID_MULTA_FGTS_TERCO = ?," +
+                    " VALOR_FERIAS_PROP = ?," +
+                    " VALOR_TERCO_PROP = ?," +
+                    " INCID_SUBMOD_4_1_FERIAS_PROP = ?," +
+                    " INCID_SUBMOD_4_1_TERCO_PROP = ?," +
+                    " INCID_MULTA_FGTS_FERIAS_PROP = ?," +
+                    " INCID_MULTA_FGTS_TERCO_PROP = ?," +
+                    " MULTA_FGTS_SALARIO = ?," +
+                    " DATA_REFERENCIA = ?," +
+                    " AUTORIZADO = ?," +
+                    " RESTITUIDO = ?," +
+                    " OBSERVACAO = ?," +
+                    " LOGIN_ATUALIZACAO = ?," +
+                    " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
+                    " WHERE COD = ?";
 
             preparedStatement = connection.prepareStatement(sql);
 
@@ -1573,7 +1572,7 @@ public class UpdateTSQL {
             preparedStatement.setFloat(25, pMultaFGTSSalario);
             preparedStatement.setDate(26, pDataReferencia);
             preparedStatement.setString(27, pAutorizado);
-            preparedStatement.setString(28,pRestituido);
+            preparedStatement.setString(28, pRestituido);
             preparedStatement.setString(29, pObservacao);
             preparedStatement.setString(30, pLoginAtualizacao);
             preparedStatement.setInt(31, pCodHistoricoRestituicaoRescisao);
@@ -1595,24 +1594,24 @@ public class UpdateTSQL {
     }
 
 
-    public Integer UpdateHistoricoRestituicaoFerias (int pCodHistoricoRestituicaoFerias,
-                                                     int pCodTbRestituicaoFerias,
-                                                     int pCodTipoRestituicao,
-                                                     Date pInicioPeriodoAquisitivo,
-                                                     Date pFimPeriodoAquisitivo,
-                                                     Date pInicioFerias,
-                                                     Date pFimFerias,
-                                                     float pTotalFerias,
-                                                     float pTotalTercoConstitucional,
-                                                     float pTotalIncidenciaFerias,
-                                                     float pTotalIncidenciaTerco,
-                                                     int pParcela,
-                                                     Date pDataReferencia,
-                                                     int pDiasVendidos,
-                                                     String pAutorizado,
-                                                     String pRestituido,
-                                                     String pObservacao,
-                                                     String pLoginAtualizacao) {
+    public Integer UpdateHistoricoRestituicaoFerias(int pCodHistoricoRestituicaoFerias,
+                                                    int pCodTbRestituicaoFerias,
+                                                    int pCodTipoRestituicao,
+                                                    Date pInicioPeriodoAquisitivo,
+                                                    Date pFimPeriodoAquisitivo,
+                                                    Date pInicioFerias,
+                                                    Date pFimFerias,
+                                                    float pTotalFerias,
+                                                    float pTotalTercoConstitucional,
+                                                    float pTotalIncidenciaFerias,
+                                                    float pTotalIncidenciaTerco,
+                                                    int pParcela,
+                                                    Date pDataReferencia,
+                                                    int pDiasVendidos,
+                                                    String pAutorizado,
+                                                    String pRestituido,
+                                                    String pObservacao,
+                                                    String pLoginAtualizacao) {
 
         PreparedStatement preparedStatement;
         int vRetorno = -1;
@@ -1620,25 +1619,25 @@ public class UpdateTSQL {
         try {
 
             String sql = "UPDATE TB_HIST_RESTITUICAO_FERIAS" +
-                            " SET COD_RESTITUICAO_FERIAS = ?," +
-                                " COD_TIPO_RESTITUICAO = ?," +
-                                " DATA_INICIO_PERIODO_AQUISITIVO = ?," +
-                                " DATA_FIM_PERIODO_AQUISITIVO = ?," +
-                                " DATA_INICIO_USUFRUTO = ?," +
-                                " DATA_FIM_USUFRUTO = ?," +
-                                " VALOR_FERIAS = ?," +
-                                " VALOR_TERCO_CONSTITUCIONAL = ?," +
-                                " INCID_SUBMOD_4_1_FERIAS = ?," +
-                                " INCID_SUBMOD_4_1_TERCO = ?," +
-                                " PARCELA = ?," +
-                                " DIAS_VENDIDOS = ?," +
-                                " DATA_REFERENCIA = ?," +
-                                " AUTORIZADO = ?," +
-                                " RESTITUIDO = ?," +
-                                " OBSERVACAO = ?," +
-                                " LOGIN_ATUALIZACAO = ?," +
-                                " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
-                            " WHERE COD = ?";
+                    " SET COD_RESTITUICAO_FERIAS = ?," +
+                    " COD_TIPO_RESTITUICAO = ?," +
+                    " DATA_INICIO_PERIODO_AQUISITIVO = ?," +
+                    " DATA_FIM_PERIODO_AQUISITIVO = ?," +
+                    " DATA_INICIO_USUFRUTO = ?," +
+                    " DATA_FIM_USUFRUTO = ?," +
+                    " VALOR_FERIAS = ?," +
+                    " VALOR_TERCO_CONSTITUCIONAL = ?," +
+                    " INCID_SUBMOD_4_1_FERIAS = ?," +
+                    " INCID_SUBMOD_4_1_TERCO = ?," +
+                    " PARCELA = ?," +
+                    " DIAS_VENDIDOS = ?," +
+                    " DATA_REFERENCIA = ?," +
+                    " AUTORIZADO = ?," +
+                    " RESTITUIDO = ?," +
+                    " OBSERVACAO = ?," +
+                    " LOGIN_ATUALIZACAO = ?," +
+                    " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
+                    " WHERE COD = ?";
 
             preparedStatement = connection.prepareStatement(sql);
 
@@ -1675,13 +1674,13 @@ public class UpdateTSQL {
 
     }
 
-    public int UpdateSaldoResidualFerias (int pCodSaldoResidualFerias,
-                                          int pCodTbRestituicaoFerias,
-                                          float pValorFerias,
-                                          float pValorTerco,
-                                          float pIncidenciaFerias,
-                                          float pIncidenciaTerco,
-                                          String pLoginAtualizacao) {
+    public int UpdateSaldoResidualFerias(int pCodSaldoResidualFerias,
+                                         int pCodTbRestituicaoFerias,
+                                         float pValorFerias,
+                                         float pValorTerco,
+                                         float pIncidenciaFerias,
+                                         float pIncidenciaTerco,
+                                         String pLoginAtualizacao) {
 
         PreparedStatement preparedStatement;
         int vRetorno = -1;
@@ -1689,14 +1688,14 @@ public class UpdateTSQL {
         try {
 
             String sql = "UPDATE TB_SALDO_RESIDUAL_FERIAS" +
-                            " SET COD_RESTITUICAO_FERIAS = ?," +
-                                " VALOR_FERIAS = ?," +
-                                " VALOR_TERCO = ?," +
-                                " INCID_SUBMOD_4_1_FERIAS = ?," +
-                                " INCID_SUBMOD_4_1_TERCO = ?," +
-                                " LOGIN_ATUALIZACAO = ?," +
-                                " DATA_ATUALIZACAO = ?" +
-                            " WHERE COD = CURRENT_TIMESTAMP";
+                    " SET COD_RESTITUICAO_FERIAS = ?," +
+                    " VALOR_FERIAS = ?," +
+                    " VALOR_TERCO = ?," +
+                    " INCID_SUBMOD_4_1_FERIAS = ?," +
+                    " INCID_SUBMOD_4_1_TERCO = ?," +
+                    " LOGIN_ATUALIZACAO = ?," +
+                    " DATA_ATUALIZACAO = ?" +
+                    " WHERE COD = CURRENT_TIMESTAMP";
 
             preparedStatement = connection.prepareStatement(sql);
 
@@ -1724,11 +1723,11 @@ public class UpdateTSQL {
 
     }
 
-    public int UpdateSaldoResidualDecimoTerceiro (int pCodSaldoResidualDecimoTerceiro,
-                                                  int pCodRestituicaoDecimoTerceiro,
-                                                  float pValorDecimoTerceiro,
-                                                  float pValorIncidencia,
-                                                  String pLoginAtualizacao) {
+    public int UpdateSaldoResidualDecimoTerceiro(int pCodSaldoResidualDecimoTerceiro,
+                                                 int pCodRestituicaoDecimoTerceiro,
+                                                 float pValorDecimoTerceiro,
+                                                 float pValorIncidencia,
+                                                 String pLoginAtualizacao) {
 
         PreparedStatement preparedStatement;
         int vRetorno = -1;
@@ -1736,12 +1735,12 @@ public class UpdateTSQL {
         try {
 
             String sql = "UPDATE TB_SALDO_RESIDUAL_DEC_TER" +
-                            " SET COD_RESTITUICAO_DEC_TERCEIRO = ?," +
-                                " VALOR = ?," +
-                                " INCIDENCIA_SUBMODULO_4_1 = ?," +
-                                " LOGIN_ATUALIZACAO = ?," +
-                                " DATA_ATUALIZACAO = ?" +
-                            " WHERE COD = CURRENT_TIMESTAMP";
+                    " SET COD_RESTITUICAO_DEC_TERCEIRO = ?," +
+                    " VALOR = ?," +
+                    " INCIDENCIA_SUBMODULO_4_1 = ?," +
+                    " LOGIN_ATUALIZACAO = ?," +
+                    " DATA_ATUALIZACAO = ?" +
+                    " WHERE COD = CURRENT_TIMESTAMP";
 
             preparedStatement = connection.prepareStatement(sql);
 
@@ -1767,25 +1766,25 @@ public class UpdateTSQL {
 
     }
 
-    public int UpdateSaldoResidualRescisao (int pCodSaldoResidualRescisao,
-                                            int pCodRestituicaoRescisao,
-                                            float pValorDecimoTerceiro,
-                                            float pValorIncidenciaDecimoTerceiro,
-                                            float pValorFGTSDecimoTerceiro,
-                                            float pValorFerias,
-                                            float pValorTerco,
-                                            float pValorIncidenciaFerias,
-                                            float pValorIncidenciaTerco,
-                                            float pValorFGTSFerias,
-                                            float pValorFGTSTerco,
-                                            float pValorFeriasProporcional,
-                                            float pValorTercoProporcional,
-                                            float pValorIncidenciaFeriasProporcional,
-                                            float pValorIncidenciaTercoProporcional,
-                                            float pValorFGTSFeriasProporcional,
-                                            float pValorFGTSTercoProporcional,
-                                            float pValorFGTSSalario,
-                                            String pLoginAtualizacao) {
+    public int UpdateSaldoResidualRescisao(int pCodSaldoResidualRescisao,
+                                           int pCodRestituicaoRescisao,
+                                           float pValorDecimoTerceiro,
+                                           float pValorIncidenciaDecimoTerceiro,
+                                           float pValorFGTSDecimoTerceiro,
+                                           float pValorFerias,
+                                           float pValorTerco,
+                                           float pValorIncidenciaFerias,
+                                           float pValorIncidenciaTerco,
+                                           float pValorFGTSFerias,
+                                           float pValorFGTSTerco,
+                                           float pValorFeriasProporcional,
+                                           float pValorTercoProporcional,
+                                           float pValorIncidenciaFeriasProporcional,
+                                           float pValorIncidenciaTercoProporcional,
+                                           float pValorFGTSFeriasProporcional,
+                                           float pValorFGTSTercoProporcional,
+                                           float pValorFGTSSalario,
+                                           String pLoginAtualizacao) {
 
         PreparedStatement preparedStatement;
         int vRetorno = -1;
@@ -1793,26 +1792,26 @@ public class UpdateTSQL {
         try {
 
             String sql = "UPDATE TB_SALDO_RESIDUAL_RESCISAO" +
-                            " SET cod_restituicao_rescisao = ?," +
-                                " valor_decimo_terceiro = ?," +
-                                " incid_submod_4_1_dec_terceiro = ?," +
-                                " incid_multa_fgts_dec_terceiro = ?," +
-                                " valor_ferias = ?," +
-                                " valor_terco = ?," +
-                                " incid_submod_4_1_ferias = ?," +
-                                " incid_submod_4_1_terco = ?," +
-                                " incid_multa_fgts_ferias = ?," +
-                                " incid_multa_fgts_terco = ?," +
-                                " valor_ferias_prop = ?," +
-                                " valor_terco_prop = ?," +
-                                " incid_submod_4_1_ferias_prop = ?," +
-                                " incid_submod_4_1_terco_prop = ?," +
-                                " incid_multa_fgts_ferias_prop = ?," +
-                                " incid_multa_fgts_terco_prop = ?," +
-                                " multa_fgts_salario = ?," +
-                                " login_atualizacao = ?," +
-                                " data_atualizacao = ?" +
-                            " WHERE COD = CURRENT_TIMESTAMP";
+                    " SET cod_restituicao_rescisao = ?," +
+                    " valor_decimo_terceiro = ?," +
+                    " incid_submod_4_1_dec_terceiro = ?," +
+                    " incid_multa_fgts_dec_terceiro = ?," +
+                    " valor_ferias = ?," +
+                    " valor_terco = ?," +
+                    " incid_submod_4_1_ferias = ?," +
+                    " incid_submod_4_1_terco = ?," +
+                    " incid_multa_fgts_ferias = ?," +
+                    " incid_multa_fgts_terco = ?," +
+                    " valor_ferias_prop = ?," +
+                    " valor_terco_prop = ?," +
+                    " incid_submod_4_1_ferias_prop = ?," +
+                    " incid_submod_4_1_terco_prop = ?," +
+                    " incid_multa_fgts_ferias_prop = ?," +
+                    " incid_multa_fgts_terco_prop = ?," +
+                    " multa_fgts_salario = ?," +
+                    " login_atualizacao = ?," +
+                    " data_atualizacao = ?" +
+                    " WHERE COD = CURRENT_TIMESTAMP";
 
             preparedStatement = connection.prepareStatement(sql);
 
@@ -1852,62 +1851,62 @@ public class UpdateTSQL {
 
     }
 
-    public int UpdateTotalMensalAReter (int pCodTotalMensalAReter,
-                                        int pCodTerceirizadoContrato,
-                                        int pCodFuncaoTerceirizadoContrato,
-                                        float pFerias,
-                                        float pTercoConstitucional,
-                                        float pDecimoTerceiro,
-                                        float pIncidenciaSubmodulo41,
-                                        float pMultaFgts,
-                                        float pTotal,
-                                        Date pDataReferencia,
-                                        String pAutorizado,
-                                        String pRetido,
-                                        String pObeservacao,
-                                        String pLoginAtualizacao) {
+    public int UpdateTotalMensalAReter(int pCodTotalMensalAReter,
+                                       int pCodTerceirizadoContrato,
+                                       int pCodFuncaoTerceirizadoContrato,
+                                       float pFerias,
+                                       float pTercoConstitucional,
+                                       float pDecimoTerceiro,
+                                       float pIncidenciaSubmodulo41,
+                                       float pMultaFgts,
+                                       float pTotal,
+                                       Date pDataReferencia,
+                                       String pAutorizado,
+                                       String pRetido,
+                                       String pObeservacao,
+                                       String pLoginAtualizacao) {
 
         PreparedStatement preparedStatement;
         int vRetorno = -1;
 
         try {
 
-                String sql = "UPDATE TB_TOTAL_MENSAL_A_RETER" +
-                                " SET COD_TERCEIRIZADO_CONTRATO = ?, " +
-                                    " COD_FUNCAO_TERCEIRIZADO = ?, " +
-                                    " FERIAS = ?, " +
-                                    " TERCO_CONSTITUCIONAL = ?," +
-                                    " DECIMO_TERCEIRO = ?, " +
-                                    " INCIDENCIA_SUBMODULO_4_1 = ?, " +
-                                    " MULTA_FGTS = ?," +
-                                    " TOTAL = ?, " +
-                                    " DATA_REFERENCIA = ?, " +
-                                    " AUTORIZADO = ?, " +
-                                    " RETIDO = ?, " +
-                                    " OBSERVACAO = ?, " +
-                                    " LOGIN_ATUALIZACAO = ?, " +
-                                    " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
-                                " WHERE COD = ?";
+            String sql = "UPDATE TB_TOTAL_MENSAL_A_RETER" +
+                    " SET COD_TERCEIRIZADO_CONTRATO = ?, " +
+                    " COD_FUNCAO_TERCEIRIZADO = ?, " +
+                    " FERIAS = ?, " +
+                    " TERCO_CONSTITUCIONAL = ?," +
+                    " DECIMO_TERCEIRO = ?, " +
+                    " INCIDENCIA_SUBMODULO_4_1 = ?, " +
+                    " MULTA_FGTS = ?," +
+                    " TOTAL = ?, " +
+                    " DATA_REFERENCIA = ?, " +
+                    " AUTORIZADO = ?, " +
+                    " RETIDO = ?, " +
+                    " OBSERVACAO = ?, " +
+                    " LOGIN_ATUALIZACAO = ?, " +
+                    " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
+                    " WHERE COD = ?";
 
 
-                preparedStatement = connection.prepareStatement(sql);
+            preparedStatement = connection.prepareStatement(sql);
 
-                preparedStatement.setInt(1, pCodTerceirizadoContrato);
-                preparedStatement.setInt(2, pCodFuncaoTerceirizadoContrato);
-                preparedStatement.setFloat(3, pFerias);
-                preparedStatement.setFloat(4, pTercoConstitucional);
-                preparedStatement.setFloat(5, pDecimoTerceiro);
-                preparedStatement.setFloat(6, pIncidenciaSubmodulo41);
-                preparedStatement.setFloat(7, pMultaFgts);
-                preparedStatement.setFloat(8, pTotal);
-                preparedStatement.setDate(9, pDataReferencia);
-                preparedStatement.setString(10, pAutorizado);
-                preparedStatement.setString(11, pRetido);
-                preparedStatement.setString(12, pObeservacao);
-                preparedStatement.setString(13, pLoginAtualizacao);
-                preparedStatement.setInt(14, pCodTotalMensalAReter);
+            preparedStatement.setInt(1, pCodTerceirizadoContrato);
+            preparedStatement.setInt(2, pCodFuncaoTerceirizadoContrato);
+            preparedStatement.setFloat(3, pFerias);
+            preparedStatement.setFloat(4, pTercoConstitucional);
+            preparedStatement.setFloat(5, pDecimoTerceiro);
+            preparedStatement.setFloat(6, pIncidenciaSubmodulo41);
+            preparedStatement.setFloat(7, pMultaFgts);
+            preparedStatement.setFloat(8, pTotal);
+            preparedStatement.setDate(9, pDataReferencia);
+            preparedStatement.setString(10, pAutorizado);
+            preparedStatement.setString(11, pRetido);
+            preparedStatement.setString(12, pObeservacao);
+            preparedStatement.setString(13, pLoginAtualizacao);
+            preparedStatement.setInt(14, pCodTotalMensalAReter);
 
-                preparedStatement.executeUpdate();
+            preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
 
@@ -1919,6 +1918,55 @@ public class UpdateTSQL {
 
         return vRetorno;
 
+    }
+
+    public void UpdateDataFimHistoricoGestaoContrato(int pCodHistoricoGestaoVigente, Date pDataInicio, String pUsername) throws RuntimeException {
+        String sql = "UPDATE TB_HISTORICO_GESTAO_CONTRATO SET DATA_FIM=? , LOGIN_ATUALIZACAO=?, DATA_ATUALIZACAO=GETDATE() WHERE COD=?";
+        LocalDate dateMinusOne = pDataInicio.toLocalDate().minusDays(1);
+        Date dataInicioMenosUmDia = Date.valueOf(dateMinusOne);
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setDate(1, dataInicioMenosUmDia);
+            preparedStatement.setString(2, pUsername);
+            preparedStatement.setInt(3, pCodHistoricoGestaoVigente);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Erro ao tentar atualizar o registro de código " + pCodHistoricoGestaoVigente + " em Historico Gestao Contrato. Causa: " +
+                    e.getMessage());
+        }
+    }
+
+    public void UpdateDataFimPercentualContrato(int pCodPercentualVigente, Date pDataInicio, String pUsername) throws RuntimeException {
+        String sql = "UPDATE TB_PERCENTUAL_CONTRATO SET DATA_FIM=?, LOGIN_ATUALIZACAO=?, DATA_ATUALIZACAO=GETDATE() WHERE COD=?";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setDate(1, subraiDias(pDataInicio, 1));
+            preparedStatement.setString(2, pUsername);
+            preparedStatement.setInt(3, pCodPercentualVigente);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Erro ao tentar atualizar a data fim de um percentual do contrato ! [Codigo do registro:" +
+                    pCodPercentualVigente + "]. Causa: " + e.getMessage());
+        }
+    }
+
+    public void UpdateFimRemuneracaoFuncao(int pCodFuncaoContrato, Date pDataInicio, String pUsername) throws RuntimeException {
+        String sql = "UPDATE TB_REMUNERACAO_FUN_CON SET DATA_FIM=?, LOGIN_ATUALIZACAO=? WHERE COD_FUNCAO_CONTRATO=? ";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setDate(1, subraiDias(pDataInicio, 1));
+            preparedStatement.setString(2, pUsername);
+            preparedStatement.setInt(3, pCodFuncaoContrato);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Erro ao tentar atualizar a data fim da remuneração vigente no contrato ! " +
+                    e.getMessage());
+        }
+    }
+
+    private Date subraiDias(Date date, long qtdDias) {
+        LocalDate localDate = date.toLocalDate().minusDays(qtdDias);
+        return Date.valueOf(localDate);
     }
 
 }

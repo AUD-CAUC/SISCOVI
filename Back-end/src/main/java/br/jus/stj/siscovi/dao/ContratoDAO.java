@@ -153,6 +153,18 @@ public class ContratoDAO {
         return codigoGestor;
     }
 
+    /**
+     * Função que insere um contrato no sistema, isto é, insere o nome da empresa, o CNPJ, o número do contrato no STJ,
+     * o número do processo no STJ, a descrição do objeto deste contrato, os gestores (O gestor em si, e até dois
+     * substitutos), os percentuais, as funções com suas respectivas remunerações e convenções coletivas e a vigência do
+     * contrato
+     *
+     * @param contrato
+     * @param username
+     * @return
+     * @throws RuntimeException
+     * @throws SQLException
+     */
     public boolean cadastrarContrato(ContratoModel contrato, String username) throws RuntimeException, SQLException {
         this.connection.setAutoCommit(false);
         Savepoint savepoint = this.connection.setSavepoint("Savepoint1");
@@ -181,10 +193,10 @@ public class ContratoDAO {
                     } catch (SQLException e) {
                         throw new RuntimeException("Erro. Usuário indicado para gestor do contrato não existe no sistema !");
                     }
-                    insertTSQL.InsertHistoricoGestaoContrato(vCodContrato, vCodUsuarioGestor, hgc.getCodigoPerfilGestao(), hgc.getInicio(), hgc.getFim(), username);
+                    insertTSQL.InsertHistoricoGestaoContrato(vCodContrato, vCodUsuarioGestor, hgc.getCodigoPerfilGestao(), hgc.getInicio(), null, username);
                 }
                 for (PercentualModel pm : contrato.getPercentuais()) {
-                    insertTSQL.InsertPercentualContrato(vCodContrato, pm.getRubrica().getCodigo(), pm.getPercentual(), pm.getDataInicio(), pm.getDataFim(), pm.getDataAditamento(), username);
+                    insertTSQL.InsertPercentualContrato(vCodContrato, pm.getRubrica().getCodigo(), pm.getPercentual(), pm.getDataInicio(), null, pm.getDataAditamento(), username);
                     if (pm.getRubrica().getNome().contains("Férias")) {
                         vPercentualTercoConstitucional = pm.getPercentual() / 3;
                         vDataInicioPercentualTercoConstitucional = pm.getDataInicio();
@@ -228,6 +240,13 @@ public class ContratoDAO {
         }
     }
 
+    /**
+     * Retorna o código de um evento contratual pelo tipo de evento.
+     *
+     * @param tipoEventoContratual
+     * @return
+     * @throws RuntimeException
+     */
     public int retornaCodEventoContratual(String tipoEventoContratual) {
         String sql = "SELECT COD FROM TB_TIPO_EVENTO_CONTRATUAL WHERE TIPO = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -243,6 +262,12 @@ public class ContratoDAO {
         return 0;
     }
 
+    /**
+     * @param username
+     * @param codigoContrato
+     * @return
+     * @throws RuntimeException
+     */
     public List<EventoContratualModel> retornaEventosContratuais(String username, int codigoContrato) throws RuntimeException {
         int vCodUsuario = 0;
         List<EventoContratualModel> lista = new ArrayList<>();
@@ -291,6 +316,14 @@ public class ContratoDAO {
         return null;
     }
 
+    /**
+     * Retorna todas as informações atuais do contrato.
+     *
+     * @param username
+     * @param codContrato
+     * @return
+     * @throws RuntimeException
+     */
     public ContratoModel getContratoCompleto(String username, int codContrato) throws RuntimeException {
         String sql = "SELECT COD FROM TB_USUARIO WHERE LOGIN=?";
         User user = new User();
@@ -331,6 +364,14 @@ public class ContratoDAO {
         }
     }
 
+    /**
+     *  Retorna verdadeiro se o ano passado como argumento da função está dentro do período de vigência do contrato que
+     *  está se requisitando através do código do contrato, e retorna falso caso contrário.
+     * @param ano
+     * @param codigoContrato
+     * @return
+     * @throws RuntimeException
+     */
     public boolean anoDentroPeriodoVigencia(int ano, int codigoContrato) throws RuntimeException {
         String sql = "SELECT MIN(YEAR(EC.DATA_INICIO_VIGENCIA)), MAX(YEAR(EC.DATA_FIM_VIGENCIA)) FROM TB_CONTRATO C JOIN TB_EVENTO_CONTRATUAL EC ON EC.COD_CONTRATO = C.COD WHERE C.COD= ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -352,12 +393,14 @@ public class ContratoDAO {
         return false;
     }
 
+
+
     public List<TipoEventoContratualModel> getTiposEventosContratuais() throws RuntimeException {
         List<TipoEventoContratualModel> tiposEventosContratuais = new ArrayList<>();
         String sql = "SELECT * FROM TB_TIPO_EVENTO_CONTRATUAL TEC  WHERE TEC.TIPO !='CONTRATO'; ";
-        try(PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            try(ResultSet resultSet = preparedStatement.executeQuery()){
-                while(resultSet.next()) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
                     TipoEventoContratualModel tipoEventoContratualModel = new TipoEventoContratualModel(resultSet.getInt("COD"), resultSet.getString("TIPO"),
                             resultSet.getString("LOGIN_ATUALIZACAO"), resultSet.getDate("DATA_ATUALIZACAO"));
                     tiposEventosContratuais.add(tipoEventoContratualModel);
@@ -370,17 +413,110 @@ public class ContratoDAO {
         return tiposEventosContratuais;
     }
 
-    public void cadastrarAjusteContrato(ContratoModel contrato) throws RuntimeException, SQLException {
+    /**
+     * Função para cadastrar ajuste. Esta função criar o registro de evento contratual com informações inseridas pelo
+     * usuário e atualizar as informações das outras tabelas como por exemplo definir a data fim para os percentuais
+     * vigentes e acrescentar o novo registro para os novos percentuais
+     *
+     * @param contrato
+     * @param username
+     * @throws RuntimeException
+     * @throws SQLException
+     */
+    public void cadastrarAjusteContrato(ContratoModel contrato, String username) throws RuntimeException, SQLException {
         this.connection.setAutoCommit(false);
         Savepoint savepoint = this.connection.setSavepoint("Savepoint1");
+
         InsertTSQL insertTSQL = new InsertTSQL(connection);
         ConsultaTSQL consultaTSQL = new ConsultaTSQL(connection);
         UpdateTSQL updateTSQL = new UpdateTSQL(connection);
-        String sql = "";
-        try(PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            
-        }catch (SQLException sqle) {
 
+        int vCodHistoricoGestaoVigente = 0;
+        int vCodPercentualVigente = 0;
+        int vCodFuncaoContrato = 0;
+        int vCodRubrica = 0;
+
+        CargoModel vFuncaoComRemuneracaoVigente = null;
+
+        String sql = "";
+
+        try {
+            int vCodEventoContratual = insertTSQL.InsertEventoContratual(contrato.getCodigo(),
+                    contrato.getEventoContratual().getTipo().getCod(),
+                    String.valueOf(contrato.getEventoContratual().getProrrogacao()),
+                    contrato.getEventoContratual().getAssunto(),
+                    contrato.getEventoContratual().getDataInicioVigencia(),
+                    contrato.getEventoContratual().getDataFimVigencia(),
+                    contrato.getEventoContratual().getDataAssinatura(),
+                    username);
+            for (HistoricoGestorModel hgc : contrato.getHistoricoGestao()) {
+
+                vCodHistoricoGestaoVigente = consultaTSQL.RetornaRegistroHistoricoGestaoVigente(contrato.getCodigo(),
+                        hgc.getCodigoPerfilGestao());
+                if (vCodHistoricoGestaoVigente != 0) {
+                    updateTSQL.UpdateDataFimHistoricoGestaoContrato(vCodHistoricoGestaoVigente, hgc.getInicio(), username);
+                    insereHistoricoGestaoContrato(contrato.getCodigo(), hgc.getGestor(),
+                            hgc.getCodigoPerfilGestao(), hgc.getInicio(), username);
+                } else {
+                    throw new SQLException("Nenhum historico encontrado para ser atualizado");
+                }
+            }
+
+            for (PercentualModel pcm : contrato.getPercentuais()) {
+                vCodPercentualVigente = consultaTSQL.RetornaPercentualContratoVigente(contrato.getCodigo(),
+                        pcm.getRubrica().getCodigo());
+                if (vCodPercentualVigente != 0) {
+                    updateTSQL.UpdateDataFimPercentualContrato(vCodPercentualVigente, pcm.getDataInicio(), username);
+                    insertTSQL.InsertPercentualContrato(contrato.getCodigo(), pcm.getRubrica().getCodigo(),
+                            pcm.getPercentual(), pcm.getDataInicio(), null, pcm.getDataAditamento(), username);
+
+                } else {
+                    throw new SQLException("Nenhum percentual no contrato com esta rubrica para ser atualizado !");
+                }
+            }
+
+            for (CargoModel cm : contrato.getFuncoes()) {
+                vCodFuncaoContrato = consultaTSQL.RetornaCodFuncaoContrato(contrato.getCodigo(), cm.getCodigo());
+                if (vCodFuncaoContrato != 0) {
+                    vFuncaoComRemuneracaoVigente = consultaTSQL.RetornaFuncaoRemuneracaoVigente(vCodFuncaoContrato);
+                    if (vFuncaoComRemuneracaoVigente.getRemuneracao() != cm.getRemuneracao() ||
+                            vFuncaoComRemuneracaoVigente.getTrienios() != cm.getTrienios() ||
+                            vFuncaoComRemuneracaoVigente.getAdicionais() != cm.getAdicionais() ||
+                            vFuncaoComRemuneracaoVigente.getConvencao().getCodigo() != cm.getConvencao().getCodigo()) {
+                        updateTSQL.UpdateFimRemuneracaoFuncao(vCodFuncaoContrato,
+                                contrato.getEventoContratual().getDataInicioVigencia(), username);
+                        insertTSQL.InsertRemuneracaoFunCon(vCodFuncaoContrato, cm.getConvencao().getCodigo(),
+                                contrato.getEventoContratual().getDataInicioVigencia(), null,
+                                contrato.getEventoContratual().getDataAssinatura(), cm.getRemuneracao(),
+                                cm.getAdicionais(), cm.getTrienios(), username);
+                    }
+                } else {
+                    throw new SQLException("A função não foi encontrada neste contrato !");
+                }
+            }
+            connection.commit();
+            connection.setAutoCommit(true);
+        } catch (Exception ex) {
+            connection.rollback(savepoint);
+            ex.printStackTrace();
+            throw new RuntimeException("Erro ao tentar cadastrar ajuste, contrato: " + contrato.getNomeDaEmpresa() + " . Causa :" + ex.getMessage());
         }
+    }
+
+    private void insereHistoricoGestaoContrato(int pCodContrato, String nomeGestor, int pCodPerfilGestao, Date pDataInicio, String pUsername) {
+        InsertTSQL insertTSQL = new InsertTSQL(connection);
+        int vCodUsuarioGestor = 0;
+        String sql = "SELECT COD FROM TB_USUARIO WHERE NOME=?";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setString(1, nomeGestor);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    vCodUsuarioGestor = resultSet.getInt("COD");
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro. Usuário indicado para gestor do contrato não existe no sistema !");
+        }
+        insertTSQL.InsertHistoricoGestaoContrato(pCodContrato, vCodUsuarioGestor, pCodPerfilGestao, pDataInicio, null, pUsername);
     }
 }
