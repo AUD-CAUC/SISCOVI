@@ -159,7 +159,7 @@ public class CargoController {
             }
             connectSQLServer.dbConnect().close();
         } catch (SQLException e) {
-            return Response.ok(gson.toJson(ErrorMessage.handleError(e))).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(gson.toJson(ErrorMessage.handleError(e))).build();
         }
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("success", "O terceirizado foi inserido no contrato com sucesso !");
@@ -186,10 +186,8 @@ public class CargoController {
                 }
             }
             connectSQLServer.dbConnect().close();
-        } catch (SQLException e) {
-            return Response.ok(gson.toJson(ErrorMessage.handleError(e))).build();
-        } catch (RuntimeException rte) {
-            return Response.ok(gson.toJson(ErrorMessage.handleError(rte))).build();
+        } catch (Exception ex) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(gson.toJson(ErrorMessage.handleError(ex))).build();
         }
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("success", "As alterações foram feitas com sucesso");
