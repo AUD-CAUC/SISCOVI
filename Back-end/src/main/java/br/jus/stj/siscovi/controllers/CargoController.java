@@ -139,13 +139,23 @@ public class CargoController {
         List<CargosFuncionariosModel> lista = gson.fromJson(object, new TypeToken<List<CargosFuncionariosModel>>() {
         }.getType());
         ConnectSQLServer connectSQLServer = new ConnectSQLServer();
+        int vCodTerceirizadoContrato = 0;
         try {
             InsertTSQL insertTSQL = new InsertTSQL(connectSQLServer.dbConnect());
             CargoDAO cargoDAO = new CargoDAO(connectSQLServer.dbConnect());
             for (CargosFuncionariosModel cfm : lista) {
-                int a = insertTSQL.InsertTerceirizadoContrato(codigoContrato, cfm.getFuncionario().getCodigo(), cfm.getDataDisponibilizacao(), cfm.getDataDesligamento(), username);
+                if(cfm.getFuncionario().getCodigo() != 0) {
+                    vCodTerceirizadoContrato = insertTSQL.InsertTerceirizadoContrato(codigoContrato,
+                            cfm.getFuncionario().getCodigo(), cfm.getDataDisponibilizacao(),
+                            null, username);
+                }else {
+                   int vCodTerceirizado =  insertTSQL.InsertTerceirizado(cfm.getFuncionario().getNome(),
+                            cfm.getFuncionario().getCpf(), "S", username);
+                   vCodTerceirizadoContrato = insertTSQL.InsertTerceirizadoContrato(codigoContrato, vCodTerceirizado,
+                           cfm.getDataDisponibilizacao(), null, username);
+                }
                 int codFuncaoContrato = cargoDAO.recuperaCodigoFuncaoContrato(codigoContrato, cfm.getFuncao().getCodigo());
-                insertTSQL.InsertFuncaoTerceirizado(a, codFuncaoContrato, cfm.getDataDisponibilizacao(), null, username);
+                insertTSQL.InsertFuncaoTerceirizado(vCodTerceirizadoContrato, codFuncaoContrato, cfm.getDataDisponibilizacao(), null, username);
             }
             connectSQLServer.dbConnect().close();
         } catch (SQLException e) {
