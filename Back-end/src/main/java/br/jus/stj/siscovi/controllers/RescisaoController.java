@@ -47,8 +47,12 @@ public class RescisaoController {
         String json = "";
         try {
             for (TerceirizadoRescisao terceirizadoRescisao : lista) {
-                ValorRestituicaoRescisaoModel valorRestituicaoRescisaoModel = restituicaoRescisao.CalculaRestituicaoRescisao(terceirizadoRescisao.getCodTerceirizadoContrato(), terceirizadoRescisao.getDataDesligamento(), terceirizadoRescisao.getpDataInicioFeriasIntegrais(),
-                terceirizadoRescisao.getpDataFimFeriasIntegrais(), terceirizadoRescisao.getpDataInicioFeriasProporcionais(), terceirizadoRescisao.getpDataFimFeriasProporcionais());
+                ValorRestituicaoRescisaoModel valorRestituicaoRescisaoModel = restituicaoRescisao.CalculaRestituicaoRescisao(terceirizadoRescisao.getCodTerceirizadoContrato(),
+                                                                                                                             terceirizadoRescisao.getDataDesligamento(),
+                                                                                                                             terceirizadoRescisao.getpDataInicioFeriasIntegrais(),
+                                                                                                                             terceirizadoRescisao.getpDataFimFeriasIntegrais(),
+                                                                                                                             terceirizadoRescisao.getpDataInicioFeriasProporcionais(),
+                                                                                                                             terceirizadoRescisao.getpDataFimFeriasProporcionais());
                 CalculoRestituicaoRescisaoModel crrm = new CalculoRestituicaoRescisaoModel(terceirizadoRescisao, valorRestituicaoRescisaoModel);
                 lista1.add(crrm);
             }
