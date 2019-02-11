@@ -1324,7 +1324,7 @@ public class InsertTSQL {
                                         float pRemuneracao,
                                         float pAdicionais,
                                         float pTrienios,
-                                        String pLoginAtualizacao) {
+                                        String pLoginAtualizacao) throws NullPointerException {
 
         PreparedStatement preparedStatement;
         ConsultaTSQL consulta = new ConsultaTSQL(connection);

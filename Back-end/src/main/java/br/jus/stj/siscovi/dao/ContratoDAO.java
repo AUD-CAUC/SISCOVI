@@ -365,8 +365,9 @@ public class ContratoDAO {
     }
 
     /**
-     *  Retorna verdadeiro se o ano passado como argumento da função está dentro do período de vigência do contrato que
-     *  está se requisitando através do código do contrato, e retorna falso caso contrário.
+     * Retorna verdadeiro se o ano passado como argumento da função está dentro do período de vigência do contrato que
+     * está se requisitando através do código do contrato, e retorna falso caso contrário.
+     *
      * @param ano
      * @param codigoContrato
      * @return
@@ -392,7 +393,6 @@ public class ContratoDAO {
         }
         return false;
     }
-
 
 
     public List<TipoEventoContratualModel> getTiposEventosContratuais() throws RuntimeException {
