@@ -421,7 +421,7 @@ public class TotalMensalDAO {
                 " JOIN tb_terceirizado_contrato tc on tc.COD=tmr.cod_terceirizado_contrato" +
                 " WHERE YEAR(data_referencia) = ?" +
                 " AND (autorizado = 'S')" +
-                " AND (retido = 'N' OR retido is null)" +
+                " AND (retido = 'N' OR retido is not null)" +
                 " AND tc.cod_contrato = ?" +
                 " ORDER BY 1 asc";
         try(PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
