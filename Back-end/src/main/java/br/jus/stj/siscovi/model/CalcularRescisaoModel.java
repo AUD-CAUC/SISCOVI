@@ -42,7 +42,6 @@ public class CalcularRescisaoModel {
                                  Date fimFeriasIntegrais,
                                  Date inicioFeriasProporcionais,
                                  Date fimFeriasProporcionais,
-                                 Date inicioContagemDecTer,
                                  float valorFeriasVencidasMovimentado,
                                  float valorFeriasProporcionaisMovimentado,
                                  float valorDecimoTerceiroMovimentado,
@@ -71,7 +70,6 @@ public class CalcularRescisaoModel {
         this.fimFeriasIntegrais = fimFeriasIntegrais;
         this.inicioFeriasProporcionais = inicioFeriasProporcionais;
         this.fimFeriasProporcionais = fimFeriasProporcionais;
-        this.inicioContagemDecTer = inicioContagemDecTer;
         this.valorFeriasVencidasMovimentado = valorFeriasVencidasMovimentado;
         this.valorFeriasProporcionaisMovimentado = valorFeriasProporcionaisMovimentado;
         this.valorDecimoTerceiroMovimentado = valorDecimoTerceiroMovimentado;
@@ -216,14 +214,17 @@ public class CalcularRescisaoModel {
 
     @Override
     public String toString() {
-        return "CalcularFeriasModel{" +
+        return "CalcularRescisaoModel{" +
                 "codTerceirizadoContrato=" + codTerceirizadoContrato +
                 ", tipoRestituicao='" + tipoRestituicao + '\'' +
                 ", tipoRescisao=" + tipoRescisao +
-                ", inicioFeriasVencidas=" + inicioFeriasIntegrais +
-                ", fimFeriavencidass=" + fimFeriasIntegrais +
+                ", dataDesligamento=" + dataDesligamento +
+                ", inicioFeriasIntegrais=" + inicioFeriasIntegrais +
+                ", fimFeriasIntegrais=" + fimFeriasIntegrais +
                 ", inicioFeriasProporcionais=" + inicioFeriasProporcionais +
-                ", fimFeriasProporcionais=" + fimFeriasProporcionais +
+                ", valorFeriasVencidasMovimentado=" + valorFeriasVencidasMovimentado +
+                ", valorFeriasProporcionaisMovimentado=" + valorFeriasProporcionaisMovimentado +
+                ", valorDecimoTerceiroMovimentado=" + valorDecimoTerceiroMovimentado +
                 '}';
     }
 

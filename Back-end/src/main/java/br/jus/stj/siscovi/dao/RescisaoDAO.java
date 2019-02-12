@@ -31,7 +31,14 @@ public class RescisaoDAO {
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
                     TerceirizadoRescisao terceirizadoRescisao = new TerceirizadoRescisao(resultSet.getInt("COD"),
-                            resultSet.getString("NOME"));
+                            resultSet.getString("NOME"),
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null);
                     terceirizados.add(terceirizadoRescisao);
                 }
             } catch (SQLException sqle) {
