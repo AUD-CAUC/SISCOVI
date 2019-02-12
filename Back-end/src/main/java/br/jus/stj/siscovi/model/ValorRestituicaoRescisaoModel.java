@@ -5,12 +5,12 @@ public class ValorRestituicaoRescisaoModel {
     private final float valorDecimoTerceiro;
     private final float valorIncidenciaDecimoTerceiro;
     private final float valorFGTSDecimoTerceiro;
-    private final float valorFerias;
-    private final float valorTerco;
-    private final float valorIncidenciaFerias;
-    private final float valorIncidenciaTerco;
-    private final float valorFGTSFerias;
-    private final float valorFGTSTerco;
+    private final float valorFeriasIntegral;
+    private final float valorTercoIntegral;
+    private final float valorIncidenciaFeriasIntegral;
+    private final float valorIncidenciaTercoIntegral;
+    private final float valorFGTSFeriasIntegral;
+    private final float valorFGTSTercoIntegral;
     private final float valorFGTSSalario;
     private final float valorFeriasProporcional;
     private final float valorTercoProporcional;
@@ -22,12 +22,12 @@ public class ValorRestituicaoRescisaoModel {
     public ValorRestituicaoRescisaoModel (float valorDecimoTerceiro,
                                           float valorIncidenciaDecimoTerceiro,
                                           float valorFGTSDecimoTerceiro,
-                                          float valorFerias,
-                                          float valorTerco,
-                                          float valorIncidenciaFerias,
-                                          float valorIncidenciaTerco,
-                                          float valorFGTSFerias,
-                                          float valorFGTSTerco,
+                                          float valorFeriasIntegral,
+                                          float valorTercoIntegral,
+                                          float valorIncidenciaFeriasIntegral,
+                                          float valorIncidenciaTercoIntegral,
+                                          float valorFGTSFeriasIntegral,
+                                          float valorFGTSTercoIntegral,
                                           float valorFeriasProporcional,
                                           float valorTercoProporcional,
                                           float valorIncidenciaFeriasProporcional,
@@ -39,12 +39,12 @@ public class ValorRestituicaoRescisaoModel {
         this.valorDecimoTerceiro = valorDecimoTerceiro;
         this.valorIncidenciaDecimoTerceiro = valorIncidenciaDecimoTerceiro;
         this.valorFGTSDecimoTerceiro = valorFGTSDecimoTerceiro;
-        this.valorFerias = valorFerias;
-        this.valorTerco = valorTerco;
-        this.valorIncidenciaFerias = valorIncidenciaFerias;
-        this.valorIncidenciaTerco = valorIncidenciaTerco;
-        this.valorFGTSFerias = valorFGTSFerias;
-        this.valorFGTSTerco = valorFGTSTerco;
+        this.valorFeriasIntegral = valorFeriasIntegral;
+        this.valorTercoIntegral = valorTercoIntegral;
+        this.valorIncidenciaFeriasIntegral = valorIncidenciaFeriasIntegral;
+        this.valorIncidenciaTercoIntegral = valorIncidenciaTercoIntegral;
+        this.valorFGTSFeriasIntegral = valorFGTSFeriasIntegral;
+        this.valorFGTSTercoIntegral = valorFGTSTercoIntegral;
         this.valorFGTSSalario = valorFGTSSalario;
         this.valorFeriasProporcional = valorFeriasProporcional;
         this.valorTercoProporcional = valorTercoProporcional;
@@ -73,39 +73,39 @@ public class ValorRestituicaoRescisaoModel {
 
     }
 
-    public float getValorFerias () {
+    public float getValorFeriasIntegral () {
 
-        return valorFerias;
-
-    }
-
-    public float getValorTerco () {
-
-        return valorTerco;
+        return valorFeriasIntegral;
 
     }
 
-    public float getValorIncidenciaFerias () {
+    public float getValorTercoIntegral () {
 
-        return valorIncidenciaFerias;
-
-    }
-
-    public float getValorIncidenciaTerco () {
-
-        return valorIncidenciaTerco;
+        return valorTercoIntegral;
 
     }
 
-    public float getValorFGTSFerias () {
+    public float getValorIncidenciaFeriasIntegral () {
 
-        return valorFGTSFerias;
+        return valorIncidenciaFeriasIntegral;
 
     }
 
-    public float getValorFGTSTerco () {
+    public float getValorIncidenciaTercoIntegral () {
 
-        return valorFGTSTerco;
+        return valorIncidenciaTercoIntegral;
+
+    }
+
+    public float getValorFGTSFeriasIntegral () {
+
+        return valorFGTSFeriasIntegral;
+
+    }
+
+    public float getValorFGTSTercoIntegral () {
+
+        return valorFGTSTercoIntegral;
 
     }
 

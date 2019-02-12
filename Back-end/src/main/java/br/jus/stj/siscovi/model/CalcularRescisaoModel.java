@@ -42,6 +42,7 @@ public class CalcularRescisaoModel {
                                  Date fimFeriasIntegrais,
                                  Date inicioFeriasProporcionais,
                                  Date fimFeriasProporcionais,
+                                 Date inicioContagemDecTer,
                                  float valorFeriasVencidasMovimentado,
                                  float valorFeriasProporcionaisMovimentado,
                                  float valorDecimoTerceiroMovimentado,
@@ -70,6 +71,7 @@ public class CalcularRescisaoModel {
         this.fimFeriasIntegrais = fimFeriasIntegrais;
         this.inicioFeriasProporcionais = inicioFeriasProporcionais;
         this.fimFeriasProporcionais = fimFeriasProporcionais;
+        this.inicioContagemDecTer = inicioContagemDecTer;
         this.valorFeriasVencidasMovimentado = valorFeriasVencidasMovimentado;
         this.valorFeriasProporcionaisMovimentado = valorFeriasProporcionaisMovimentado;
         this.valorDecimoTerceiroMovimentado = valorDecimoTerceiroMovimentado;
