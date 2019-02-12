@@ -3,6 +3,7 @@ package br.jus.stj.siscovi.controllers;
 import br.jus.stj.siscovi.calculos.RestituicaoDecimoTerceiro;
 import br.jus.stj.siscovi.dao.ConnectSQLServer;
 import br.jus.stj.siscovi.dao.DecimoTerceiroDAO;
+import br.jus.stj.siscovi.dao.UsuarioDAO;
 import br.jus.stj.siscovi.helpers.ErrorMessage;
 import br.jus.stj.siscovi.model.AvaliacaoDecimoTerceiro;
 import br.jus.stj.siscovi.model.TerceirizadoDecimoTerceiro;
@@ -14,6 +15,7 @@ import com.google.gson.reflect.TypeToken;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.sql.Connection;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -322,5 +324,29 @@ public class DecimoTerceiroController {
             json = gson.toJson(errorMessage);
         }
         return Response.ok(json, MediaType.APPLICATION_JSON).build();
+    }
+    @GET
+    @Path("/getAnosCalculoDecimoTerceiro/{codigoContrato}/{username}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAnosCalculoDecimoTerceiro(@PathParam("codigoContrato") int codigoContrato,
+                                                 @PathParam("username") String username){
+        Gson gson = new Gson();
+        ConnectSQLServer connectSQLServer = new ConnectSQLServer();
+        Connection connection = connectSQLServer.dbConnect();
+        DecimoTerceiroDAO decimoTerceiroDAO = new DecimoTerceiroDAO(connection);
+        List<Integer> anos;
+        try {
+            if(new UsuarioDAO(connection).isAdmin(username) ||
+                    new UsuarioDAO(connection).isGestor(username, codigoContrato)) {
+                anos = decimoTerceiroDAO.getAnosDecimoTerceiro(codigoContrato);
+            } else {
+                throw new RuntimeException("Permissão negada !");
+            }
+            connection.close();
+        } catch (Exception ex) {
+            String error = gson.toJson(ErrorMessage.handleError(ex));
+            return Response.status(Response.Status.BAD_REQUEST).entity(error).build();
+        }
+        return Response.ok(gson.toJson(anos), MediaType.APPLICATION_JSON).build();
     }
 }
