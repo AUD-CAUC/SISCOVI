@@ -365,4 +365,24 @@ public class DecimoTerceiroDAO {
         }
         return lista;
     }
+
+    public List<Integer> getAnosDecimoTerceiro(int codigoContrato) throws NullPointerException {
+        List<Integer> anos = new ArrayList<>();
+        String sql = "SELECT DISTINCT YEAR(date.DATE) FROM (SELECT DISTINCT TE.DATA_INICIO_VIGENCIA AS DATE FROM tb_evento_contratual TE WHERE TE.COD_CONTRATO=?" +
+                " UNION SELECT TE.DATA_FIM_VIGENCIA AS DATE FROM tb_evento_contratual TE WHERE TE.COD_CONTRATO=?) date; ";
+        try(PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, codigoContrato);
+            preparedStatement.setInt(2, codigoContrato);
+            try(ResultSet resultSet = preparedStatement.executeQuery()){
+                while(resultSet.next()) {
+                    anos.add(resultSet.getInt(1));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new NullPointerException("Nenhum período válido para cálculo de décimo terceiro.");
+        }
+
+        return anos;
+    }
 }
