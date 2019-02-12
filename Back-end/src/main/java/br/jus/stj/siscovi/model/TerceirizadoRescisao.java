@@ -10,12 +10,27 @@ public class TerceirizadoRescisao {
     private Date pDataFimFeriasIntegrais;
     private Date pDataInicioFeriasProporcionais;
     private Date pDataFimFeriasProporcionais;
-    private String tipoRescisao;
     private String tipoRestituicao;
+    private String tipoRescisao;
 
-    public TerceirizadoRescisao (int codTerceirizadoContrato, String nomeTerceirizado) {
+    public TerceirizadoRescisao (int codTerceirizadoContrato,
+                                 String nomeTerceirizado,
+                                 Date dataDesligamento,
+                                 Date pDataInicioFeriasIntegrais,
+                                 Date pDataFimFeriasIntegrais,
+                                 Date pDataInicioFeriasProporcionais,
+                                 Date pDataFimFeriasProporcionais,
+                                 String tipoRestituicao,
+                                 String tipoRescisao) {
         this.codTerceirizadoContrato = codTerceirizadoContrato;
         this.nomeTerceirizado = nomeTerceirizado;
+        this.dataDesligamento = dataDesligamento;
+        this.pDataInicioFeriasIntegrais = pDataInicioFeriasIntegrais;
+        this.pDataFimFeriasIntegrais = pDataFimFeriasIntegrais;
+        this.pDataInicioFeriasProporcionais = pDataInicioFeriasProporcionais;
+        this.pDataFimFeriasProporcionais = pDataFimFeriasProporcionais;
+        this.tipoRestituicao = tipoRestituicao;
+        this.tipoRescisao = tipoRescisao;
     }
 
     public int getCodTerceirizadoContrato() {

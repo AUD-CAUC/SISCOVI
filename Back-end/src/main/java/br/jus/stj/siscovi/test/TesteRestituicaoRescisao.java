@@ -53,12 +53,12 @@ public class TesteRestituicaoRescisao {
         System.out.println("Décimo terceiro: " + restituicao.getValorDecimoTerceiro());
         System.out.println("Incidência de Décimo terceiro: " + restituicao.getValorIncidenciaDecimoTerceiro());
         System.out.println("Multa FGTS do Décimo terceiro: " + restituicao.getValorFGTSDecimoTerceiro());
-        System.out.println("Férias integrais: " + restituicao.getValorFerias());
-        System.out.println("Terço integral: " + restituicao.getValorTerco());
-        System.out.println("Incidência de férias integrais: " + restituicao.getValorIncidenciaFerias());
-        System.out.println("Incidência de terço integral: " + restituicao.getValorIncidenciaTerco());
-        System.out.println("MULTA FGTS de férias integrais: " + restituicao.getValorFGTSFerias());
-        System.out.println("MULTA FGTS de terço integral: " + restituicao.getValorFGTSTerco());
+        System.out.println("Férias integrais: " + restituicao.getValorFeriasIntegral());
+        System.out.println("Terço integral: " + restituicao.getValorTercoIntegral());
+        System.out.println("Incidência de férias integrais: " + restituicao.getValorIncidenciaFeriasIntegral());
+        System.out.println("Incidência de terço integral: " + restituicao.getValorIncidenciaTercoIntegral());
+        System.out.println("MULTA FGTS de férias integrais: " + restituicao.getValorFGTSFeriasIntegral());
+        System.out.println("MULTA FGTS de terço integral: " + restituicao.getValorFGTSTercoIntegral());
         System.out.println("Férias proporcionais: " + restituicao.getValorFeriasProporcional());
         System.out.println("Terço proporcional: " + restituicao.getValorTercoProporcional());
         System.out.println("Incidência de férias proporcionais: " + restituicao.getValorIncidenciaFeriasProporcional());
@@ -80,12 +80,12 @@ public class TesteRestituicaoRescisao {
                 restituicao.getValorDecimoTerceiro(),
                 restituicao.getValorIncidenciaDecimoTerceiro(),
                 restituicao.getValorFGTSDecimoTerceiro(),
-                restituicao.getValorFerias(),
-                restituicao.getValorTerco(),
-                restituicao.getValorIncidenciaFerias(),
-                restituicao.getValorIncidenciaTerco(),
-                restituicao.getValorFGTSFerias(),
-                restituicao.getValorFGTSTerco(),
+                restituicao.getValorFeriasIntegral(),
+                restituicao.getValorTercoIntegral(),
+                restituicao.getValorIncidenciaFeriasIntegral(),
+                restituicao.getValorIncidenciaTercoIntegral(),
+                restituicao.getValorFGTSFeriasIntegral(),
+                restituicao.getValorFGTSTercoIntegral(),
                 restituicao.getValorFeriasProporcional(),
                 restituicao.getValorTercoProporcional(),
                 restituicao.getValorIncidenciaFeriasProporcional(),

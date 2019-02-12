@@ -216,14 +216,17 @@ public class CalcularRescisaoModel {
 
     @Override
     public String toString() {
-        return "CalcularFeriasModel{" +
+        return "CalcularRescisaoModel{" +
                 "codTerceirizadoContrato=" + codTerceirizadoContrato +
                 ", tipoRestituicao='" + tipoRestituicao + '\'' +
                 ", tipoRescisao=" + tipoRescisao +
-                ", inicioFeriasVencidas=" + inicioFeriasIntegrais +
-                ", fimFeriavencidass=" + fimFeriasIntegrais +
+                ", dataDesligamento=" + dataDesligamento +
+                ", inicioFeriasIntegrais=" + inicioFeriasIntegrais +
+                ", fimFeriasIntegrais=" + fimFeriasIntegrais +
                 ", inicioFeriasProporcionais=" + inicioFeriasProporcionais +
-                ", fimFeriasProporcionais=" + fimFeriasProporcionais +
+                ", valorFeriasVencidasMovimentado=" + valorFeriasVencidasMovimentado +
+                ", valorFeriasProporcionaisMovimentado=" + valorFeriasProporcionaisMovimentado +
+                ", valorDecimoTerceiroMovimentado=" + valorDecimoTerceiroMovimentado +
                 '}';
     }
 
