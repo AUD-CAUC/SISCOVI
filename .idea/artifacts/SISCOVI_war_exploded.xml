@@ -1,0 +1,16 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="SISCOVI:war exploded">
+    <output-path>$PROJECT_DIR$/Back-end/out/artifacts/SISCOVI_war_exploded</output-path>
+    <root id="root">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="SISCOVI" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="aopalliance-repackaged-2.5.0-b32" />
+        </element>
+      </element>
+      <element id="javaee-facet-resources" facet="SISCOVI/web/Web" />
+    </root>
+  </artifact>
+</component>
