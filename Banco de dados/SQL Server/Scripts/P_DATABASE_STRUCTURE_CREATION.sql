@@ -857,6 +857,22 @@ CREATE TABLE tb_trienio_terc_contrato
 	
 	go
 
+CREATE TABLE tb_percentual_dinamico (
+    cod                 INTEGER NOT NULL,
+    percentual          FLOAT(20) NOT NULL,
+    login_atualizacao   VARCHAR(150) NOT NULL,
+    data_atualizacao    datetime NOT NULL
+)
+
+go
+
+ALTER TABLE TB_PERCENTUAL_DINAMICO ADD constraint tb_percentual_dinamico_pk PRIMARY KEY CLUSTERED (cod)
+     WITH (
+     ALLOW_PAGE_LOCKS = ON , 
+     ALLOW_ROW_LOCKS = ON ) 
+	 go
+
+
 ALTER TABLE TB_TRIENIO_TERC_CONTRATO ADD constraint tb_trienio_terc_contrato_pk PRIMARY KEY CLUSTERED (COD)
      WITH (
      ALLOW_PAGE_LOCKS = ON , 
