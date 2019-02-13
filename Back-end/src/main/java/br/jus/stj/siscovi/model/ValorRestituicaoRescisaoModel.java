@@ -1,7 +1,10 @@
 package br.jus.stj.siscovi.model;
 
+import java.sql.Date;
+
 public class ValorRestituicaoRescisaoModel {
 
+    private final Date inicioContagemDecimoTerceiro;
     private final float valorDecimoTerceiro;
     private final float valorIncidenciaDecimoTerceiro;
     private final float valorFGTSDecimoTerceiro;
@@ -19,7 +22,8 @@ public class ValorRestituicaoRescisaoModel {
     private final float valorFGTSFeriasProporcional;
     private final float valorFGTSTercoProporcional;
 
-    public ValorRestituicaoRescisaoModel (float valorDecimoTerceiro,
+    public ValorRestituicaoRescisaoModel (Date incioContagemDecimoTerceiro,
+                                          float valorDecimoTerceiro,
                                           float valorIncidenciaDecimoTerceiro,
                                           float valorFGTSDecimoTerceiro,
                                           float valorFeriasIntegral,
@@ -36,6 +40,7 @@ public class ValorRestituicaoRescisaoModel {
                                           float valorFGTSTercoProporcional,
                                           float valorFGTSSalario) {
 
+        this.inicioContagemDecimoTerceiro = incioContagemDecimoTerceiro;
         this.valorDecimoTerceiro = valorDecimoTerceiro;
         this.valorIncidenciaDecimoTerceiro = valorIncidenciaDecimoTerceiro;
         this.valorFGTSDecimoTerceiro = valorFGTSDecimoTerceiro;
@@ -52,6 +57,12 @@ public class ValorRestituicaoRescisaoModel {
         this.valorIncidenciaTercoProporcional = valorIncidenciaTercoProporcional;
         this.valorFGTSFeriasProporcional = valorFGTSFeriasProporcional;
         this.valorFGTSTercoProporcional = valorFGTSTercoProporcional;
+
+    }
+
+    public Date getIncioContagemDecimoTerceiro () {
+
+        return inicioContagemDecimoTerceiro;
 
     }
 

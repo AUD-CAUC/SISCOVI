@@ -105,7 +105,8 @@ public class RestituicaoRescisao {
         vTotalMultaFGTSRemuneracao = CalcularValorRubricaRescisao(pCodTerceirizadoContrato, 10, vDataDisponibilizacao, pDataDesligamento);
 
 
-        return new ValorRestituicaoRescisaoModel(vTotalDecimoTerceiro,
+        return new ValorRestituicaoRescisaoModel(vDataInicioContagemDecTer,
+                                                 vTotalDecimoTerceiro,
                                                  vTotalIncidenciaDecimoTerceiro,
                                                  vTotalMultaFGTSDecimoTerceiro,
                                                  vTotalFerias,
