@@ -1910,6 +1910,73 @@
 </ind_PK_UK>
 </indexes>
 </Table>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="5A6746EC-B42E-FEA0-657D-35B4E45548E2" name="TB_PERCENTUAL_DINAMICO">
+<createdBy>vssousa</createdBy>
+<createdTime>2019-02-13 16:58:34 UTC</createdTime>
+<ownerDesignName>SISCOVI - Modelo de Dados</ownerDesignName>
+<ordsAlias>table_36</ordsAlias>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="COD" id="A990DAD8-FF05-D165-D54A-1D5F2D32F2DF">
+<createdBy>vssousa</createdBy>
+<createdTime>2019-02-13 17:00:09 UTC</createdTime>
+<ownerDesignName>SISCOVI - Modelo de Dados</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="PERCENTUAL" id="9EDADDF0-E10E-3223-BDED-A4AEC104468E">
+<createdBy>vssousa</createdBy>
+<createdTime>2019-02-13 17:00:09 UTC</createdTime>
+<ownerDesignName>SISCOVI - Modelo de Dados</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT021</logicalDatatype>
+<dataTypePrecision>20</dataTypePrecision>
+<dataTypeScale>10</dataTypeScale>
+<ownDataTypeParameters>,20,10</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="LOGIN_ATUALIZACAO" id="47766801-23FE-396B-E2BF-B8C53FD831B0">
+<createdBy>vssousa</createdBy>
+<createdTime>2019-02-13 17:00:09 UTC</createdTime>
+<ownerDesignName>SISCOVI - Modelo de Dados</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>150 CHAR</dataTypeSize>
+<ownDataTypeParameters>150 CHAR,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="DATA_ATUALIZACAO" id="604DE5F6-BFC0-D36E-8F99-09E8D169D3FB">
+<createdBy>vssousa</createdBy>
+<createdTime>2019-02-13 17:00:09 UTC</createdTime>
+<ownerDesignName>SISCOVI - Modelo de Dados</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT015</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="2B112BB0-8161-DBC3-979E-3591C9C3DB14" name="TB_PERCENTUAL_DINAMICO_PK">
+<createdBy>vssousa</createdBy>
+<createdTime>2019-02-13 17:00:09 UTC</createdTime>
+<ownerDesignName>SISCOVI - Modelo de Dados</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="A990DAD8-FF05-D165-D54A-1D5F2D32F2DF"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>
 <Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="40CF6558-1ABC-668E-B396-27E5E2A23371" name="TB_PERCENTUAL_ESTATICO">
 <createdBy>vssousa</createdBy>
 <createdTime>2018-02-15 16:29:29 UTC</createdTime>
@@ -6161,6 +6228,10 @@
 <hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
 <bounds x="808" y="271" width="416" height="290"/>
 </OView>
+<OView class="oracle.dbtools.crest.swingui.relational.TVTable" oid="5A6746EC-B42E-FEA0-657D-35B4E45548E2" otype="Table" vid="6C9903DE-4F40-89EE-9952-B89BEF2DE646">
+<hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
+<bounds x="1301" y="258" width="276" height="111"/>
+</OView>
 <OView class="oracle.dbtools.crest.swingui.relational.TVTable" oid="5FA235A5-D756-239B-AB3A-E14F52962292" otype="Table" vid="DA704AC1-4CBB-E522-2017-2CFD0E372A40">
 <hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
 <bounds x="385" y="1501" width="384" height="170"/>
@@ -6681,7 +6752,7 @@
 </connectors>
 </Diagram>
 </Diagrams>
-<mainView class="oracle.dbtools.crest.swingui.relational.DPVRelational" name="SISCOVI">
+<mainView class="oracle.dbtools.crest.swingui.relational.DPVRelational">
 <createdBy>vssousa</createdBy>
 <modifiedBy>vssousa</modifiedBy>
 <createdTime>2017-08-16 19:01:34 UTC</createdTime>
@@ -6755,6 +6826,10 @@
 <OView class="oracle.dbtools.crest.swingui.relational.TVTable" oid="4E1223D2-370C-71A9-4946-69D677A13BE4" otype="Table" vid="0DEABB8E-820A-C107-43DF-F5F82237A698">
 <hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
 <bounds x="90" y="130" width="170" height="110"/>
+</OView>
+<OView class="oracle.dbtools.crest.swingui.relational.TVTable" oid="5A6746EC-B42E-FEA0-657D-35B4E45548E2" otype="Table" vid="04015CD1-BB1B-3BF2-8094-19D555268C2F">
+<hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
+<bounds x="50" y="50" width="170" height="110"/>
 </OView>
 <OView class="oracle.dbtools.crest.swingui.relational.TVTable" oid="5FA235A5-D756-239B-AB3A-E14F52962292" otype="Table" vid="FAFCA47E-2C89-7DB8-467E-7D9A936DC3D2">
 <hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>

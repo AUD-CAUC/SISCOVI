@@ -12,24 +12,25 @@ public class TestFerias {
 
         Date data = null;
         Ferias ferias = new Ferias(connectSQLServer.dbConnect());
-        int vCodTerceirizado = 1;
+        int vCodTerceirizado = 2;
+        Date deslligamento = Date.valueOf("2018-07-22");
 
-        data = ferias.RetornaDatasPeriodoFeriasRescisao(vCodTerceirizado, Date.valueOf("2016-12-31"), 1);
-
-        System.out.print(data);
-        System.out.print("\n");
-
-        data = ferias.RetornaDatasPeriodoFeriasRescisao(vCodTerceirizado, Date.valueOf("2016-12-31"), 2);
+        data = ferias.RetornaDatasPeriodoFeriasRescisao(vCodTerceirizado, deslligamento, 1);
 
         System.out.print(data);
         System.out.print("\n");
 
-        data = ferias.RetornaDatasPeriodoFeriasRescisao(vCodTerceirizado, Date.valueOf("2016-12-31"), 3);
+        data = ferias.RetornaDatasPeriodoFeriasRescisao(vCodTerceirizado, deslligamento, 2);
 
         System.out.print(data);
         System.out.print("\n");
 
-        data = ferias.RetornaDatasPeriodoFeriasRescisao(vCodTerceirizado, Date.valueOf("2016-12-31"), 4);
+        data = ferias.RetornaDatasPeriodoFeriasRescisao(vCodTerceirizado, deslligamento, 3);
+
+        System.out.print(data);
+        System.out.print("\n");
+
+        data = ferias.RetornaDatasPeriodoFeriasRescisao(vCodTerceirizado, deslligamento, 4);
 
         System.out.print(data);
         System.out.print("\n");

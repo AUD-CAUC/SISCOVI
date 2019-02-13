@@ -10,6 +10,7 @@ import br.jus.stj.siscovi.model.TerceirizadoRescisao;
 import br.jus.stj.siscovi.model.ValorRestituicaoRescisaoModel;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
 import javax.ws.rs.*;
@@ -100,41 +101,36 @@ public class RescisaoController {
         ArrayList<CalcularRescisaoModel> listaTerceirizadosParaRegistro = gson.fromJson(object, new TypeToken<List<CalcularRescisaoModel>>(){}.getType());
         ConnectSQLServer connectSQLServer = new ConnectSQLServer();
         RestituicaoRescisao restituicaoRescisao = new RestituicaoRescisao(connectSQLServer.dbConnect());
-        if (listaTerceirizadosParaRegistro.get(0).getTipoRestituicao().equals("RESGATE")) {
-            for (CalcularRescisaoModel calcularRescisaoModel : listaTerceirizadosParaRegistro) {
+        for (CalcularRescisaoModel calcularRescisaoModel : listaTerceirizadosParaRegistro) {
                 restituicaoRescisao.RegistrarRestituicaoRescisao(calcularRescisaoModel.getCodTerceirizadoContrato(),
                         calcularRescisaoModel.getTipoRestituicao(),
-                        calcularRescisaoModel.getDiasVendidos(),
-                        calcularRescisaoModel.getInicioFerias(),
-                        calcularRescisaoModel.getFimFerias(),
-                        calcularRescisaoModel.getInicioPeriodoAquisitivo(),
-                        calcularRescisaoModel.getFimPeriodoAquisitivo(),
-                        calcularRescisaoModel.getParcelas(),
-                        calcularRescisaoModel.,
-                        calcularRescisaoModel.getpTotalFerias(),
-                        calcularRescisaoModel.getpTotalTercoConstitucional(),
-                        calcularRescisaoModel.getpTotalIncidenciaFerias(),
-                        calcularRescisaoModel.getpTotalIncidenciaTerco(),
+                        calcularRescisaoModel.getTipoRescisao(),
+                        calcularRescisaoModel.getDataDesligamento(),
+                        calcularRescisaoModel.getInicioFeriasIntegrais(),
+                        calcularRescisaoModel.getFimFeriasIntegrais(),
+                        calcularRescisaoModel.getInicioFeriasProporcionais(),
+                        calcularRescisaoModel.getFimFeriasProporcionais(),
+                        calcularRescisaoModel.getInicioContagemDecimoTerceiro(),
+                        calcularRescisaoModel.getValorFeriasVencidasMovimentado(),
+                        calcularRescisaoModel.getValorFeriasProporcionaisMovimentado(),
+                        calcularRescisaoModel.getValorDecimoTerceiroMovimentado(),
+                        calcularRescisaoModel.getTotalDecimoTerceiro(),
+                        calcularRescisaoModel.getTotalIncidenciaDecimoTerceiro(),
+                        calcularRescisaoModel.getTotalMultaFgtsDecimoTerceiro(),
+                        calcularRescisaoModel.getTotalFeriasVencidas(),
+                        calcularRescisaoModel.getTotalTercoConstitucionalvencido(),
+                        calcularRescisaoModel.getTotalIncidenciaFeriasVencidas(),
+                        calcularRescisaoModel.getTotalIncidenciaTercoVencido(),
+                        calcularRescisaoModel.getTotalMultaFgtsFeriasVencidas(),
+                        calcularRescisaoModel.getTotalMultaFgtsTercoVencido(),
+                        calcularRescisaoModel.getTotalFeriasProporcionais(),
+                        calcularRescisaoModel.getTotalTercoProporcional(),
+                        calcularRescisaoModel.getTotalIncidenciaFeriasProporcionais(),
+                        calcularRescisaoModel.getTotalIncidenciaTercoProporcional(),
+                        calcularRescisaoModel.getTotalMultaFgtsFeriasProporcionais(),
+                        calcularRescisaoModel.getTotalMultaFgtsTercoProporcional(),
+                        calcularRescisaoModel.getTotalMultaFgtsSalario(),
                         calcularRescisaoModel.getUsername().toUpperCase());
-            }
-        }
-        if (listaTerceirizadosParaCalculo.get(0).getTipoRestituicao().equals("MOVIMENTAÇÃO")) {
-            for (CalcularFeriasModel calcularFeriasModel : listaTerceirizadosParaCalculo) {
-                restituicaoFerias.RegistraRestituicaoFerias(calcularFeriasModel.getCodTerceirizadoContrato(),
-                        calcularFeriasModel.getTipoRestituicao(),
-                        calcularFeriasModel.getDiasVendidos(),
-                        calcularFeriasModel.getInicioFerias(),
-                        calcularFeriasModel.getFimFerias(),
-                        calcularFeriasModel.getInicioPeriodoAquisitivo(),
-                        calcularFeriasModel.getFimPeriodoAquisitivo(),
-                        calcularFeriasModel.getParcelas(),
-                        calcularFeriasModel.getValorMovimentado(),
-                        calcularFeriasModel.getpTotalFerias(),
-                        calcularFeriasModel.getpTotalTercoConstitucional(),
-                        calcularFeriasModel.getpTotalIncidenciaFerias(),
-                        calcularFeriasModel.getpTotalIncidenciaTerco(),
-                        calcularFeriasModel.getUsername().toUpperCase());
-            }
         }
         try {
             connectSQLServer.dbConnect().close();

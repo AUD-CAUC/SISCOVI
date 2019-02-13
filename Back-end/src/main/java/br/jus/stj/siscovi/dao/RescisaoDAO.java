@@ -1,5 +1,6 @@
 package br.jus.stj.siscovi.dao;
 
+import br.jus.stj.siscovi.calculos.Ferias;
 import br.jus.stj.siscovi.model.CalcularRescisaoModel;
 import br.jus.stj.siscovi.model.CalculoPendenteRescisaoModel;
 import br.jus.stj.siscovi.model.TerceirizadoRescisao;
@@ -21,22 +22,25 @@ public class RescisaoDAO {
      */
     public ArrayList<TerceirizadoRescisao> getListaTerceirizadoParaCalculoDeRescisao (int codigoContrato) {
         ArrayList<TerceirizadoRescisao> terceirizados = new ArrayList<>();
+        Ferias ferias = new Ferias(connection);
         String sql = "SELECT TC.COD," +
-                " T.NOME" +
-                " FROM tb_terceirizado_contrato TC " +
-                " JOIN tb_terceirizado T ON T.COD = TC.COD_TERCEIRIZADO " +
-                " WHERE COD_CONTRATO = ? AND T.ATIVO = 'S'";
+                     "       T.NOME," +
+                     "       TC.DATA_DESLIGAMENTO" +
+                     " FROM tb_terceirizado_contrato TC" +
+                     "   JOIN tb_terceirizado T ON T.COD = TC.COD_TERCEIRIZADO" +
+                     " WHERE COD_CONTRATO = ?" +
+                     "   AND TC.DATA_DESLIGAMENTO IS NOT NULL";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, codigoContrato);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
                     TerceirizadoRescisao terceirizadoRescisao = new TerceirizadoRescisao(resultSet.getInt("COD"),
                             resultSet.getString("NOME"),
-                            null,
-                            null,
-                            null,
-                            null,
-                            null,
+                            resultSet.getDate(3),
+                            ferias.RetornaDatasPeriodoFeriasRescisao(resultSet.getInt(1), resultSet.getDate(3), 1),
+                            ferias.RetornaDatasPeriodoFeriasRescisao(resultSet.getInt(1), resultSet.getDate(3), 2),
+                            ferias.RetornaDatasPeriodoFeriasRescisao(resultSet.getInt(1), resultSet.getDate(3), 3),
+                            ferias.RetornaDatasPeriodoFeriasRescisao(resultSet.getInt(1), resultSet.getDate(3), 4),
                             null,
                             null);
                     terceirizados.add(terceirizadoRescisao);
