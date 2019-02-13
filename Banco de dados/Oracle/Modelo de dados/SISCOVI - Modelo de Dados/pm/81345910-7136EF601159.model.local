@@ -1,7 +1,7 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<LogicalDesign class="oracle.dbtools.crest.model.design.logical.LogicalDesign" name="Logical" id="F92F122A-BC74-EC57-CF52-8573F2593750" mainViewID="491459A0-A68A-83F2-F1AB-C9EB45C5EE5F">
+<ProcessModel class="oracle.dbtools.crest.model.design.process.ProcessModel" name="Process Model" id="81345910-4C6A-935B-0FDF-7136EF601159">
 <createdBy>vssousa</createdBy>
 <createdTime>2017-08-16 19:00:13 UTC</createdTime>
 <ownerDesignName>SISCOVI - Modelo de Dados</ownerDesignName>
 <shouldBeOpen>false</shouldBeOpen>
-</LogicalDesign>
+</ProcessModel>

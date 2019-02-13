@@ -92,5 +92,59 @@ public class RescisaoController {
         }
         return Response.ok(json, MediaType.APPLICATION_JSON).build();
     }
+    @POST
+    @Path("/registrarCalculoRescisao")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response registrarCalculoRescisao(String object) {
+        Gson gson = new GsonBuilder().serializeNulls().setDateFormat("yyyy-MM-dd").create();
+        ArrayList<CalcularRescisaoModel> listaTerceirizadosParaRegistro = gson.fromJson(object, new TypeToken<List<CalcularRescisaoModel>>(){}.getType());
+        ConnectSQLServer connectSQLServer = new ConnectSQLServer();
+        RestituicaoRescisao restituicaoRescisao = new RestituicaoRescisao(connectSQLServer.dbConnect());
+        if (listaTerceirizadosParaRegistro.get(0).getTipoRestituicao().equals("RESGATE")) {
+            for (CalcularRescisaoModel calcularRescisaoModel : listaTerceirizadosParaRegistro) {
+                restituicaoRescisao.RegistrarRestituicaoRescisao(calcularRescisaoModel.getCodTerceirizadoContrato(),
+                        calcularRescisaoModel.getTipoRestituicao(),
+                        calcularRescisaoModel.getDiasVendidos(),
+                        calcularRescisaoModel.getInicioFerias(),
+                        calcularRescisaoModel.getFimFerias(),
+                        calcularRescisaoModel.getInicioPeriodoAquisitivo(),
+                        calcularRescisaoModel.getFimPeriodoAquisitivo(),
+                        calcularRescisaoModel.getParcelas(),
+                        calcularRescisaoModel.,
+                        calcularRescisaoModel.getpTotalFerias(),
+                        calcularRescisaoModel.getpTotalTercoConstitucional(),
+                        calcularRescisaoModel.getpTotalIncidenciaFerias(),
+                        calcularRescisaoModel.getpTotalIncidenciaTerco(),
+                        calcularRescisaoModel.getUsername().toUpperCase());
+            }
+        }
+        if (listaTerceirizadosParaCalculo.get(0).getTipoRestituicao().equals("MOVIMENTAÇÃO")) {
+            for (CalcularFeriasModel calcularFeriasModel : listaTerceirizadosParaCalculo) {
+                restituicaoFerias.RegistraRestituicaoFerias(calcularFeriasModel.getCodTerceirizadoContrato(),
+                        calcularFeriasModel.getTipoRestituicao(),
+                        calcularFeriasModel.getDiasVendidos(),
+                        calcularFeriasModel.getInicioFerias(),
+                        calcularFeriasModel.getFimFerias(),
+                        calcularFeriasModel.getInicioPeriodoAquisitivo(),
+                        calcularFeriasModel.getFimPeriodoAquisitivo(),
+                        calcularFeriasModel.getParcelas(),
+                        calcularFeriasModel.getValorMovimentado(),
+                        calcularFeriasModel.getpTotalFerias(),
+                        calcularFeriasModel.getpTotalTercoConstitucional(),
+                        calcularFeriasModel.getpTotalIncidenciaFerias(),
+                        calcularFeriasModel.getpTotalIncidenciaTerco(),
+                        calcularFeriasModel.getUsername().toUpperCase());
+            }
+        }
+        try {
+            connectSQLServer.dbConnect().close();
+        } catch (SQLException e) {
+            System.err.println(e.toString());
+        }
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("success", true);
+        String json = gson.toJson(jsonObject);
+        return Response.ok(json, MediaType.APPLICATION_JSON).build();
+    }
 
 }

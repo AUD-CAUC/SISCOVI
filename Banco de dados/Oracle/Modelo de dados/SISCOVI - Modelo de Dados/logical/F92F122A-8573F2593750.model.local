@@ -1,13 +1,13 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<LogicalDesign class="oracle.dbtools.crest.model.design.logical.LogicalDesign" name="Logical" id="A7F70A0A-6931-43D4-D818-EA2A999A3595" mainViewID="4A692A5F-B733-9B6C-4907-E9B4ADBEC053">
+<LogicalDesign class="oracle.dbtools.crest.model.design.logical.LogicalDesign" name="Logical" id="F92F122A-BC74-EC57-CF52-8573F2593750">
 <createdBy>vssousa</createdBy>
-<createdTime>2018-10-11 18:36:22 UTC</createdTime>
+<createdTime>2017-08-16 19:00:13 UTC</createdTime>
 <ownerDesignName>SISCOVI - Modelo de Dados</ownerDesignName>
 <shouldBeOpen>false</shouldBeOpen>
-<mainView class="oracle.dbtools.crest.swingui.logical.DPVLogical" id="4A692A5F-B733-9B6C-4907-E9B4ADBEC053">
+<mainView class="oracle.dbtools.crest.swingui.logical.DPVLogical">
 <createdBy>vssousa</createdBy>
 <modifiedBy>vssousa</modifiedBy>
-<createdTime>2018-10-11 18:36:44 UTC</createdTime>
+<createdTime>2017-08-16 19:02:01 UTC</createdTime>
 <autoRoute>false</autoRoute>
 <boxInbox>true</boxInbox>
 <showLegend>false</showLegend>
