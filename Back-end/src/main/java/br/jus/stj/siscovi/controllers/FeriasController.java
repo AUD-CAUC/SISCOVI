@@ -3,14 +3,11 @@ package br.jus.stj.siscovi.controllers;
 import br.jus.stj.siscovi.calculos.Ferias;
 import br.jus.stj.siscovi.calculos.RestituicaoFerias;
 import br.jus.stj.siscovi.dao.ConnectSQLServer;
+import br.jus.stj.siscovi.dao.ContratoDAO;
 import br.jus.stj.siscovi.dao.FeriasDAO;
 import br.jus.stj.siscovi.helpers.ErrorMessage;
-import br.jus.stj.siscovi.model.AvaliacaoFerias;
-import br.jus.stj.siscovi.model.CalcularFeriasModel;
-import br.jus.stj.siscovi.model.ValorRestituicaoFeriasModel;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
+import br.jus.stj.siscovi.model.*;
+import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 
 import javax.print.attribute.standard.Media;
@@ -289,5 +286,39 @@ public class FeriasController {
         }else {
             return Response.status(409).build();
         }
+    }
+
+
+    @GET
+    @Path("/getCalculosPendentes/{codigoUsuario}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getCalculosPendentes(@PathParam("codigoUsuario") int codigoUsuario) {
+        ConnectSQLServer connectSQLServer = new ConnectSQLServer();
+        FeriasDAO feriasDAO = new FeriasDAO(connectSQLServer.dbConnect());
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+        String json = "";
+        try {
+            JsonArray jsonArray = new JsonArray();
+            List<ContratoModel> contratos = new ContratoDAO(connectSQLServer.dbConnect()).getCodigosContratosCalculosPendentes();
+            for(ContratoModel contrato : contratos) {
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty("titulo", contrato.getNomeDaEmpresa() + " - Contrato Nº: " + contrato.getNumeroDoContrato());
+                jsonObject.addProperty("codigo", contrato.getCodigo());
+                JsonElement jsonElement = gson.toJsonTree(feriasDAO.getCalculosPendentes(contrato.getCodigo(), codigoUsuario), new TypeToken<List<CalcularFeriasModel>>(){}.getType());
+                jsonObject.add("calculos", jsonElement);
+                jsonArray.add(jsonObject);
+
+                // JsonArray ja = new JSONArray(feriasDAO.getCalculosPendentes(contrato.getCodigo(), codigoUsuario));
+                // jsonObject.addProperty("calculosPendentes", feriasDAO.getCalculosPendentes(contrato.getCodigo(), codigoUsuario));
+
+            }
+            System.out.println(jsonArray);
+            json = gson.toJson(jsonArray);
+            connectSQLServer.dbConnect().close();
+        }catch(Exception ex) {
+            json = gson.toJson(ErrorMessage.handleError(ex));
+            return  Response.status(Response.Status.NOT_FOUND).entity(json).build();
+        }
+        return Response.ok(json, MediaType.APPLICATION_JSON).build();
     }
 }

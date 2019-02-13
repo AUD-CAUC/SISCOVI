@@ -519,4 +519,28 @@ public class ContratoDAO {
         }
         insertTSQL.InsertHistoricoGestaoContrato(pCodContrato, vCodUsuarioGestor, pCodPerfilGestao, pDataInicio, null, pUsername);
     }
+
+    public List<ContratoModel> getCodigosContratosCalculosPendentes() throws NullPointerException {
+        List<ContratoModel> contratos = new ArrayList<>();
+        String sql = "SELECT DISTINCT C.COD, C.CNPJ, C.NOME_EMPRESA, C.NUMERO_CONTRATO, C.NUMERO_PROCESSO_STJ FROM tb_restituicao_ferias RF" +
+                " JOIN TB_TERCEIRIZADO_CONTRATO TC ON TC.COD=RF.COD_TERCEIRIZADO_CONTRATO" +
+                " JOIN TB_CONTRATO C ON C.COD=TC.COD_CONTRATO" +
+                " WHERE RF.AUTORIZADO IS NULL";
+        try(PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+            try(ResultSet resultSet = preparedStatement.executeQuery()){
+                while(resultSet.next()) {
+                    ContratoModel contrato = new ContratoModel(resultSet.getInt("COD"),
+                            resultSet.getString("NOME_EMPRESA"), resultSet.getString("CNPJ"));
+                    contrato.setNumeroProcessoSTJ(resultSet.getString("NUMERO_PROCESSO_STJ"));
+                    contrato.setNumeroDoContrato(resultSet.getString("NUMERO_CONTRATO"));
+                    contratos.add(contrato);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new NullPointerException("Nenhum cálculo pendente encontrado !");
+        }
+
+        return contratos;
+    }
 }
