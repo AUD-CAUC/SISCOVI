@@ -29,7 +29,9 @@ public class RescisaoDAO {
                      " FROM tb_terceirizado_contrato TC" +
                      "   JOIN tb_terceirizado T ON T.COD = TC.COD_TERCEIRIZADO" +
                      " WHERE COD_CONTRATO = ?" +
-                     "   AND TC.DATA_DESLIGAMENTO IS NOT NULL";
+                     "   AND TC.DATA_DESLIGAMENTO IS NOT NULL" +
+                     "   AND tc.cod NOT IN (SELECT cod_terceirizado_contrato" +
+                     "                        FROM tb_restituicao_rescisao)";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, codigoContrato);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
