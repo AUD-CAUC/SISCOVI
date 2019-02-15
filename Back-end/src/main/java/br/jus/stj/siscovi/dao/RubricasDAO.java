@@ -51,11 +51,11 @@ public class RubricasDAO {
         ArrayList<PercentuaisEstaticosModel> listaDePercentuais = new ArrayList<PercentuaisEstaticosModel>();
         PercentuaisEstaticosModel meuPercentual;
         try{
-            preparedStatement = connection.prepareStatement("SELECT NOME,PERCENTUAL, DATA_INICIO, DATA_FIM, DATA_ADITAMENTO FROM tb_percentual_estatico JOIN tb_rubrica R ON " +
+            preparedStatement = connection.prepareStatement("SELECT COD_RUBRICA,NOME,PERCENTUAL, DATA_INICIO, DATA_FIM, DATA_ADITAMENTO FROM tb_percentual_estatico JOIN tb_rubrica R ON " +
                     " COD_RUBRICA=R.cod");
             resultSet = preparedStatement.executeQuery();
             while(resultSet.next()) {
-                meuPercentual = new PercentuaisEstaticosModel(resultSet.getString("NOME"), resultSet.getFloat("PERCENTUAL"),
+                meuPercentual = new PercentuaisEstaticosModel(resultSet.getInt("COD_RUBRICA"), resultSet.getString("NOME"), resultSet.getFloat("PERCENTUAL"),
                         resultSet.getDate("DATA_INICIO"), resultSet.getDate("DATA_FIM"), resultSet.getDate("DATA_ADITAMENTO"));
                 listaDePercentuais.add(meuPercentual);
             }
@@ -68,6 +68,16 @@ public class RubricasDAO {
             sqle.printStackTrace();
         }
         return null;
+    }
+    public boolean InsertPercentualEstatico(PercentuaisEstaticosModel percentuaisEstaticosModel, String currentUser) {
+        PreparedStatement preparedStatement;
+        String sql = "";
+//        try {
+//            preparedStatement = connection.prepareStatement();
+//        } catch (SQLException sqle) {
+//
+//        }
+        return true;
     }
     public boolean InsertRubrica(RubricaModel rubricaModel, String currentUser) {
         PreparedStatement preparedStatement;

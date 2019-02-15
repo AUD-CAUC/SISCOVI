@@ -5,6 +5,7 @@ import java.sql.Date;
 
 public class PercentuaisEstaticosModel {
     private String nome;
+    private int codigo;
     private float percentual;
     private Date dataInicio;
     private Date dataFim;
@@ -30,8 +31,11 @@ public class PercentuaisEstaticosModel {
         return dataAditamento;
     }
 
-    public PercentuaisEstaticosModel(String nome, float percentual, Date dataInicio, Date dataFim, Date dataAditamento) {
+    public int getCodigo(){ return codigo; }
+
+    public PercentuaisEstaticosModel(int codigo, String nome, float percentual, Date dataInicio, Date dataFim, Date dataAditamento) {
         this.nome = nome;
+        this.codigo = codigo;
         this.percentual = percentual;
         this.dataInicio = dataInicio;
         this.dataFim = dataFim;
