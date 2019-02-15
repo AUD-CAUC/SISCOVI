@@ -35,7 +35,6 @@ public class RescisaoController {
 
         return Response.ok(json, MediaType.APPLICATION_JSON).build();
     }
-
     @POST
     @Path("/calculaRescisaoTerceirizados")
     @Produces(MediaType.APPLICATION_JSON)
