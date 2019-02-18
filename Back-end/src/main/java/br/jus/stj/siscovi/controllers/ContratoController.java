@@ -22,6 +22,8 @@ import java.util.List;
 
 @Path("/contrato")
 public class ContratoController {
+
+
     @GET
     @Path("/getContrato/usuario={username}")
     @Produces(MediaType.APPLICATION_JSON)
