@@ -165,7 +165,6 @@ public class FeriasDAO {
                 " WHERE COD_TERCEIRIZADO_CONTRATO = ? AND COD = ?";
         try(PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             for (CalculoPendenteModel calculoPendenteModel : avaliacaoFerias.getCalculosAvaliados()) {
-                System.out.println(calculoPendenteModel);
                 int i = 1;
                 //preparedStatement.setString(1, calculoPendenteModel.getCalcularFeriasModel().getTipoRestituicao());
                 preparedStatement.setDate(i++, calculoPendenteModel.getCalcularFeriasModel().getInicioPeriodoAquisitivo());
@@ -212,7 +211,6 @@ public class FeriasDAO {
                 " WHERE COD_TERCEIRIZADO_CONTRATO = ?";
         try(PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             for (CalculoPendenteModel calculoPendenteModel : avaliacaoFerias.getCalculosAvaliados()) {
-                System.out.println(calculoPendenteModel);
                 //preparedStatement.setString(1, calculoPendenteModel.getCalcularFeriasModel().getTipoRestituicao());
                 preparedStatement.setDate(1, calculoPendenteModel.getCalcularFeriasModel().getInicioPeriodoAquisitivo());
                 preparedStatement.setDate(2, calculoPendenteModel.getCalcularFeriasModel().getFimPeriodoAquisitivo());
@@ -473,8 +471,8 @@ public class FeriasDAO {
                         }
                         if(autorizado.equals("S") && restituido == null) {
                             status = "Em Análise";
-                        }else if(autorizado.equals("N")){
-                            status = "REJEITADO";
+                        }else if(restituido.equals("N")){
+                            status = "NEGADO";
                         }
                         CalcularFeriasModel calcularFeriasModel = new CalcularFeriasModel(resultSet.getInt("COD"),
                                 resultSet.getString("Tipo de restituição"),
