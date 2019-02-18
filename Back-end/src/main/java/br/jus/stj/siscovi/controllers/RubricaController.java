@@ -47,7 +47,7 @@ public class RubricaController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response insertPercentualEstatico(String object) throws SQLException {
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
         String json;
         CadastroPercentualEstaticoModel cadastroPercentualEstaticoModel = gson.fromJson(object, CadastroPercentualEstaticoModel.class);
         System.out.println(cadastroPercentualEstaticoModel.getPercentualEstaticoModel().getCodigo());

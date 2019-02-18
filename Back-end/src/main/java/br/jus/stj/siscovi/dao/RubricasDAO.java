@@ -1,14 +1,13 @@
 package br.jus.stj.siscovi.dao;
 
+import br.jus.stj.siscovi.dao.sql.InsertTSQL;
 import br.jus.stj.siscovi.model.PercentuaisEstaticosModel;
 import br.jus.stj.siscovi.model.RubricaModel;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
+
 
 public class RubricasDAO {
     private Connection connection;
@@ -71,12 +70,21 @@ public class RubricasDAO {
     }
     public boolean InsertPercentualEstatico(PercentuaisEstaticosModel percentuaisEstaticosModel, String currentUser) {
         PreparedStatement preparedStatement;
-        String sql = "";
-//        try {
-//            preparedStatement = connection.prepareStatement();
-//        } catch (SQLException sqle) {
-//
-//        }
+        InsertTSQL insertTSQL = new InsertTSQL(connection);
+        Date novaDataInicio = Date.valueOf(percentuaisEstaticosModel.getDataInicio().toLocalDate().minusDays(1));
+        try {
+            preparedStatement = connection.prepareStatement("UPDATE tb_percentual_estatico SET DATA_FIM = ? WHERE COD_RUBRICA = ? AND DATA_FIM is NULL");
+            preparedStatement.setDate(1, novaDataInicio);
+            preparedStatement.setInt(2, percentuaisEstaticosModel.getCodigo());
+            preparedStatement.executeUpdate();
+
+            insertTSQL.InsertPercentualEstatico(percentuaisEstaticosModel.getCodigo(), percentuaisEstaticosModel.getPercentual(), percentuaisEstaticosModel.getDataInicio(),
+                    percentuaisEstaticosModel.getDataFim(), percentuaisEstaticosModel.getDataAditamento(), currentUser);
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+            return false;
+        }
+
         return true;
     }
     public boolean InsertRubrica(RubricaModel rubricaModel, String currentUser) {
