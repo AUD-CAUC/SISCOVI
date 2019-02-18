@@ -6,8 +6,6 @@ import br.jus.stj.siscovi.model.CalcularFeriasModel;
 import br.jus.stj.siscovi.model.CalculoPendenteModel;
 import br.jus.stj.siscovi.model.TerceirizadoFerias;
 
-import javax.validation.constraints.Null;
-import javax.xml.transform.Result;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
