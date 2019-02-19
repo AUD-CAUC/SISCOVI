@@ -42,6 +42,18 @@ public class RubricaController {
         connectSQLServer.dbConnect().close();
         return Response.ok(json, MediaType.APPLICATION_JSON).build();
     }
+    @GET
+    @Path("/getDinamicPercent")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getPercentuaisDinamicos() throws SQLException {
+        ConnectSQLServer connectSQLServer = new ConnectSQLServer();
+        Gson gson = new GsonBuilder().serializeNulls().setDateFormat("dd/MM/yyyy").create();
+        String json;
+        RubricasDAO rubricasDAO = new RubricasDAO(connectSQLServer.dbConnect());
+        json = gson.toJson(rubricasDAO.SelectPercentuaisDinamicos());
+        connectSQLServer.dbConnect().close();
+        return Response.ok(json, MediaType.APPLICATION_JSON).build();
+    }
     @POST
     @Path("/cadastrarPercentualEstatico")
     @Consumes(MediaType.APPLICATION_JSON)

@@ -2,6 +2,7 @@ package br.jus.stj.siscovi.dao;
 
 import br.jus.stj.siscovi.dao.sql.InsertTSQL;
 import br.jus.stj.siscovi.model.PercentuaisEstaticosModel;
+import br.jus.stj.siscovi.model.PercentuaisDinamicosModel;
 import br.jus.stj.siscovi.model.RubricaModel;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 
@@ -64,6 +65,30 @@ public class RubricasDAO {
         }catch (SQLServerException sqlse) {
             sqlse.printStackTrace();
         }catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+        return null;
+    }
+    public ArrayList<PercentuaisDinamicosModel> SelectPercentuaisDinamicos() {
+        ResultSet resultSet = null;
+        PreparedStatement preparedStatement = null;
+        ArrayList<PercentuaisDinamicosModel> listaDePercentuaisDinamicos = new ArrayList<PercentuaisDinamicosModel>();
+        PercentuaisDinamicosModel meuPercentual;
+
+        try {
+            preparedStatement = connection.prepareStatement("SELECT * FROM tb_percentual_dinamico");
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                meuPercentual = new PercentuaisDinamicosModel(resultSet.getFloat("PERCENTUAL"), resultSet.getString("LOGIN_ATUALIZACAO"),
+                        resultSet.getDate("DATA_ATUALIZACAO"));
+                listaDePercentuaisDinamicos.add(meuPercentual);
+            }
+            return listaDePercentuaisDinamicos;
+        } catch (NullPointerException npe) {
+            npe.printStackTrace();
+        } catch (SQLServerException sqlse) {
+            sqlse.printStackTrace();
+        } catch (SQLException sqle) {
             sqle.printStackTrace();
         }
         return null;
