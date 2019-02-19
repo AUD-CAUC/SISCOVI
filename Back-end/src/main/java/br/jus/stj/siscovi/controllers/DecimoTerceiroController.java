@@ -2,13 +2,17 @@ package br.jus.stj.siscovi.controllers;
 
 import br.jus.stj.siscovi.calculos.RestituicaoDecimoTerceiro;
 import br.jus.stj.siscovi.dao.ConnectSQLServer;
+import br.jus.stj.siscovi.dao.ContratoDAO;
 import br.jus.stj.siscovi.dao.DecimoTerceiroDAO;
 import br.jus.stj.siscovi.dao.UsuarioDAO;
+import br.jus.stj.siscovi.helpers.CalculosPendentesDecTerHelper;
 import br.jus.stj.siscovi.helpers.ErrorMessage;
 import br.jus.stj.siscovi.model.AvaliacaoDecimoTerceiro;
+import br.jus.stj.siscovi.model.ContratoModel;
 import br.jus.stj.siscovi.model.TerceirizadoDecimoTerceiro;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
@@ -140,23 +144,26 @@ public class DecimoTerceiroController {
     }
 
     @GET
-    @Path("/getCalculosPendentes/{codigoContrato}/{codigoUsuario}")
+    @Path("/getCalculosPendentes/{codigoUsuario}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getCalculosPendentesDecTer(@PathParam("codigoContrato") int codigoContrato, @PathParam("codigoUsuario") int codigoUsuario) {
+    public Response getCalculosPendentesDecTer(@PathParam("codigoUsuario") int codigoUsuario) {
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
         ConnectSQLServer connectSQLServer = new ConnectSQLServer();
         DecimoTerceiroDAO decimoTerceiroDAO = new DecimoTerceiroDAO(connectSQLServer.dbConnect());
         String json;
         try {
-            json = gson.toJson(decimoTerceiroDAO.getCalculosPendentes(codigoContrato, codigoUsuario));
+            List<ContratoModel> contratos = new ContratoDAO(connectSQLServer.dbConnect())
+                    .getCodigosContratosCalculosPendentes(codigoUsuario, 2);
+            JsonArray jsonArray = new JsonArray();
+            for(ContratoModel contrato : contratos) {
+                jsonArray.add(CalculosPendentesDecTerHelper.formataCalculosPendentes(contrato, gson, decimoTerceiroDAO,
+                        codigoUsuario, 1));
+            }
+            json = gson.toJson(jsonArray);
             connectSQLServer.dbConnect().close();
-        }catch (SQLException slqe) {
-            ErrorMessage errorMessage = ErrorMessage.handleError(slqe);
-            return Response.ok(gson.toJson(errorMessage), MediaType.APPLICATION_JSON).build();
-        }catch (RuntimeException rte) {
-            System.err.println(rte.getStackTrace());
-            ErrorMessage errorMessage = ErrorMessage.handleError(rte);
-            return Response.ok(gson.toJson(errorMessage), MediaType.APPLICATION_JSON).build();
+        }catch (Exception ex) {
+            json = gson.toJson(ErrorMessage.handleError(ex));
+            return Response.status(Response.Status.BAD_REQUEST).entity(json).build();
         }
         return Response.ok(json, MediaType.APPLICATION_JSON).build();
     }

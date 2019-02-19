@@ -520,22 +520,46 @@ public class ContratoDAO {
         insertTSQL.InsertHistoricoGestaoContrato(pCodContrato, vCodUsuarioGestor, pCodPerfilGestao, pDataInicio, null, pUsername);
     }
 
-    public List<ContratoModel> getCodigosContratosCalculosPendentes(int codigoUsuario) throws NullPointerException {
+    public List<ContratoModel> getCodigosContratosCalculosPendentes(int codigoUsuario, int vCalculo) throws NullPointerException {
+        /*
+            vCalculo: 1 - Férias
+                      2 - Décimo Terceiro
+         */
         List<ContratoModel> contratos = new ArrayList<>();
         String sql = "";
         boolean isAdmin = new UsuarioDAO(connection).isAdmin(codigoUsuario);
         if(isAdmin) {
-            sql = "SELECT DISTINCT C.COD, C.CNPJ, C.NOME_EMPRESA, C.NUMERO_CONTRATO, C.NUMERO_PROCESSO_STJ FROM tb_restituicao_ferias RF" +
-                    " JOIN TB_TERCEIRIZADO_CONTRATO TC ON TC.COD=RF.COD_TERCEIRIZADO_CONTRATO" +
-                    " JOIN TB_CONTRATO C ON C.COD=TC.COD_CONTRATO" +
-                    " WHERE RF.AUTORIZADO IS NULL";
+
+            if(vCalculo == 1) {
+                sql = "SELECT DISTINCT C.COD, C.CNPJ, C.NOME_EMPRESA, C.NUMERO_CONTRATO, C.NUMERO_PROCESSO_STJ FROM tb_restituicao_ferias RF" +
+                        " JOIN TB_TERCEIRIZADO_CONTRATO TC ON TC.COD=RF.COD_TERCEIRIZADO_CONTRATO" +
+                        " JOIN TB_CONTRATO C ON C.COD=TC.COD_CONTRATO" +
+                        " WHERE RF.AUTORIZADO IS NULL";
+            }
+            if(vCalculo == 2) {
+                sql = "SELECT DISTINCT C.COD, C.CNPJ, C.NOME_EMPRESA, C.NUMERO_CONTRATO, C.NUMERO_PROCESSO_STJ FROM tb_restituicao_decimo_terceiro RDT" +
+                        " JOIN TB_TERCEIRIZADO_CONTRATO TC ON TC.COD=RDT.COD_TERCEIRIZADO_CONTRATO" +
+                        " JOIN TB_CONTRATO C ON C.COD=TC.COD_CONTRATO" +
+                        " WHERE RDT.AUTORIZADO IS NULL";
+            }
         }else {
-            sql = "SELECT DISTINCT C.COD, C.CNPJ, C.NOME_EMPRESA, C.NUMERO_CONTRATO, C.NUMERO_PROCESSO_STJ FROM tb_restituicao_ferias RF" +
-                    " JOIN TB_TERCEIRIZADO_CONTRATO TC ON TC.COD=RF.COD_TERCEIRIZADO_CONTRATO" +
-                    " JOIN TB_CONTRATO C ON C.COD=TC.COD_CONTRATO" +
-                    " JOIN tb_historico_gestao_contrato HGC ON HGC.COD_CONTRATO=C.COD" +
-                    " WHERE RF.AUTORIZADO IS NULL AND HGC.COD_CONTRATO=?";
+            if(vCalculo == 1) {
+                sql = "SELECT DISTINCT C.COD, C.CNPJ, C.NOME_EMPRESA, C.NUMERO_CONTRATO, C.NUMERO_PROCESSO_STJ FROM tb_restituicao_ferias RF" +
+                        " JOIN TB_TERCEIRIZADO_CONTRATO TC ON TC.COD=RF.COD_TERCEIRIZADO_CONTRATO" +
+                        " JOIN TB_CONTRATO C ON C.COD=TC.COD_CONTRATO" +
+                        " JOIN tb_historico_gestao_contrato HGC ON HGC.COD_CONTRATO=C.COD" +
+                        " WHERE RF.AUTORIZADO IS NULL AND HGC.COD_CONTRATO=?";
+            }
+
+            if(vCalculo == 2) {
+                sql = "SELECT DISTINCT C.COD, C.CNPJ, C.NOME_EMPRESA, C.NUMERO_CONTRATO, C.NUMERO_PROCESSO_STJ FROM tb_restituicao_decimo_terceiro RDT" +
+                        " JOIN TB_TERCEIRIZADO_CONTRATO TC ON TC.COD=RDT.COD_TERCEIRIZADO_CONTRATO" +
+                        " JOIN TB_CONTRATO C ON C.COD=TC.COD_CONTRATO" +
+                        " JOIN tb_historico_gestao_contrato HGC ON HGC.COD_CONTRATO=C.COD" +
+                        " WHERE RDT.AUTORIZADO IS NULL AND HGC.COD_CONTRATO=?";
+            }
         }
+
         try(PreparedStatement preparedStatement = connection.prepareStatement(sql)){
             if(!isAdmin){
                 preparedStatement.setInt(1, codigoUsuario);
