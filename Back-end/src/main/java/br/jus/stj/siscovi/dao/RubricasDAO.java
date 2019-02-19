@@ -1,14 +1,13 @@
 package br.jus.stj.siscovi.dao;
 
+import br.jus.stj.siscovi.dao.sql.InsertTSQL;
 import br.jus.stj.siscovi.model.PercentuaisEstaticosModel;
 import br.jus.stj.siscovi.model.RubricaModel;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
+
 
 public class RubricasDAO {
     private Connection connection;
@@ -51,11 +50,11 @@ public class RubricasDAO {
         ArrayList<PercentuaisEstaticosModel> listaDePercentuais = new ArrayList<PercentuaisEstaticosModel>();
         PercentuaisEstaticosModel meuPercentual;
         try{
-            preparedStatement = connection.prepareStatement("SELECT NOME,PERCENTUAL, DATA_INICIO, DATA_FIM, DATA_ADITAMENTO FROM tb_percentual_estatico JOIN tb_rubrica R ON " +
+            preparedStatement = connection.prepareStatement("SELECT COD_RUBRICA,NOME,PERCENTUAL, DATA_INICIO, DATA_FIM, DATA_ADITAMENTO FROM tb_percentual_estatico JOIN tb_rubrica R ON " +
                     " COD_RUBRICA=R.cod");
             resultSet = preparedStatement.executeQuery();
             while(resultSet.next()) {
-                meuPercentual = new PercentuaisEstaticosModel(resultSet.getString("NOME"), resultSet.getFloat("PERCENTUAL"),
+                meuPercentual = new PercentuaisEstaticosModel(resultSet.getInt("COD_RUBRICA"), resultSet.getString("NOME"), resultSet.getFloat("PERCENTUAL"),
                         resultSet.getDate("DATA_INICIO"), resultSet.getDate("DATA_FIM"), resultSet.getDate("DATA_ADITAMENTO"));
                 listaDePercentuais.add(meuPercentual);
             }
@@ -68,6 +67,25 @@ public class RubricasDAO {
             sqle.printStackTrace();
         }
         return null;
+    }
+    public boolean InsertPercentualEstatico(PercentuaisEstaticosModel percentuaisEstaticosModel, String currentUser) {
+        PreparedStatement preparedStatement;
+        InsertTSQL insertTSQL = new InsertTSQL(connection);
+        Date novaDataInicio = Date.valueOf(percentuaisEstaticosModel.getDataInicio().toLocalDate().minusDays(1));
+        try {
+            preparedStatement = connection.prepareStatement("UPDATE tb_percentual_estatico SET DATA_FIM = ? WHERE COD_RUBRICA = ? AND DATA_FIM is NULL");
+            preparedStatement.setDate(1, novaDataInicio);
+            preparedStatement.setInt(2, percentuaisEstaticosModel.getCodigo());
+            preparedStatement.executeUpdate();
+
+            insertTSQL.InsertPercentualEstatico(percentuaisEstaticosModel.getCodigo(), percentuaisEstaticosModel.getPercentual(), percentuaisEstaticosModel.getDataInicio(),
+                    percentuaisEstaticosModel.getDataFim(), percentuaisEstaticosModel.getDataAditamento(), currentUser);
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+            return false;
+        }
+
+        return true;
     }
     public boolean InsertRubrica(RubricaModel rubricaModel, String currentUser) {
         PreparedStatement preparedStatement;
