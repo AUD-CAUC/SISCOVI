@@ -96,14 +96,17 @@ public class RestituicaoRescisao {
 
         }
 
-        vTotalFeriasProporcional = CalcularValorRubricaRescisao(pCodTerceirizadoContrato, 1, pDataInicioFeriasProporcionais, pDataFimFeriasProporcionais);
-        vTotalTercoConstitucionalProporcional = CalcularValorRubricaRescisao(pCodTerceirizadoContrato, 2, pDataInicioFeriasProporcionais, pDataFimFeriasProporcionais);
-        vTotalIncidenciaFeriasProporcional = CalcularValorRubricaRescisao(pCodTerceirizadoContrato, 4, pDataInicioFeriasProporcionais, pDataFimFeriasProporcionais);
-        vTotalIncidenciaTercoProporcional = CalcularValorRubricaRescisao(pCodTerceirizadoContrato, 5, pDataInicioFeriasProporcionais, pDataFimFeriasProporcionais);
-        vTotalMultaFGTSFeriasProporcional = CalcularValorRubricaRescisao(pCodTerceirizadoContrato, 7, pDataInicioFeriasProporcionais, pDataFimFeriasProporcionais);
-        vTotalMultaFGTSTercoProporcional = CalcularValorRubricaRescisao(pCodTerceirizadoContrato, 8, pDataInicioFeriasProporcionais, pDataFimFeriasProporcionais);
-        vTotalMultaFGTSRemuneracao = CalcularValorRubricaRescisao(pCodTerceirizadoContrato, 10, vDataDisponibilizacao, pDataDesligamento);
+        if (pDataInicioFeriasProporcionais != null) {
 
+            vTotalFeriasProporcional = CalcularValorRubricaRescisao(pCodTerceirizadoContrato, 1, pDataInicioFeriasProporcionais, pDataFimFeriasProporcionais);
+            vTotalTercoConstitucionalProporcional = CalcularValorRubricaRescisao(pCodTerceirizadoContrato, 2, pDataInicioFeriasProporcionais, pDataFimFeriasProporcionais);
+            vTotalIncidenciaFeriasProporcional = CalcularValorRubricaRescisao(pCodTerceirizadoContrato, 4, pDataInicioFeriasProporcionais, pDataFimFeriasProporcionais);
+            vTotalIncidenciaTercoProporcional = CalcularValorRubricaRescisao(pCodTerceirizadoContrato, 5, pDataInicioFeriasProporcionais, pDataFimFeriasProporcionais);
+            vTotalMultaFGTSFeriasProporcional = CalcularValorRubricaRescisao(pCodTerceirizadoContrato, 7, pDataInicioFeriasProporcionais, pDataFimFeriasProporcionais);
+            vTotalMultaFGTSTercoProporcional = CalcularValorRubricaRescisao(pCodTerceirizadoContrato, 8, pDataInicioFeriasProporcionais, pDataFimFeriasProporcionais);
+            vTotalMultaFGTSRemuneracao = CalcularValorRubricaRescisao(pCodTerceirizadoContrato, 10, vDataDisponibilizacao, pDataDesligamento);
+
+        }
 
         return new ValorRestituicaoRescisaoModel(vDataInicioContagemDecTer,
                                                  vTotalDecimoTerceiro,
@@ -774,15 +777,21 @@ public class RestituicaoRescisao {
 
         float vIncidDecTer = 0;
         float vFGTSDecimoTerceiro = 0;
+        float vFeriasIntegrais = 0;
+        float vTercoIntegral = 0;
         float vIncidFerias = 0;
         float vIncidTerco = 0;
         float vFGTSFerias = 0;
         float vFGTSTerco = 0;
+        float vFeriasProporcionais = 0;
+        float vTercoProporcional = 0;
         float vIncidFeriasProporcional = 0;
         float vIncidTercoProporcional = 0;
         float vFGTSFeriasProporcional = 0;
         float vFGTSTercoProporcional = 0;
         float vFGTSRemuneracao = 0;
+        float vDecimoTerceiro = 0;
+
 
         /*Atribuição do cod do tipo de restituição.*/
 
@@ -807,6 +816,24 @@ public class RestituicaoRescisao {
             vIncidTercoProporcional = pValorIncidenciaTercoProporcional;
             vFGTSFeriasProporcional = pValorFGTSFeriasProporcional;
             vFGTSTercoProporcional = pValorFGTSTercoProporcional;
+
+            vFeriasIntegrais = pValorFerias;
+            vTercoIntegral = pValorTerco;
+            vFeriasProporcionais = pValorFeriasProporcional;
+            vTercoProporcional = pValorTercoProporcional;
+
+            pValorTerco = valorFeriasVencidasMovimentado/4;
+            pValorTercoProporcional = valorFeriasProporcionaisMovimentado/4;
+            pValorFerias = valorFeriasVencidasMovimentado - pValorTerco;
+            pValorFeriasProporcional = valorFeriasProporcionaisMovimentado - pValorTercoProporcional;
+
+            vFeriasIntegrais = vFeriasIntegrais - pValorFerias;
+            vTercoIntegral = vTercoIntegral - pValorTerco;
+            vFeriasProporcionais = vFeriasProporcionais - pValorFeriasProporcional;
+            vTercoProporcional = vTercoProporcional - pValorTercoProporcional;
+
+            vDecimoTerceiro = pValorDecimoTerceiro - valorDecimoTerceiroMovimentado;
+            pValorDecimoTerceiro = valorDecimoTerceiroMovimentado;
 
             pValorIncidenciaDecimoTerceiro = 0;
             pValorIncidenciaFerias = 0;
@@ -854,17 +881,17 @@ public class RestituicaoRescisao {
         if (pTipoRestituicao.equals("MOVIMENTAÇÃO")) {
 
             insert.InsertSaldoResidualRescisao(vCodTbRestituicaoRescisao,
-                    0,
+                    vDecimoTerceiro,
                     vIncidDecTer,
                     vFGTSDecimoTerceiro,
-                    0,
-                    0,
+                    vFeriasIntegrais,
+                    vTercoIntegral,
                     vIncidFerias,
                     vIncidTerco,
                     vFGTSFerias,
                     vFGTSTerco,
-                    0,
-                    0,
+                    vFeriasProporcionais,
+                    vTercoProporcional,
                     vIncidFeriasProporcional,
                     vIncidTercoProporcional,
                     vFGTSFeriasProporcional,
