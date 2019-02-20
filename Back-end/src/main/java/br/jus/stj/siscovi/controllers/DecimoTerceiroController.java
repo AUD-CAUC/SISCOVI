@@ -174,29 +174,21 @@ public class DecimoTerceiroController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response avaliarCalculosPendentes(String object) {
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
-        AvaliacaoDecimoTerceiro avaliacaoDecimoTerceiro = gson.fromJson(object, AvaliacaoDecimoTerceiro.class);
+        List<AvaliacaoDecimoTerceiro> avaliacoesDecimoTerceiro = gson.fromJson(object,
+                new TypeToken<List<AvaliacaoDecimoTerceiro>>(){}.getType());
         ConnectSQLServer connectSQLServer = new ConnectSQLServer();
         DecimoTerceiroDAO decimoTerceiroDAO = new DecimoTerceiroDAO(connectSQLServer.dbConnect());
         String json = "";
         try {
-            if (decimoTerceiroDAO.salvarAlteracoesCalculo(avaliacaoDecimoTerceiro)) {
-                connectSQLServer.dbConnect().close();
-                JsonObject jsonObject = new JsonObject();
-                jsonObject.addProperty("success", "As alterações foram feitas com sucesso");
-                json = gson.toJson(jsonObject);
-                return Response.ok(json, MediaType.APPLICATION_JSON).build();
+            for(AvaliacaoDecimoTerceiro avaliacaoDecimoTerceiro : avaliacoesDecimoTerceiro) {
+                decimoTerceiroDAO.salvarAlteracoesCalculo(avaliacaoDecimoTerceiro);
             }
-        }catch (SQLException sqle) {
-            ErrorMessage errorMessage = new ErrorMessage();
-            errorMessage.error = "Houve um erro ao tentar salvar as execuções de cálculos !";
-            json = gson.toJson(errorMessage);
-            return Response.ok(json, MediaType.APPLICATION_JSON).build();
-        } catch (RuntimeException rte) {
-            rte.printStackTrace();
-            System.err.println(rte.toString());
-            ErrorMessage errorMessage = new ErrorMessage();
-            errorMessage.error = rte.getMessage();
-            json = gson.toJson(errorMessage);
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("success", "As alterações foram feitas com sucesso");
+            json = gson.toJson(jsonObject);
+        }catch (Exception ex) {
+            json = gson.toJson(ErrorMessage.handleError(ex));
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(json).build();
         }
         return Response.ok(json, MediaType.APPLICATION_JSON).build();
     }
