@@ -325,7 +325,7 @@ public class FeriasController {
         String json = "";
         try {
             JsonArray jsonArray = new JsonArray();
-            List<ContratoModel> contratos = new ContratoDAO(connectSQLServer.dbConnect()).getCodigosContratosCalculosPendentesNegados(codigoUsuario);
+            List<ContratoModel> contratos = new ContratoDAO(connectSQLServer.dbConnect()).getCodigosContratosCalculosPendentesNegados(codigoUsuario, 1);
             for (ContratoModel contrato : contratos) {
                 jsonArray.add(CalculosPendentesFeriasHelper.formataCalculosPendentes(contrato, gson, feriasDAO, codigoUsuario, 2));
             }

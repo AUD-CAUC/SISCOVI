@@ -194,26 +194,26 @@ public class DecimoTerceiroController {
     }
 
     @GET
-    @Path("/getCalculosPendentesNegados/{codigoContrato}/{codigoUsuario}")
+    @Path("/getCalculosPendentesNegados/{codigoUsuario}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getCalculosPendentesNegados(@PathParam("codigoContrato") int codigoContrato, @PathParam("codigoUsuario") int codigoUsuario) {
+    public Response getCalculosPendentesNegados(@PathParam("codigoUsuario") int codigoUsuario) {
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
         ConnectSQLServer connectSQLServer = new ConnectSQLServer();
         DecimoTerceiroDAO decimoTerceiroDAO = new DecimoTerceiroDAO(connectSQLServer.dbConnect());
         String json;
         try {
-            json = gson.toJson(decimoTerceiroDAO.getCalculosPendentesNegados(codigoContrato, codigoUsuario));
+            List<ContratoModel> contratos = new ContratoDAO(connectSQLServer.dbConnect())
+                    .getCodigosContratosCalculosPendentesNegados(codigoUsuario, 2);
+            JsonArray jsonArray = new JsonArray();
+            for(ContratoModel contrato : contratos) {
+                jsonArray.add(CalculosPendentesDecTerHelper
+                        .formataCalculosPendentes(contrato, gson, decimoTerceiroDAO, codigoUsuario, 2));
+            }
             connectSQLServer.dbConnect().close();
-        } catch (SQLException slqe) {
-            slqe.printStackTrace();
-            ErrorMessage errorMessage = new ErrorMessage();
-            errorMessage.error = "Houve um erro ao tentar salvar as execuções de cálculos !";
-            json = gson.toJson(errorMessage);
-        }catch (RuntimeException re) {
-            System.err.println(re.toString());
-            ErrorMessage errorMessage = new ErrorMessage();
-            errorMessage.error = re.getMessage();
-            json = gson.toJson(errorMessage);
+            json = gson.toJson(jsonArray);
+        } catch (Exception ex) {
+            json = gson.toJson(ErrorMessage.handleError(ex));
+            return Response.status(Response.Status.BAD_REQUEST).entity(json).build();
         }
         return Response.ok(json, MediaType.APPLICATION_JSON).build();
     }
