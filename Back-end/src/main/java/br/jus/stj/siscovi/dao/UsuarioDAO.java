@@ -238,5 +238,21 @@ public class UsuarioDAO {
 
     }
 
+    public boolean isAdmin(int codigoUsuario) {
+        String sql = "SELECT PU.SIGLA FROM TB_USUARIO U JOIN TB_PERFIL_USUARIO PU ON U.COD_PERFIL=PU.COD  WHERE U.COD = ?";
+        try(PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+            preparedStatement.setInt(1, codigoUsuario);
+            try(ResultSet resultSet = preparedStatement.executeQuery()) {
+                if(resultSet.next()){
+                    if(resultSet.getString("SIGLA").contains("ADMINISTRADOR")) {
+                        return  true;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Usuário não existe !");
+        }
+        return false;
+    }
 }
 
