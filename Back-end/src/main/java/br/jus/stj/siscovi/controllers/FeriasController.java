@@ -4,7 +4,7 @@ import br.jus.stj.siscovi.calculos.RestituicaoFerias;
 import br.jus.stj.siscovi.dao.ConnectSQLServer;
 import br.jus.stj.siscovi.dao.ContratoDAO;
 import br.jus.stj.siscovi.dao.FeriasDAO;
-import br.jus.stj.siscovi.helpers.CalculosPendentesHelper;
+import br.jus.stj.siscovi.helpers.CalculosPendentesFeriasHelper;
 import br.jus.stj.siscovi.helpers.ErrorMessage;
 import br.jus.stj.siscovi.model.*;
 import com.google.gson.*;
@@ -202,10 +202,10 @@ public class FeriasController {
         String json = null;
         try {
             List<ContratoModel> contratos = new ContratoDAO(connectSQLServer.dbConnect())
-                    .getCodigosContratosCalculosNaoPendentesNegados(codigoUsuario);
+                    .getCodigosContratosCalculosNaoPendentesNegados(codigoUsuario, 1);
             JsonArray jsonArray = new JsonArray();
             for(ContratoModel contrato : contratos) {
-                jsonArray.add(CalculosPendentesHelper.formataCalculosPendentes(contrato, gson, feriasDAO,
+                jsonArray.add(CalculosPendentesFeriasHelper.formataCalculosPendentes(contrato, gson, feriasDAO,
                         codigoUsuario, 4));
             }
             json = gson.toJson(jsonArray);
@@ -299,9 +299,9 @@ public class FeriasController {
         String json = "";
         try {
             JsonArray jsonArray = new JsonArray();
-            List<ContratoModel> contratos = new ContratoDAO(connectSQLServer.dbConnect()).getCodigosContratosCalculosPendentes(codigoUsuario);
+            List<ContratoModel> contratos = new ContratoDAO(connectSQLServer.dbConnect()).getCodigosContratosCalculosPendentes(codigoUsuario, 1);
             for (ContratoModel contrato : contratos) {
-                jsonArray.add(CalculosPendentesHelper.formataCalculosPendentes(contrato, gson, feriasDAO,
+                jsonArray.add(CalculosPendentesFeriasHelper.formataCalculosPendentes(contrato, gson, feriasDAO,
                         codigoUsuario, 1));
                 // JsonArray ja = new JSONArray(feriasDAO.getCalculosPendentes(contrato.getCodigo(), codigoUsuario));
                 // jsonObject.addProperty("calculosPendentes", feriasDAO.getCalculosPendentes(contrato.getCodigo(), codigoUsuario));
@@ -325,9 +325,9 @@ public class FeriasController {
         String json = "";
         try {
             JsonArray jsonArray = new JsonArray();
-            List<ContratoModel> contratos = new ContratoDAO(connectSQLServer.dbConnect()).getCodigosContratosCalculosPendentesNegados(codigoUsuario);
+            List<ContratoModel> contratos = new ContratoDAO(connectSQLServer.dbConnect()).getCodigosContratosCalculosPendentesNegados(codigoUsuario, 1);
             for (ContratoModel contrato : contratos) {
-                jsonArray.add(CalculosPendentesHelper.formataCalculosPendentes(contrato, gson, feriasDAO, codigoUsuario, 2));
+                jsonArray.add(CalculosPendentesFeriasHelper.formataCalculosPendentes(contrato, gson, feriasDAO, codigoUsuario, 2));
             }
             json = gson.toJson(jsonArray);
             connectSQLServer.dbConnect().close();
@@ -349,9 +349,9 @@ public class FeriasController {
         try {
             JsonArray jsonArray = new JsonArray();
             List<ContratoModel> contratos = new ContratoDAO(connectSQLServer.dbConnect())
-                    .getContratosCalculosPendentesExecucao(codigoUsuario);
+                    .getContratosCalculosPendentesExecucao(codigoUsuario, 1);
             for(ContratoModel contrato : contratos){
-                jsonArray.add(CalculosPendentesHelper.formataCalculosPendentes(contrato, gson, feriasDAO,
+                jsonArray.add(CalculosPendentesFeriasHelper.formataCalculosPendentes(contrato, gson, feriasDAO,
                         codigoUsuario, 3));
             }
             json = gson.toJson(jsonArray);

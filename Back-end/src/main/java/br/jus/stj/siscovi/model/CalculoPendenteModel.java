@@ -47,6 +47,10 @@ public class CalculoPendenteModel {
         return cod;
     }
 
+    public void setObservacoes(String observacoes) {
+        this.observacoes = observacoes;
+    }
+
     @Override
     public String toString() {
         return "CalculoPendenteModel{" +

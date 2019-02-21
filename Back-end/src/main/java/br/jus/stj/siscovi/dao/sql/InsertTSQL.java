@@ -1181,6 +1181,29 @@ public class InsertTSQL {
 
     }
 
+    public int InsertPercentualDinamico (float pPercentual, String pLoginAtualizacao) {
+        PreparedStatement preparedStatement;
+        ConsultaTSQL consulta = new ConsultaTSQL(connection);
+
+        try {
+            String sql = " INSERT INTO TB_PERCENTUAL_DINAMICO (PERCENTUAL, LOGIN_ATUALIZACAO, DATA_ATUALIZACAO)" +
+                            "VALUES (?, ?, CURRENT_TIMESTAMP);";
+
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setFloat(1, pPercentual);
+            preparedStatement.setString(2, pLoginAtualizacao);
+
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException sqle) {
+
+            sqle.printStackTrace();
+
+            throw new NullPointerException("Não foi possível inserir o novo percentual.");
+        }
+        return 1;
+    }
+
     public int InsertPercentualEstatico (int pCodRubrica,
                                          float pPercentual,
                                          Date pDataInicio,

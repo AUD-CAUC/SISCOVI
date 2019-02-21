@@ -15,7 +15,7 @@ public class TestConsultaTSQL {
 
         int retorno;
 
-        retorno = consulta.RetornaCodSequenceTable("TB_RUBRICA");
+        retorno = consulta.RetornaCodSequenceTable("TB_PERCENTUAL_DINAMICO");
 
         System.out.print("RetornaCodSequenceTable: " + retorno + "\n\n");
 
