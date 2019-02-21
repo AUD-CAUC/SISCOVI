@@ -3,6 +3,7 @@ package br.jus.stj.siscovi.controllers;
 
 import br.jus.stj.siscovi.dao.ConnectSQLServer;
 import br.jus.stj.siscovi.dao.RubricasDAO;
+import br.jus.stj.siscovi.model.CadastroPercentualDinamicoModel;
 import br.jus.stj.siscovi.model.CadastroPercentualEstaticoModel;
 import br.jus.stj.siscovi.model.CadastroRubricaModel;
 import br.jus.stj.siscovi.model.RubricaModel;
@@ -13,6 +14,7 @@ import sun.rmi.runtime.Log;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @Path("/rubricas")
@@ -42,6 +44,42 @@ public class RubricaController {
         connectSQLServer.dbConnect().close();
         return Response.ok(json, MediaType.APPLICATION_JSON).build();
     }
+    @GET
+    @Path("/getDinamicPercent")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getPercentuaisDinamicos() throws SQLException {
+        ConnectSQLServer connectSQLServer = new ConnectSQLServer();
+        Gson gson = new GsonBuilder().serializeNulls().setDateFormat("dd/MM/yyyy").create();
+        String json;
+        RubricasDAO rubricasDAO = new RubricasDAO(connectSQLServer.dbConnect());
+        json = gson.toJson(rubricasDAO.SelectPercentuaisDinamicos());
+        connectSQLServer.dbConnect().close();
+        return Response.ok(json, MediaType.APPLICATION_JSON).build();
+    }
+    @POST
+    @Path("/cadastrarPercentualDinamico")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response insertPercentualDinamico(String object) throws SQLException {
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+        String json;
+        CadastroPercentualDinamicoModel cadastroPercentualDinamicoModel = gson.fromJson(object, CadastroPercentualDinamicoModel.class);
+        ConnectSQLServer connectSQLServer = new ConnectSQLServer();
+        RubricasDAO rubricasDAO = new RubricasDAO(connectSQLServer.dbConnect());
+
+        if (rubricasDAO.InsertPercentualDinamico(cadastroPercentualDinamicoModel.getPercentual(), cadastroPercentualDinamicoModel.getCurrentUser())) {
+            json = "Percentual Dinâmico cadastrado com sucesso!";
+        } else {
+            json = "Algum erro impossibilitou o cadastro do Percentual Dinâmico";
+        }
+        try {
+            connectSQLServer.dbConnect().close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Response.ok(gson.toJson(json)).build();
+    }
+
     @POST
     @Path("/cadastrarPercentualEstatico")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -50,14 +88,13 @@ public class RubricaController {
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
         String json;
         CadastroPercentualEstaticoModel cadastroPercentualEstaticoModel = gson.fromJson(object, CadastroPercentualEstaticoModel.class);
-        System.out.println(cadastroPercentualEstaticoModel.getPercentualEstaticoModel().getCodigo());
         ConnectSQLServer connectSQLServer = new ConnectSQLServer();
         RubricasDAO rubricasDAO = new RubricasDAO(connectSQLServer.dbConnect());
 
         if (rubricasDAO.InsertPercentualEstatico(cadastroPercentualEstaticoModel.getPercentualEstaticoModel(), cadastroPercentualEstaticoModel.getCurrentUser())) {
             json = "Percentual Estático cadastrado com sucesso!";
         } else {
-            json = "Algum erro Algum erro impossibilitou o cadastro do Percentual Estático";
+            json = "Algum erro impossibilitou o cadastro do Percentual Estático";
         }
         try {
             connectSQLServer.dbConnect().close();
