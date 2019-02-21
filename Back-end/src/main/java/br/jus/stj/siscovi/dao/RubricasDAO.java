@@ -93,6 +93,11 @@ public class RubricasDAO {
         }
         return null;
     }
+    public boolean InsertPercentualDinamico(float percentual, String currentUser) {
+        InsertTSQL insertTSQL = new InsertTSQL(connection);
+        insertTSQL.InsertPercentualDinamico(percentual, currentUser);
+        return true;
+    }
     public boolean InsertPercentualEstatico(PercentuaisEstaticosModel percentuaisEstaticosModel, String currentUser) {
         PreparedStatement preparedStatement;
         InsertTSQL insertTSQL = new InsertTSQL(connection);

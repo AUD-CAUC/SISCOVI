@@ -4,20 +4,20 @@ import java.sql.Date;
 
 public class PercentuaisDinamicosModel {
     private float percentual;
-    private String loginUsuario;
+    private String currentUser;
     private Date dataAlteracao;
 
     public float getPercentual() {
         return percentual;
     }
 
-    public String getLoginUsuario() { return loginUsuario; }
+    public String getLoginUsuario() { return currentUser; }
 
     public Date getDataAlteracao() { return  dataAlteracao; }
 
     public PercentuaisDinamicosModel (float percentual, String loginUsuario, Date dataAlteracao) {
         this.percentual = percentual;
-        this.loginUsuario = loginUsuario;
+        this.currentUser = loginUsuario;
         this.dataAlteracao = dataAlteracao;
     }
 }
