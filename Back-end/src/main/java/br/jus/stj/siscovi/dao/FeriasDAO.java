@@ -256,7 +256,8 @@ public class FeriasDAO {
                     " rt.incid_submod_4_1_terco AS \"Incidência sobre 1/3\"," +
                     " rt.valor_ferias + rt.valor_terco_constitucional + rt.incid_submod_4_1_ferias + rt.incid_submod_4_1_terco AS \"Total\"," +
                     " rt.AUTORIZADO," +
-                    " rt.COD AS CODIGO" +
+                    " rt.COD AS CODIGO," +
+                    " rt.OBSERVACAO" +
                     " FROM tb_restituicao_ferias rt" +
                     " JOIN tb_terceirizado_contrato tc ON tc.cod = rt.cod_terceirizado_contrato" +
                     " JOIN tb_funcao_terceirizado ft ON ft.cod_terceirizado_contrato = tc.cod" +
@@ -298,6 +299,7 @@ public class FeriasDAO {
                                 resultSet.getString("Cargo"),
                                 status,
                                 resultSet.getFloat("Total"));
+                        calculoPendenteModel.setObservacoes(resultSet.getString("OBSERVACAO"));
                         lista.add(calculoPendenteModel);
                     }
                 }
@@ -438,7 +440,8 @@ public class FeriasDAO {
                     " rt.valor_ferias + rt.valor_terco_constitucional + rt.incid_submod_4_1_ferias + rt.incid_submod_4_1_terco AS \"Total\"," +
                     " rt.AUTORIZADO," +
                     " rt.RESTITUIDO," +
-                    " rt.COD AS CODIGO" +
+                    " rt.COD AS CODIGO," +
+                    " rt.OBSERVACAO" +
                     " FROM tb_restituicao_ferias rt" +
                     " JOIN tb_terceirizado_contrato tc ON tc.cod = rt.cod_terceirizado_contrato" +
                     " JOIN tb_funcao_terceirizado ft ON ft.cod_terceirizado_contrato = tc.cod" +
@@ -491,6 +494,7 @@ public class FeriasDAO {
                                 resultSet.getString("Cargo"),
                                 status,
                                 resultSet.getFloat("Total"));
+                        calculoPendenteModel.setObservacoes(resultSet.getString("OBSERVACAO"));
                         lista.add(calculoPendenteModel);
                     }
                 }

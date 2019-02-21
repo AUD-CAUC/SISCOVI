@@ -10,7 +10,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.util.List;
 
-public class CalculosPendentesHelper {
+public class CalculosPendentesFeriasHelper {
 
     public static JsonObject formataCalculosPendentes(ContratoModel contrato, Gson gson, FeriasDAO feriasDAO,
                                                       int codigoUsuario, int pOperacao) {
