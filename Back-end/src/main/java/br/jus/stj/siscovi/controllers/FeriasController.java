@@ -202,7 +202,7 @@ public class FeriasController {
         String json = null;
         try {
             List<ContratoModel> contratos = new ContratoDAO(connectSQLServer.dbConnect())
-                    .getCodigosContratosCalculosNaoPendentesNegados(codigoUsuario);
+                    .getCodigosContratosCalculosNaoPendentesNegados(codigoUsuario, 1);
             JsonArray jsonArray = new JsonArray();
             for(ContratoModel contrato : contratos) {
                 jsonArray.add(CalculosPendentesFeriasHelper.formataCalculosPendentes(contrato, gson, feriasDAO,
@@ -349,7 +349,7 @@ public class FeriasController {
         try {
             JsonArray jsonArray = new JsonArray();
             List<ContratoModel> contratos = new ContratoDAO(connectSQLServer.dbConnect())
-                    .getContratosCalculosPendentesExecucao(codigoUsuario);
+                    .getContratosCalculosPendentesExecucao(codigoUsuario, 1);
             for(ContratoModel contrato : contratos){
                 jsonArray.add(CalculosPendentesFeriasHelper.formataCalculosPendentes(contrato, gson, feriasDAO,
                         codigoUsuario, 3));

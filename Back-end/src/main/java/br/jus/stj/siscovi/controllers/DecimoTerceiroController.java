@@ -31,14 +31,14 @@ public class DecimoTerceiroController {
     @GET
     @Path("/getTerceirizadosDecimoTerceiro={codigoContrato}/{tipoRestituicao}/{anoContagem}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getTerceirizadosParaDecimoTerceiro (@PathParam("codigoContrato") int codigoContrato,
-                                                        @PathParam("tipoRestituicao") String tipoRestituicao,
-                                                        @PathParam("anoContagem") int anoContagem) {
+    public Response getTerceirizadosParaDecimoTerceiro(@PathParam("codigoContrato") int codigoContrato,
+                                                       @PathParam("tipoRestituicao") String tipoRestituicao,
+                                                       @PathParam("anoContagem") int anoContagem) {
         Gson gson = new GsonBuilder().setDateFormat("YYYY-MM-dd").create();
         ConnectSQLServer connectSQLServer = new ConnectSQLServer();
         DecimoTerceiroDAO decimoTerceiroDAO = new DecimoTerceiroDAO(connectSQLServer.dbConnect());
         String json = "";
-            json = gson.toJson(decimoTerceiroDAO.getListaTerceirizadoParaCalculoDeDecimoTerceiro(codigoContrato, anoContagem));
+        json = gson.toJson(decimoTerceiroDAO.getListaTerceirizadoParaCalculoDeDecimoTerceiro(codigoContrato, anoContagem));
         try {
             connectSQLServer.dbConnect().close();
         } catch (SQLException e) {
@@ -53,17 +53,18 @@ public class DecimoTerceiroController {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response calcularDecimoTerceiroListaTerceirizados(String object) {
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
-        ArrayList<TerceirizadoDecimoTerceiro> lista = gson.fromJson(object, new TypeToken<List<TerceirizadoDecimoTerceiro>>(){}.getType());
+        ArrayList<TerceirizadoDecimoTerceiro> lista = gson.fromJson(object, new TypeToken<List<TerceirizadoDecimoTerceiro>>() {
+        }.getType());
         ConnectSQLServer connectSQLServer = new ConnectSQLServer();
         RestituicaoDecimoTerceiro restituicaoDecimoTerceiro = new RestituicaoDecimoTerceiro(connectSQLServer.dbConnect());
         String json = "";
-        for(TerceirizadoDecimoTerceiro calculo : lista) {
+        for (TerceirizadoDecimoTerceiro calculo : lista) {
             Date ultimoDiaDoAno = Date.valueOf("" + calculo.getInicioContagem().toLocalDate().getYear() + "-12-31");
             try {
                 calculo.setValoresDecimoTerceiro(restituicaoDecimoTerceiro.CalculaRestituicaoDecimoTerceiro(calculo.getCodigoTerceirizadoContrato(), calculo.getParcelas(),
                         calculo.getInicioContagem(), ultimoDiaDoAno));
                 calculo.setFimContagem(ultimoDiaDoAno);
-            }catch(NullPointerException npe) {
+            } catch (NullPointerException npe) {
                 ErrorMessage error = new ErrorMessage();
                 error.error = npe.getMessage();
                 json = gson.toJson(error);
@@ -73,7 +74,7 @@ public class DecimoTerceiroController {
         json = gson.toJson(lista);
         try {
             connectSQLServer.dbConnect().close();
-        }catch(SQLException sqle) {
+        } catch (SQLException sqle) {
             return Response.accepted().status(500).build();
         }
         return Response.ok(json, MediaType.APPLICATION_JSON).build();
@@ -85,13 +86,14 @@ public class DecimoTerceiroController {
     @Path("/registrarCalculoDecimoTerceiro")
     public Response registratCalculoDecimoTerceiro(String object) {
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
-        ArrayList<TerceirizadoDecimoTerceiro> lista = gson.fromJson(object, new TypeToken<List<TerceirizadoDecimoTerceiro>>(){}.getType());
+        ArrayList<TerceirizadoDecimoTerceiro> lista = gson.fromJson(object, new TypeToken<List<TerceirizadoDecimoTerceiro>>() {
+        }.getType());
         ConnectSQLServer connectSQLServer = new ConnectSQLServer();
         RestituicaoDecimoTerceiro restituicaoDecimoTerceiro = new RestituicaoDecimoTerceiro(connectSQLServer.dbConnect());
         String json = "";
-        for(TerceirizadoDecimoTerceiro decimoTerceiro : lista) {
+        for (TerceirizadoDecimoTerceiro decimoTerceiro : lista) {
             Date ultimoDiaDoAno = Date.valueOf("" + decimoTerceiro.getInicioContagem().toLocalDate().getYear() + "-12-31");
-            if(decimoTerceiro.getTipoRestituicao().equals("RESGATE")) {
+            if (decimoTerceiro.getTipoRestituicao().equals("RESGATE")) {
                 try {
                     restituicaoDecimoTerceiro.RegistraRestituicaoDecimoTerceiro(decimoTerceiro.getCodigoTerceirizadoContrato(),
                             decimoTerceiro.getTipoRestituicao(),
@@ -101,14 +103,14 @@ public class DecimoTerceiroController {
                             decimoTerceiro.getValoresDecimoTerceiro().getValorIncidenciaDecimoTerceiro(),
                             decimoTerceiro.getValorMovimentado(),
                             decimoTerceiro.getId());
-                }catch(NullPointerException npe) {
+                } catch (NullPointerException npe) {
                     System.err.println(npe.getStackTrace());
                     ErrorMessage error = new ErrorMessage();
                     error.error = "Houve um erro ao tentar registrar o cálculo de Décimo Terceiro";
                     json = gson.toJson(error);
                     return Response.ok(json, MediaType.APPLICATION_JSON).build();
                 }
-            }else if(decimoTerceiro.getTipoRestituicao().equals("MOVIMENTAÇÃO")) {
+            } else if (decimoTerceiro.getTipoRestituicao().equals("MOVIMENTAÇÃO")) {
                 try {
                     decimoTerceiro.setValoresDecimoTerceiro(restituicaoDecimoTerceiro.CalculaRestituicaoDecimoTerceiro(decimoTerceiro.getCodigoTerceirizadoContrato(),
                             decimoTerceiro.getParcelas(), decimoTerceiro.getInicioContagem(), ultimoDiaDoAno));
@@ -121,12 +123,12 @@ public class DecimoTerceiroController {
                             decimoTerceiro.getValoresDecimoTerceiro().getValorIncidenciaDecimoTerceiro(),
                             decimoTerceiro.getValorMovimentado(),
                             decimoTerceiro.getId());
-                } catch(NullPointerException npe) {
+                } catch (NullPointerException npe) {
                     ErrorMessage error = new ErrorMessage();
                     error.error = "Houve um erro ao tentar registrar o cálculo !";
                     json = gson.toJson(error);
                     return Response.ok(json, MediaType.APPLICATION_JSON).build();
-                }catch (RuntimeException rte) {
+                } catch (RuntimeException rte) {
                     json = gson.toJson(ErrorMessage.handleError(rte));
                     return Response.ok(json, MediaType.APPLICATION_JSON).build();
                 }
@@ -134,7 +136,7 @@ public class DecimoTerceiroController {
         }
         try {
             connectSQLServer.dbConnect().close();
-        }catch (SQLException sqle) {
+        } catch (SQLException sqle) {
             return Response.accepted().status(500).build();
         }
         JsonObject jsonObject = new JsonObject();
@@ -155,13 +157,13 @@ public class DecimoTerceiroController {
             List<ContratoModel> contratos = new ContratoDAO(connectSQLServer.dbConnect())
                     .getCodigosContratosCalculosPendentes(codigoUsuario, 2);
             JsonArray jsonArray = new JsonArray();
-            for(ContratoModel contrato : contratos) {
+            for (ContratoModel contrato : contratos) {
                 jsonArray.add(CalculosPendentesDecTerHelper.formataCalculosPendentes(contrato, gson, decimoTerceiroDAO,
                         codigoUsuario, 1));
             }
             json = gson.toJson(jsonArray);
             connectSQLServer.dbConnect().close();
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             json = gson.toJson(ErrorMessage.handleError(ex));
             return Response.status(Response.Status.BAD_REQUEST).entity(json).build();
         }
@@ -175,18 +177,19 @@ public class DecimoTerceiroController {
     public Response avaliarCalculosPendentes(String object) {
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
         List<AvaliacaoDecimoTerceiro> avaliacoesDecimoTerceiro = gson.fromJson(object,
-                new TypeToken<List<AvaliacaoDecimoTerceiro>>(){}.getType());
+                new TypeToken<List<AvaliacaoDecimoTerceiro>>() {
+                }.getType());
         ConnectSQLServer connectSQLServer = new ConnectSQLServer();
         DecimoTerceiroDAO decimoTerceiroDAO = new DecimoTerceiroDAO(connectSQLServer.dbConnect());
         String json = "";
         try {
-            for(AvaliacaoDecimoTerceiro avaliacaoDecimoTerceiro : avaliacoesDecimoTerceiro) {
+            for (AvaliacaoDecimoTerceiro avaliacaoDecimoTerceiro : avaliacoesDecimoTerceiro) {
                 decimoTerceiroDAO.salvarAlteracoesCalculo(avaliacaoDecimoTerceiro);
             }
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("success", "As alterações foram feitas com sucesso");
             json = gson.toJson(jsonObject);
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             json = gson.toJson(ErrorMessage.handleError(ex));
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(json).build();
         }
@@ -205,7 +208,7 @@ public class DecimoTerceiroController {
             List<ContratoModel> contratos = new ContratoDAO(connectSQLServer.dbConnect())
                     .getCodigosContratosCalculosPendentesNegados(codigoUsuario, 2);
             JsonArray jsonArray = new JsonArray();
-            for(ContratoModel contrato : contratos) {
+            for (ContratoModel contrato : contratos) {
                 jsonArray.add(CalculosPendentesDecTerHelper
                         .formataCalculosPendentes(contrato, gson, decimoTerceiroDAO, codigoUsuario, 2));
             }
@@ -219,51 +222,51 @@ public class DecimoTerceiroController {
     }
 
     @GET
-    @Path("/getCalculosPendentesExecucao/{codigoContrato}/{codigoUsuario}")
+    @Path("/getCalculosPendentesExecucao/{codigoUsuario}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getCalculosPendentesExecucao(@PathParam("codigoContrato") int codigoContrato, @PathParam("codigoUsuario") int codigoUsuario) {
+    public Response getCalculosPendentesExecucao(@PathParam("codigoUsuario") int codigoUsuario) {
         ConnectSQLServer connectSQLServer = new ConnectSQLServer();
         DecimoTerceiroDAO decimoTerceiroDAO = new DecimoTerceiroDAO(connectSQLServer.dbConnect());
         String json;
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
         try {
-            json = gson.toJson(decimoTerceiroDAO.getCalculosPendentesExecucao(codigoContrato, codigoUsuario));
+            List<ContratoModel> contratos = new ContratoDAO(connectSQLServer.dbConnect())
+                    .getContratosCalculosPendentesExecucao(codigoUsuario, 2);
+            JsonArray jsonArray = new JsonArray();
+            for(ContratoModel contrato : contratos) {
+                jsonArray.add(CalculosPendentesDecTerHelper.formataCalculosPendentes(contrato, gson,
+                        decimoTerceiroDAO, codigoUsuario, 3));
+            }
+            json = gson.toJson(jsonArray);
             connectSQLServer.dbConnect().close();
-        }catch (SQLException sqle) {
-            sqle.printStackTrace();
-            ErrorMessage errorMessage = new ErrorMessage();
-            errorMessage.error = "Houve um erro ao tentar salvar as execuções de cálculos !";
-            json = gson.toJson(errorMessage);
-        }catch(RuntimeException rte) {
-            System.err.println(rte.toString());
-            ErrorMessage errorMessage = new ErrorMessage();
-            errorMessage.error = rte.getMessage();
-            json = gson.toJson(errorMessage);
+        } catch (Exception ex) {
+            json = gson.toJson(ErrorMessage.handleError(ex));
+            return Response.status(Response.Status.BAD_REQUEST).entity(json).build();
         }
         return Response.ok(json, MediaType.APPLICATION_JSON).build();
     }
 
     @GET
-    @Path("/getCalculosNaoPendentesNegados/{codigoContrato}/{codigoUsuario}")
+    @Path("/getCalculosNaoPendentesNegados/{codigoUsuario}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getCalculosNaoPendentesNegados(@PathParam("codigoContrato") int codigoContrato, @PathParam("codigoUsuario") int codigoUsuario) {
+    public Response getCalculosNaoPendentesNegados(@PathParam("codigoUsuario") int codigoUsuario) {
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
         ConnectSQLServer connectSQLServer = new ConnectSQLServer();
         DecimoTerceiroDAO decimoTerceiroDAO = new DecimoTerceiroDAO(connectSQLServer.dbConnect());
-        String json;
+        String json = null;
         try {
-            json = gson.toJson(decimoTerceiroDAO.getCalculosNaoPendentesNegados(codigoContrato, codigoUsuario));
+            List<ContratoModel> contratos = new ContratoDAO(connectSQLServer.dbConnect())
+                    .getCodigosContratosCalculosNaoPendentesNegados(codigoUsuario, 2);
+            JsonArray jsonArray = new JsonArray();
+            for(ContratoModel contrato : contratos) {
+                jsonArray.add(CalculosPendentesDecTerHelper
+                        .formataCalculosPendentes(contrato, gson, decimoTerceiroDAO, codigoUsuario, 4));
+            }
+            json = gson.toJson(jsonArray);
             connectSQLServer.dbConnect().close();
-        } catch (SQLException slqe) {
-            slqe.printStackTrace();
-            ErrorMessage errorMessage = new ErrorMessage();
-            errorMessage.error = "Houve um erro ao tentar salvar as execuções de cálculos !";
-            json = gson.toJson(errorMessage);
-        }catch (RuntimeException re) {
-            System.err.println(re.toString());
-            ErrorMessage errorMessage = new ErrorMessage();
-            errorMessage.error = re.getMessage();
-            json = gson.toJson(errorMessage);
+        } catch (Exception ex) {
+            json = gson.toJson(ErrorMessage.handleError(ex));
+            return Response.status(Response.Status.BAD_REQUEST).entity(json).build();
         }
         return Response.ok(json, MediaType.APPLICATION_JSON).build();
     }
@@ -274,19 +277,38 @@ public class DecimoTerceiroController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response executarCalculos(String object) {
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
-        AvaliacaoDecimoTerceiro avaliacaoDecimoTerceiro = gson.fromJson(object, AvaliacaoDecimoTerceiro.class);
+        List<AvaliacaoDecimoTerceiro> avaliacoesDecimoTerceiro = gson.fromJson(object,
+                new TypeToken<List<AvaliacaoDecimoTerceiro>>(){}.getType());
         ConnectSQLServer connectSQLServer = new ConnectSQLServer();
         DecimoTerceiroDAO decimoTerceiroDAO = new DecimoTerceiroDAO(connectSQLServer.dbConnect());
-        String json = "";
+        String json = null;
         try {
-            if (decimoTerceiroDAO.executarCalculos(avaliacaoDecimoTerceiro)) {
-                connectSQLServer.dbConnect().close();
-                JsonObject jsonObject = new JsonObject();
-                jsonObject.addProperty("success", "As alterações foram salvas com sucesso");
-                json = gson.toJson(jsonObject);
-                return Response.ok(json, MediaType.APPLICATION_JSON).build();
+            for(AvaliacaoDecimoTerceiro avaliacaoDecimoTerceiro : avaliacoesDecimoTerceiro) {
+                decimoTerceiroDAO.executarCalculos(avaliacaoDecimoTerceiro);
             }
-        }catch (SQLException sqle) {
+            connectSQLServer.dbConnect().close();
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("success", "As alterações foram salvas com sucesso");
+            json = gson.toJson(jsonObject);
+        } catch (Exception ex) {
+            json = gson.toJson(ErrorMessage.handleError(ex));
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(json).build();
+        }
+        return Response.ok(json, MediaType.APPLICATION_JSON).build();
+    }
+
+    @GET
+    @Path("/getRestituicoes/{codigoContrato}/{codigoUsuario}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getRestituicoes(@PathParam("codigoContrato") int codigoContrato, @PathParam("codigoUsuario") int codigoUsuario) {
+        ConnectSQLServer connectSQLServer = new ConnectSQLServer();
+        DecimoTerceiroDAO decimoTerceiroDAO = new DecimoTerceiroDAO(connectSQLServer.dbConnect());
+        String json;
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+        try {
+            json = gson.toJson(decimoTerceiroDAO.getRestituicoes(codigoContrato, codigoUsuario));
+            connectSQLServer.dbConnect().close();
+        } catch (SQLException slqe) {
             ErrorMessage errorMessage = new ErrorMessage();
             errorMessage.error = "Houve um erro ao tentar salvar as execuções de cálculos !";
             json = gson.toJson(errorMessage);
@@ -301,41 +323,17 @@ public class DecimoTerceiroController {
     }
 
     @GET
-    @Path("/getRestituicoes/{codigoContrato}/{codigoUsuario}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getRestituicoes(@PathParam("codigoContrato") int codigoContrato, @PathParam("codigoUsuario") int codigoUsuario) {
-        ConnectSQLServer connectSQLServer = new ConnectSQLServer();
-        DecimoTerceiroDAO decimoTerceiroDAO = new DecimoTerceiroDAO(connectSQLServer.dbConnect());
-        String json;
-        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
-        try{
-            json = gson.toJson(decimoTerceiroDAO.getRestituicoes(codigoContrato, codigoUsuario));
-            connectSQLServer.dbConnect().close();
-        }catch (SQLException slqe) {
-            ErrorMessage errorMessage = new ErrorMessage();
-            errorMessage.error = "Houve um erro ao tentar salvar as execuções de cálculos !";
-            json = gson.toJson(errorMessage);
-            return Response.ok(json, MediaType.APPLICATION_JSON).build();
-        }catch (RuntimeException rte) {
-            System.err.println(rte.toString());
-            ErrorMessage errorMessage = new ErrorMessage();
-            errorMessage.error = rte.getMessage();
-            json = gson.toJson(errorMessage);
-        }
-        return Response.ok(json, MediaType.APPLICATION_JSON).build();
-    }
-    @GET
     @Path("/getAnosCalculoDecimoTerceiro/{codigoContrato}/{username}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAnosCalculoDecimoTerceiro(@PathParam("codigoContrato") int codigoContrato,
-                                                 @PathParam("username") String username){
+                                                 @PathParam("username") String username) {
         Gson gson = new Gson();
         ConnectSQLServer connectSQLServer = new ConnectSQLServer();
         Connection connection = connectSQLServer.dbConnect();
         DecimoTerceiroDAO decimoTerceiroDAO = new DecimoTerceiroDAO(connection);
         List<Integer> anos;
         try {
-            if(new UsuarioDAO(connection).isAdmin(username) ||
+            if (new UsuarioDAO(connection).isAdmin(username) ||
                     new UsuarioDAO(connection).isGestor(username, codigoContrato)) {
                 anos = decimoTerceiroDAO.getAnosDecimoTerceiro(codigoContrato);
             } else {
