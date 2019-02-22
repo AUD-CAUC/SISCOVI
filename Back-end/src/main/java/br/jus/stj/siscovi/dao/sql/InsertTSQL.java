@@ -1352,7 +1352,7 @@ public class InsertTSQL {
             preparedStatement.setInt(1, vCod);
             preparedStatement.setInt(2, pCodFuncaoContrato);
 
-            if (pCodConvencaoColetiva == null) {
+            if (pCodConvencaoColetiva == null || pCodConvencaoColetiva == 0) {
 
                 preparedStatement.setNull(3, java.sql.Types.INTEGER);
 
