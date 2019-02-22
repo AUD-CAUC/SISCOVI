@@ -14,6 +14,8 @@ public class TestFerias {
         Ferias ferias = new Ferias(connectSQLServer.dbConnect());
         int vCodTerceirizado = 2;
         Date deslligamento = Date.valueOf("2018-07-22");
+        Date inicioPeriodoAquisitivo;
+        Date fimPeriodoAquisitivo;
 
         data = ferias.RetornaDatasPeriodoFeriasRescisao(vCodTerceirizado, deslligamento, 1);
 
@@ -34,6 +36,16 @@ public class TestFerias {
 
         System.out.print(data);
         System.out.print("\n");
+
+        inicioPeriodoAquisitivo = ferias.DataPeriodoAquisitivo(7, 1);
+        fimPeriodoAquisitivo = ferias.DataPeriodoAquisitivo(7, 2);
+
+        System.out.print(inicioPeriodoAquisitivo);
+        System.out.print("\n");
+        System.out.print(fimPeriodoAquisitivo);
+
+
+
 
     }
 

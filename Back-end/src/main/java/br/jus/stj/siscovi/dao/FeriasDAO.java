@@ -206,7 +206,7 @@ public class FeriasDAO {
                 " OBSERVACAO = ?," +
                 " LOGIN_ATUALIZACAO = ?," +
                 " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
-                " WHERE COD_TERCEIRIZADO_CONTRATO = ?";
+                " WHERE COD = ?";
         try(PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             for (CalculoPendenteModel calculoPendenteModel : avaliacaoFerias.getCalculosAvaliados()) {
                 //preparedStatement.setString(1, calculoPendenteModel.getCalcularFeriasModel().getTipoRestituicao());
@@ -223,7 +223,7 @@ public class FeriasDAO {
                 preparedStatement.setString(11,calculoPendenteModel.getStatus());
                 preparedStatement.setString(12, calculoPendenteModel.getObservacoes());
                 preparedStatement.setString(13, avaliacaoFerias.getUser().getUsername().toUpperCase());
-                preparedStatement.setInt(14, calculoPendenteModel.getCalcularFeriasModel().getCodTerceirizadoContrato());
+                preparedStatement.setInt(14, calculoPendenteModel.getCod());
                 preparedStatement.executeUpdate();
             }
         }catch (SQLException sqle) {
