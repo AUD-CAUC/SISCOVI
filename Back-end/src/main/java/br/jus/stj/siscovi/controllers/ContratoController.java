@@ -68,15 +68,18 @@ public class ContratoController {
         ConnectSQLServer connectSQLServer = new ConnectSQLServer();
         Connection connection = connectSQLServer.dbConnect();
         ContratoDAO contratoDAO = new ContratoDAO(connection);
+        String json = null;
         try {
-            if(contratoDAO.cadastrarContrato(contrato, username)) {
-                return Response.ok().build();
-            }
+            contratoDAO.cadastrarContrato(contrato, username);
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("success", "As alterações foram salvas com sucesso");
+            json = gson.toJson(jsonObject);
             connection.close();
-        }catch (SQLException sqle) {
-            sqle.printStackTrace();
+        }catch (Exception ex) {
+            json = gson.toJson(ErrorMessage.handleError(ex));
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(json).build();
         }
-        return Response.ok().build();
+        return Response.ok(json , MediaType.APPLICATION_JSON).build();
     }
 
     @GET
