@@ -584,4 +584,37 @@ public class Ferias {
 
     }
 
+    public Date RetornaUltimaDataFimUsufruto (int pCodTerceirizadoContrato, Date pDataInicio, Date pDataFim) {
+
+        Date ultFimUsufruto = null;
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+
+        try {
+            preparedStatement = connection.prepareStatement("SELECT MAX(data_fim_usufruto)\n" +
+                    "    FROM tb_restituicao_ferias\n" +
+                    "    WHERE cod_terceirizado_contrato = ?\n" +
+                    "    AND data_inicio_periodo_aquisitivo = ?\n" +
+                    "    AND data_fim_periodo_aquisitivo = ?\n" +
+                    "    AND (autorizado IS null OR autorizado != 'N')\n" +
+                    "    AND (restituido IS null OR restituido != 'N');");
+
+            preparedStatement.setInt(1, pCodTerceirizadoContrato);
+            preparedStatement.setDate(2, pDataInicio);
+            preparedStatement.setDate(3, pDataFim);
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+
+                ultFimUsufruto = resultSet.getDate(1);
+
+            }
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+            throw new NullPointerException("Não foi possível recuperar a última data do fim do usufruto.");
+        }
+
+        return ultFimUsufruto;
+    }
+
 }

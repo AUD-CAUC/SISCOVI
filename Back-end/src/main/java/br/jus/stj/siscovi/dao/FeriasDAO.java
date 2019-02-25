@@ -5,6 +5,7 @@ import br.jus.stj.siscovi.model.AvaliacaoFerias;
 import br.jus.stj.siscovi.model.CalcularFeriasModel;
 import br.jus.stj.siscovi.model.CalculoPendenteModel;
 import br.jus.stj.siscovi.model.TerceirizadoFerias;
+import org.omg.CORBA.DATA_CONVERSION;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -44,6 +45,7 @@ public class FeriasDAO {
                     int diasUsufruidos = ferias.RetornaDiasFeriasUsufruidosPeriodo(resultSet.getInt("COD"), inicioPeriodoAquisitivo, fimPeriodoAquisitivo);
                     boolean parcela14Dias = ferias.RetornaParcela14DiasFeriasPeriodo(resultSet.getInt("COD"), inicioPeriodoAquisitivo, fimPeriodoAquisitivo);
                     String parcelaAnterior = ferias.RetornaMaiorParcelaConcedidaFeriasPeriodo(resultSet.getInt("COD"), inicioPeriodoAquisitivo, fimPeriodoAquisitivo);
+                    Date ultimoFimUsufruto = ferias.RetornaUltimaDataFimUsufruto(resultSet.getInt("COD"), inicioPeriodoAquisitivo, fimPeriodoAquisitivo);
 
                     TerceirizadoFerias terceirizadoFerias = new TerceirizadoFerias(resultSet.getInt("COD"),
                             resultSet.getString("NOME"),
@@ -52,7 +54,8 @@ public class FeriasDAO {
                             diasUsufruidos,
                             parcela14Dias,
                             ferias.ExisteFeriasTerceirizado(resultSet.getInt("COD")),
-                            parcelaAnterior);
+                            parcelaAnterior,
+                            ultimoFimUsufruto);
                     terceirizados.add(terceirizadoFerias);
                 }
             }
