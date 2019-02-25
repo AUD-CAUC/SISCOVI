@@ -40,6 +40,10 @@ public class CalculoPendenteRescisaoModel {
         return total;
     }
 
+    public void setObservacoes(String observacoes) {
+        this.observacoes = observacoes;
+    }
+
     public String getObservacoes() {
         return observacoes;
     }

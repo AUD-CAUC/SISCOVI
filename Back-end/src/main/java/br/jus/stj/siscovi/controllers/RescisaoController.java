@@ -153,16 +153,62 @@ public class RescisaoController {
             JsonArray jsonArray = new JsonArray();
             List<ContratoModel> contratos = new ContratoDAO(connectSQLServer.dbConnect()).getCodigosContratosCalculosPendentes(codigoUsuario, 1);
             for (ContratoModel contrato : contratos) {
-               // jsonArray.add(CalculosPendentesRescisaoHelper.formataCalculosPendentes(contrato, gson, rescisaoDAO,
-              //          codigoUsuario, 1));
-                // JsonArray ja = new JSONArray(feriasDAO.getCalculosPendentes(contrato.getCodigo(), codigoUsuario));
-                // jsonObject.addProperty("calculosPendentes", feriasDAO.getCalculosPendentes(contrato.getCodigo(), codigoUsuario));
+                jsonArray.add(CalculosPendentesRescisaoHelper.formataCalculosPendentes(contrato, gson, rescisaoDAO,
+                              codigoUsuario, 1));
+                //JsonArray ja = new JSONArray(rescisaoDAO.getCalculosPendentes(contrato.getCodigo(), codigoUsuario));
+                //jsonObject.addProperty("calculosPendentes", rescisaoDAO.getCalculosPendentes(contrato.getCodigo(), codigoUsuario));
             }
             json = gson.toJson(jsonArray);
             connectSQLServer.dbConnect().close();
         } catch (Exception ex) {
             json = gson.toJson(ErrorMessage.handleError(ex));
             return Response.status(Response.Status.NOT_FOUND).entity(json).build();
+        }
+        return Response.ok(json, MediaType.APPLICATION_JSON).build();
+    }
+    @GET
+    @Path("/getCalculosPendentesNegados/{codigoUsuario}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getCalculosPendentesNegadosLista(@PathParam("codigoUsuario") int codigoUsuario) {
+        ConnectSQLServer connectSQLServer = new ConnectSQLServer();
+        RescisaoDAO rescisaoDAO = new RescisaoDAO(connectSQLServer.dbConnect());
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+        String json = "";
+        try {
+            JsonArray jsonArray = new JsonArray();
+            List<ContratoModel> contratos = new ContratoDAO(connectSQLServer.dbConnect()).getCodigosContratosCalculosPendentesNegados(codigoUsuario, 1);
+            for (ContratoModel contrato : contratos) {
+                jsonArray.add(CalculosPendentesRescisaoHelper.formataCalculosPendentes(contrato, gson, rescisaoDAO, codigoUsuario, 2));
+            }
+            json = gson.toJson(jsonArray);
+            connectSQLServer.dbConnect().close();
+        } catch (Exception ex) {
+            json = gson.toJson(ErrorMessage.handleError(ex));
+            return Response.status(Response.Status.NOT_FOUND).entity(json).build();
+        }
+        return Response.ok(json, MediaType.APPLICATION_JSON).build();
+    }
+    @GET
+    @Path("/getCalculosPendentesExecucao/{codigoUsuario}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getCalculosPendentesExecucaoLista(@PathParam("codigoUsuario") int codigoUsuario) {
+        ConnectSQLServer connectSQLServer = new ConnectSQLServer();
+        RescisaoDAO rescisaoDAO = new RescisaoDAO(connectSQLServer.dbConnect());
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+        String json = "";
+        try {
+            JsonArray jsonArray = new JsonArray();
+            List<ContratoModel> contratos = new ContratoDAO(connectSQLServer.dbConnect())
+                    .getContratosCalculosPendentesExecucao(codigoUsuario, 1);
+            for(ContratoModel contrato : contratos){
+                jsonArray.add(CalculosPendentesRescisaoHelper.formataCalculosPendentes(contrato, gson, rescisaoDAO,
+                        codigoUsuario, 3));
+            }
+            json = gson.toJson(jsonArray);
+            connectSQLServer.dbConnect().close();
+        } catch (Exception ex) {
+            json = gson.toJson(ErrorMessage.handleError(ex));
+            return Response.status(Response.Status.BAD_REQUEST).entity(json).build();
         }
         return Response.ok(json, MediaType.APPLICATION_JSON).build();
     }

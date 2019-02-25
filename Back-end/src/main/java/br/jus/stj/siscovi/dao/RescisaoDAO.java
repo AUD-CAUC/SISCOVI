@@ -88,7 +88,7 @@ public class RescisaoDAO {
                         "        rt.VALOR_FERIAS_PROP,\n" +
                         "        rt.VALOR_TERCO_PROP,\n" +
                         "        rt.INCID_SUBMOD_4_1_FERIAS_PROP,\n" +
-                        "        rt.INCID_MULTA_FGTS_TERCO_PROP,\n" +
+                        "        rt.INCID_SUBMOD_4_1_TERCO_PROP,\n" +
                         "        rt.INCID_MULTA_FGTS_FERIAS_PROP,\n" +
                         "        rt.INCID_MULTA_FGTS_TERCO_PROP,\n" +
                         "        rt.MULTA_FGTS_SALARIO,\n" +
@@ -163,42 +163,57 @@ public class RescisaoDAO {
      * @param codigoContrato - Id of the contract user wants to get pending vacation calculus
      * @return
      */
-    public List<CalculoPendenteModel> getCalculosPendentes(int codigoContrato, int codigoUsuario) {
+    public List<CalculoPendenteRescisaoModel> getCalculosPendentes(int codigoContrato, int codigoUsuario) {
         int codigoGestor = new UsuarioDAO(this.connection).verifyPermission(codigoUsuario, codigoContrato);
         int codGestor = new ContratoDAO(this.connection).codigoGestorContrato(codigoUsuario, codigoContrato);
         if(codigoGestor == codGestor) {
-            List<CalculoPendenteModel> lista = new ArrayList<>();
-            String sql = "SELECT rt.COD_TERCEIRIZADO_CONTRATO AS \"COD\"," +
-                    " u.nome AS \"Gestor\"," +
-                    " c.nome_empresa AS \"Empresa\"," +
-                    " c.numero_contrato AS \"Contrato N°\"," +
-                    " tr.nome AS \"Tipo de restituição\"," +
-                    " t.nome AS \"Terceirizado\"," +
-                    " f.nome AS \"Cargo\"," +
-                    " rt.data_inicio_periodo_aquisitivo AS \"Início do período aquisitivo\"," +
-                    " rt.data_fim_periodo_aquisitivo AS \"Fim do período aquisitivo\"," +
-                    " rt.data_inicio_usufruto AS \"Início do usufruto\"," +
-                    " rt.data_fim_usufruto AS \"Fim do usufruto\"," +
-                    " rt.dias_vendidos AS \"Dias vendidos\"," +
-                    " rt.parcela AS \"PARCELA\"," +
-                    " rt.valor_ferias AS \"Valor de férias\"," +
-                    " rt.valor_terco_constitucional AS \"Valor de 1/3\"," +
-                    " rt.incid_submod_4_1_ferias AS \"Incidência sobre férias\"," +
-                    " rt.incid_submod_4_1_terco AS \"Incidência sobre 1/3\"," +
-                    " rt.valor_ferias + rt.valor_terco_constitucional + rt.incid_submod_4_1_ferias + rt.incid_submod_4_1_terco AS \"Total\"," +
-                    " rt.AUTORIZADO," +
-                    " rt.cod AS CODIGO" +
-                    " FROM tb_restituicao_ferias rt" +
-                    " JOIN tb_terceirizado_contrato tc ON tc.cod = rt.cod_terceirizado_contrato" +
-                    " JOIN tb_funcao_terceirizado ft ON ft.cod_terceirizado_contrato = tc.cod" +
-                    " JOIN tb_terceirizado t ON t.cod = tc.cod_terceirizado" +
-                    " JOIN tb_contrato c ON c.cod = tc.cod_contrato" +
-                    " JOIN tb_tipo_restituicao tr ON tr.cod = rt.cod_tipo_restituicao" +
-                    " JOIN tb_historico_gestao_contrato hgc ON hgc.cod_contrato = c.cod" +
-                    " JOIN tb_usuario u ON u.cod = hgc.cod_usuario" +
-                    " JOIN tb_funcao_contrato fc ON fc.cod = ft.cod_funcao_contrato" +
-                    " JOIN tb_funcao f ON f.cod = fc.cod_funcao" +
-                    " WHERE tc.COD_CONTRATO = ? AND (AUTORIZADO IS NULL)";
+            List<CalculoPendenteRescisaoModel> lista = new ArrayList<>();
+            String sql = "SELECT rt.COD,\n" +
+                    "        rt.COD_TERCEIRIZADO_CONTRATO, \n" +
+                    "        u.nome, \n" +
+                    "        c.nome_empresa, \n" +
+                    "        c.numero_contrato, \n" +
+                    "        tr.nome, \n" +
+                    "        trr.TIPO_RESCISAO, \n" +
+                    "        t.nome, \n" +
+                    "        f.nome, \n" +
+                    "        rt.data_desligamento, \n" +
+                    "        rt.data_inicio_ferias, \n" +
+                    "        rt.data_fim_ferias, \n" +
+                    "        rt.data_inicio_ferias_prop, \n" +
+                    "        rt.data_fim_ferias_prop, \n" +
+                    "        rt.data_inicio_contagem_dec_ter,\n" +
+                    "        rt.valor_decimo_terceiro, \n" +
+                    "        rt.INCID_SUBMOD_4_1_DEC_TERCEIRO, \n" +
+                    "        rt.INCID_MULTA_FGTS_DEC_TERCEIRO, \n" +
+                    "        rt.VALOR_FERIAS, \n" +
+                    "        rt.VALOR_TERCO, \n" +
+                    "        rt.INCID_SUBMOD_4_1_FERIAS, \n" +
+                    "        rt.INCID_SUBMOD_4_1_TERCO,\n" +
+                    "        rt.INCID_SUBMOD_4_1_TERCO_PROP,\n" +
+                    "        rt.INCID_MULTA_FGTS_TERCO,\n" +
+                    "        rt.VALOR_FERIAS_PROP,\n" +
+                    "        rt.VALOR_TERCO_PROP,\n" +
+                    "        rt.INCID_SUBMOD_4_1_FERIAS_PROP,\n" +
+                    "        rt.INCID_SUBMOD_4_1_TERCO_PROP,\n" +
+                    "        rt.INCID_MULTA_FGTS_FERIAS_PROP,\n" +
+                    "        rt.INCID_MULTA_FGTS_TERCO_PROP,\n" +
+                    "        rt.MULTA_FGTS_SALARIO,\n" +
+                    "        rt.valor_decimo_terceiro + rt.INCID_SUBMOD_4_1_DEC_TERCEIRO + rt.INCID_MULTA_FGTS_DEC_TERCEIRO + rt.VALOR_FERIAS + rt.VALOR_TERCO + rt.INCID_SUBMOD_4_1_FERIAS + rt.INCID_SUBMOD_4_1_TERCO + rt.INCID_MULTA_FGTS_FERIAS + rt.INCID_MULTA_FGTS_TERCO + rt.VALOR_FERIAS_PROP + rt.VALOR_TERCO_PROP + rt.INCID_SUBMOD_4_1_FERIAS_PROP + rt.INCID_MULTA_FGTS_TERCO_PROP + rt.INCID_MULTA_FGTS_FERIAS_PROP + rt.INCID_MULTA_FGTS_TERCO_PROP + rt.MULTA_FGTS_SALARIO, \n" +
+                    "        rt.AUTORIZADO, \n" +
+                    "        rt.RESTITUIDO \n" +
+                    "   FROM tb_restituicao_rescisao rt \n" +
+                    "    JOIN tb_terceirizado_contrato tc ON tc.cod = rt.cod_terceirizado_contrato \n" +
+                    "    JOIN tb_funcao_terceirizado ft ON ft.cod_terceirizado_contrato = tc.cod \n" +
+                    "    JOIN tb_terceirizado t ON t.cod = tc.cod_terceirizado \n" +
+                    "    JOIN tb_contrato c ON c.cod = tc.cod_contrato \n" +
+                    "    JOIN tb_tipo_restituicao tr ON tr.cod = rt.cod_tipo_restituicao \n" +
+                    "    JOIN tb_tipo_rescisao trr ON trr.cod = rt.cod_tipo_rescisao \n" +
+                    "    JOIN tb_historico_gestao_contrato hgc ON hgc.cod_contrato = c.cod \n" +
+                    "    JOIN tb_usuario u ON u.cod = hgc.cod_usuario \n" +
+                    "    JOIN tb_funcao_contrato fc ON fc.cod = ft.cod_funcao_contrato \n" +
+                    "    JOIN tb_funcao f ON f.cod = fc.cod_funcao \n" +
+                    "   WHERE tc.COD_CONTRATO = ? AND AUTORIZADO IS NULL";
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 preparedStatement.setInt(1, codigoContrato);
                 try (ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -207,25 +222,42 @@ public class RescisaoDAO {
                         if (resultSet.getString("AUTORIZADO") == null) {
                             status = "Em Análise";
                         }
-                        CalcularFeriasModel calcularFeriasModel = new CalcularFeriasModel(resultSet.getInt("COD"),
-                                resultSet.getString("Tipo de restituição"),
-                                resultSet.getInt("Dias vendidos"),
-                                resultSet.getDate("Início do usufruto"),
-                                resultSet.getDate("Fim do usufruto"),
-                                resultSet.getDate("Início do período aquisitivo"),
-                                resultSet.getDate("Fim do período aquisitivo"),
+                        CalcularRescisaoModel calcularRescisaoModel = new CalcularRescisaoModel(resultSet.getInt(2),
+                                resultSet.getString(6),
+                                resultSet.getString(7),
+                                resultSet.getDate(10),
+                                resultSet.getDate(11),
+                                resultSet.getDate(12),
+                                resultSet.getDate(13),
+                                resultSet.getDate(14),
+                                resultSet.getDate(15),
                                 0,
-                                resultSet.getInt("PARCELA"),
-                                resultSet.getFloat("TOTAL"),
-                                resultSet.getFloat("Valor de férias"),
-                                resultSet.getFloat("Valor de 1/3"),
-                                resultSet.getFloat("Incidência sobre férias"),
-                                resultSet.getFloat("Incidência sobre 1/3"));
-                        CalculoPendenteModel calculoPendenteModel = new CalculoPendenteModel(resultSet.getInt("CODIGO"), calcularFeriasModel,
-                                resultSet.getString("Terceirizado"),
-                                resultSet.getString("Cargo"),
+                                0,
+                                0,
+                                resultSet.getFloat(16),
+                                resultSet.getFloat(17),
+                                resultSet.getFloat(18),
+                                resultSet.getFloat(19),
+                                resultSet.getFloat(20),
+                                resultSet.getFloat(21),
+                                resultSet.getFloat(22),
+                                resultSet.getFloat(23),
+                                resultSet.getFloat(24),
+                                resultSet.getFloat(25),
+                                resultSet.getFloat(26),
+                                resultSet.getFloat(27),
+                                resultSet.getFloat(28),
+                                resultSet.getFloat(29),
+                                resultSet.getFloat(30),
+                                resultSet.getFloat(31));
+
+
+                        CalculoPendenteRescisaoModel calculoPendenteModel = new CalculoPendenteRescisaoModel(resultSet.getInt(1),
+                                calcularRescisaoModel,
+                                resultSet.getString(8),
+                                resultSet.getString(9),
                                 status,
-                                resultSet.getFloat("Total"));
+                                resultSet.getFloat(32));
                         lista.add(calculoPendenteModel);
                     }
                 }
@@ -238,43 +270,57 @@ public class RescisaoDAO {
         }
     }
 
-    public List<CalculoPendenteModel> getCalculosNegados(int codigoContrato, int codigoUsuario) {
+    public List<CalculoPendenteRescisaoModel> getCalculosNegados(int codigoContrato, int codigoUsuario) {
         int codigoGestor = new UsuarioDAO(this.connection).verifyPermission(codigoUsuario, codigoContrato);
         int codGestor = new ContratoDAO(this.connection).codigoGestorContrato(codigoUsuario, codigoContrato);
         if(codigoGestor == codGestor) {
-            List<CalculoPendenteModel> lista = new ArrayList<>();
-            String sql = "SELECT rt.COD_TERCEIRIZADO_CONTRATO AS \"COD\"," +
-                    " u.nome AS \"Gestor\"," +
-                    " c.nome_empresa AS \"Empresa\"," +
-                    " c.numero_contrato AS \"Contrato N°\"," +
-                    " tr.nome AS \"Tipo de restituição\"," +
-                    " t.nome AS \"Terceirizado\"," +
-                    " f.nome AS \"Cargo\"," +
-                    " rt.data_inicio_periodo_aquisitivo AS \"Início do período aquisitivo\"," +
-                    " rt.data_fim_periodo_aquisitivo AS \"Fim do período aquisitivo\"," +
-                    " rt.data_inicio_usufruto AS \"Início do usufruto\"," +
-                    " rt.data_fim_usufruto AS \"Fim do usufruto\"," +
-                    " rt.dias_vendidos AS \"Dias vendidos\"," +
-                    " rt.parcela AS \"PARCELA\"," +
-                    " rt.valor_ferias AS \"Valor de férias\"," +
-                    " rt.valor_terco_constitucional AS \"Valor de 1/3\"," +
-                    " rt.incid_submod_4_1_ferias AS \"Incidência sobre férias\"," +
-                    " rt.incid_submod_4_1_terco AS \"Incidência sobre 1/3\"," +
-                    " rt.valor_ferias + rt.valor_terco_constitucional + rt.incid_submod_4_1_ferias + rt.incid_submod_4_1_terco AS \"Total\"," +
-                    " rt.AUTORIZADO," +
-                    " rt.COD AS CODIGO," +
-                    " rt.OBSERVACAO" +
-                    " FROM tb_restituicao_ferias rt" +
-                    " JOIN tb_terceirizado_contrato tc ON tc.cod = rt.cod_terceirizado_contrato" +
-                    " JOIN tb_funcao_terceirizado ft ON ft.cod_terceirizado_contrato = tc.cod" +
-                    " JOIN tb_terceirizado t ON t.cod = tc.cod_terceirizado" +
-                    " JOIN tb_contrato c ON c.cod = tc.cod_contrato" +
-                    " JOIN tb_tipo_restituicao tr ON tr.cod = rt.cod_tipo_restituicao" +
-                    " JOIN tb_historico_gestao_contrato hgc ON hgc.cod_contrato = c.cod" +
-                    " JOIN tb_usuario u ON u.cod = hgc.cod_usuario" +
-                    " JOIN tb_funcao_contrato fc ON fc.cod = ft.cod_funcao_contrato" +
-                    " JOIN tb_funcao f ON f.cod = fc.cod_funcao" +
-                    " WHERE tc.COD_CONTRATO = ? AND (AUTORIZADO='N' OR AUTORIZADO='n')";
+            List<CalculoPendenteRescisaoModel> lista = new ArrayList<>();
+            String sql = "SELECT rt.COD,\n" +
+                    "        rt.COD_TERCEIRIZADO_CONTRATO, \n" +
+                    "        u.nome, \n" +
+                    "        c.nome_empresa, \n" +
+                    "        c.numero_contrato, \n" +
+                    "        tr.nome, \n" +
+                    "        trr.TIPO_RESCISAO, \n" +
+                    "        t.nome, \n" +
+                    "        f.nome, \n" +
+                    "        rt.data_desligamento, \n" +
+                    "        rt.data_inicio_ferias, \n" +
+                    "        rt.data_fim_ferias, \n" +
+                    "        rt.data_inicio_ferias_prop, \n" +
+                    "        rt.data_fim_ferias_prop, \n" +
+                    "        rt.data_inicio_contagem_dec_ter,\n" +
+                    "        rt.valor_decimo_terceiro, \n" +
+                    "        rt.INCID_SUBMOD_4_1_DEC_TERCEIRO, \n" +
+                    "        rt.INCID_MULTA_FGTS_DEC_TERCEIRO, \n" +
+                    "        rt.VALOR_FERIAS, \n" +
+                    "        rt.VALOR_TERCO, \n" +
+                    "        rt.INCID_SUBMOD_4_1_FERIAS, \n" +
+                    "        rt.INCID_SUBMOD_4_1_TERCO,\n" +
+                    "        rt.INCID_MULTA_FGTS_FERIAS,\n" +
+                    "        rt.INCID_MULTA_FGTS_TERCO,\n" +
+                    "        rt.VALOR_FERIAS_PROP,\n" +
+                    "        rt.VALOR_TERCO_PROP,\n" +
+                    "        rt.INCID_SUBMOD_4_1_FERIAS_PROP,\n" +
+                    "        rt.INCID_SUBMOD_4_1_TERCO_PROP,\n" +
+                    "        rt.INCID_MULTA_FGTS_FERIAS_PROP,\n" +
+                    "        rt.INCID_MULTA_FGTS_TERCO_PROP,\n" +
+                    "        rt.MULTA_FGTS_SALARIO,\n" +
+                    "        rt.valor_decimo_terceiro + rt.INCID_SUBMOD_4_1_DEC_TERCEIRO + rt.INCID_MULTA_FGTS_DEC_TERCEIRO + rt.VALOR_FERIAS + rt.VALOR_TERCO + rt.INCID_SUBMOD_4_1_FERIAS + rt.INCID_SUBMOD_4_1_TERCO + rt.INCID_MULTA_FGTS_FERIAS + rt.INCID_MULTA_FGTS_TERCO + rt.VALOR_FERIAS_PROP + rt.VALOR_TERCO_PROP + rt.INCID_SUBMOD_4_1_FERIAS_PROP + rt.INCID_MULTA_FGTS_TERCO_PROP + rt.INCID_MULTA_FGTS_FERIAS_PROP + rt.INCID_MULTA_FGTS_TERCO_PROP + rt.MULTA_FGTS_SALARIO, \n" +
+                    "        rt.AUTORIZADO, \n" +
+                    "        rt.RESTITUIDO \n" +
+                    "   FROM tb_restituicao_rescisao rt \n" +
+                    "    JOIN tb_terceirizado_contrato tc ON tc.cod = rt.cod_terceirizado_contrato \n" +
+                    "    JOIN tb_funcao_terceirizado ft ON ft.cod_terceirizado_contrato = tc.cod \n" +
+                    "    JOIN tb_terceirizado t ON t.cod = tc.cod_terceirizado \n" +
+                    "    JOIN tb_contrato c ON c.cod = tc.cod_contrato \n" +
+                    "    JOIN tb_tipo_restituicao tr ON tr.cod = rt.cod_tipo_restituicao \n" +
+                    "    JOIN tb_tipo_rescisao trr ON trr.cod = rt.cod_tipo_rescisao \n" +
+                    "    JOIN tb_historico_gestao_contrato hgc ON hgc.cod_contrato = c.cod \n" +
+                    "    JOIN tb_usuario u ON u.cod = hgc.cod_usuario \n" +
+                    "    JOIN tb_funcao_contrato fc ON fc.cod = ft.cod_funcao_contrato \n" +
+                    "    JOIN tb_funcao f ON f.cod = fc.cod_funcao \n" +
+                    "   WHERE tc.COD_CONTRATO = ? AND AUTORIZADO ='N'";
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 preparedStatement.setInt(1, codigoContrato);
                 try (ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -286,25 +332,42 @@ public class RescisaoDAO {
                         if (resultSet.getString("AUTORIZADO").toUpperCase().equals("N")) {
                             status = "NEGADO";
                         }
-                        CalcularFeriasModel calcularFeriasModel = new CalcularFeriasModel(resultSet.getInt("COD"),
-                                resultSet.getString("Tipo de restituição"),
-                                resultSet.getInt("Dias vendidos"),
-                                resultSet.getDate("Início do usufruto"),
-                                resultSet.getDate("Fim do usufruto"),
-                                resultSet.getDate("Início do período aquisitivo"),
-                                resultSet.getDate("Fim do período aquisitivo"),
+                        CalcularRescisaoModel calcularRescisaoModel = new CalcularRescisaoModel(resultSet.getInt(2),
+                                resultSet.getString(6),
+                                resultSet.getString(7),
+                                resultSet.getDate(10),
+                                resultSet.getDate(11),
+                                resultSet.getDate(12),
+                                resultSet.getDate(13),
+                                resultSet.getDate(14),
+                                resultSet.getDate(15),
                                 0,
-                                resultSet.getInt("PARCELA"),
-                                resultSet.getFloat("TOTAL"),
-                                resultSet.getFloat("Valor de férias"),
-                                resultSet.getFloat("Valor de 1/3"),
-                                resultSet.getFloat("Incidência sobre férias"),
-                                resultSet.getFloat("Incidência sobre 1/3"));
-                        CalculoPendenteModel calculoPendenteModel = new CalculoPendenteModel(resultSet.getInt("CODIGO"), calcularFeriasModel,
-                                resultSet.getString("Terceirizado"),
-                                resultSet.getString("Cargo"),
+                                0,
+                                0,
+                                resultSet.getFloat(16),
+                                resultSet.getFloat(17),
+                                resultSet.getFloat(18),
+                                resultSet.getFloat(19),
+                                resultSet.getFloat(20),
+                                resultSet.getFloat(21),
+                                resultSet.getFloat(22),
+                                resultSet.getFloat(23),
+                                resultSet.getFloat(24),
+                                resultSet.getFloat(25),
+                                resultSet.getFloat(26),
+                                resultSet.getFloat(27),
+                                resultSet.getFloat(28),
+                                resultSet.getFloat(29),
+                                resultSet.getFloat(30),
+                                resultSet.getFloat(31));
+
+
+                        CalculoPendenteRescisaoModel calculoPendenteModel = new CalculoPendenteRescisaoModel(resultSet.getInt(1),
+                                calcularRescisaoModel,
+                                resultSet.getString(8),
+                                resultSet.getString(9),
                                 status,
-                                resultSet.getFloat("Total"));
+                                resultSet.getFloat(32));
                         calculoPendenteModel.setObservacoes(resultSet.getString("OBSERVACAO"));
                         lista.add(calculoPendenteModel);
                     }
@@ -333,43 +396,57 @@ public class RescisaoDAO {
      * @param codigoUsuario - Chave primária do usuário que está fazendo a requisição. Sua permissão deve ser devidamente checada
      * @return List<CalculoPendenteModel> lista
      */
-    public List<CalculoPendenteModel> getCalculosPendentesExecucao(int codigoContrato, int codigoUsuario) {
+    public List<CalculoPendenteRescisaoModel> getCalculosPendentesExecucao(int codigoContrato, int codigoUsuario) {
         int codigoGestor = new UsuarioDAO(this.connection).verifyPermission(codigoUsuario, codigoContrato);
         int codGestor = new ContratoDAO(this.connection).codigoGestorContrato(codigoUsuario, codigoContrato);
         if(codigoGestor == codGestor) {
-            List<CalculoPendenteModel> lista = new ArrayList<>();
-            String sql = "SELECT rt.COD_TERCEIRIZADO_CONTRATO AS \"COD\"," +
-                    " u.nome AS \"Gestor\"," +
-                    " c.nome_empresa AS \"Empresa\"," +
-                    " c.numero_contrato AS \"Contrato N°\"," +
-                    " tr.nome AS \"Tipo de restituição\"," +
-                    " t.nome AS \"Terceirizado\"," +
-                    " f.nome AS \"Cargo\"," +
-                    " rt.data_inicio_periodo_aquisitivo AS \"Início do período aquisitivo\"," +
-                    " rt.data_fim_periodo_aquisitivo AS \"Fim do período aquisitivo\"," +
-                    " rt.data_inicio_usufruto AS \"Início do usufruto\"," +
-                    " rt.data_fim_usufruto AS \"Fim do usufruto\"," +
-                    " rt.dias_vendidos AS \"Dias vendidos\"," +
-                    " rt.parcela AS \"PARCELA\"," +
-                    " rt.valor_ferias AS \"Valor de férias\"," +
-                    " rt.valor_terco_constitucional AS \"Valor de 1/3\"," +
-                    " rt.incid_submod_4_1_ferias AS \"Incidência sobre férias\"," +
-                    " rt.incid_submod_4_1_terco AS \"Incidência sobre 1/3\"," +
-                    " rt.valor_ferias + rt.valor_terco_constitucional + rt.incid_submod_4_1_ferias + rt.incid_submod_4_1_terco AS \"Total\"," +
-                    " rt.AUTORIZADO," +
-                    " rt.RESTITUIDO," +
-                    " rt.COD AS CODIGO" +
-                    " FROM tb_restituicao_ferias rt" +
-                    " JOIN tb_terceirizado_contrato tc ON tc.cod = rt.cod_terceirizado_contrato" +
-                    " JOIN tb_funcao_terceirizado ft ON ft.cod_terceirizado_contrato = tc.cod" +
-                    " JOIN tb_terceirizado t ON t.cod = tc.cod_terceirizado" +
-                    " JOIN tb_contrato c ON c.cod = tc.cod_contrato" +
-                    " JOIN tb_tipo_restituicao tr ON tr.cod = rt.cod_tipo_restituicao" +
-                    " JOIN tb_historico_gestao_contrato hgc ON hgc.cod_contrato = c.cod" +
-                    " JOIN tb_usuario u ON u.cod = hgc.cod_usuario" +
-                    " JOIN tb_funcao_contrato fc ON fc.cod = ft.cod_funcao_contrato" +
-                    " JOIN tb_funcao f ON f.cod = fc.cod_funcao" +
-                    " WHERE tc.COD_CONTRATO = ? AND ((AUTORIZADO ='S' OR AUTORIZADO ='s') AND (RESTITUIDO IS NULL))";
+            List<CalculoPendenteRescisaoModel> lista = new ArrayList<>();
+            String sql = "SELECT rt.COD,\n" +
+                    "        rt.COD_TERCEIRIZADO_CONTRATO, \n" +
+                    "        u.nome, \n" +
+                    "        c.nome_empresa, \n" +
+                    "        c.numero_contrato, \n" +
+                    "        tr.nome, \n" +
+                    "        trr.TIPO_RESCISAO, \n" +
+                    "        t.nome, \n" +
+                    "        f.nome, \n" +
+                    "        rt.data_desligamento, \n" +
+                    "        rt.data_inicio_ferias, \n" +
+                    "        rt.data_fim_ferias, \n" +
+                    "        rt.data_inicio_ferias_prop, \n" +
+                    "        rt.data_fim_ferias_prop, \n" +
+                    "        rt.data_inicio_contagem_dec_ter,\n" +
+                    "        rt.valor_decimo_terceiro, \n" +
+                    "        rt.INCID_SUBMOD_4_1_DEC_TERCEIRO, \n" +
+                    "        rt.INCID_MULTA_FGTS_DEC_TERCEIRO, \n" +
+                    "        rt.VALOR_FERIAS, \n" +
+                    "        rt.VALOR_TERCO, \n" +
+                    "        rt.INCID_SUBMOD_4_1_FERIAS, \n" +
+                    "        rt.INCID_SUBMOD_4_1_TERCO,\n" +
+                    "        rt.INCID_MULTA_FGTS_FERIAS,\n" +
+                    "        rt.INCID_MULTA_FGTS_TERCO,\n" +
+                    "        rt.VALOR_FERIAS_PROP,\n" +
+                    "        rt.VALOR_TERCO_PROP,\n" +
+                    "        rt.INCID_SUBMOD_4_1_FERIAS_PROP,\n" +
+                    "        rt.INCID_SUBMOD_4_1_TERCO_PROP,\n" +
+                    "        rt.INCID_MULTA_FGTS_FERIAS_PROP,\n" +
+                    "        rt.INCID_MULTA_FGTS_TERCO_PROP,\n" +
+                    "        rt.MULTA_FGTS_SALARIO,\n" +
+                    "        rt.valor_decimo_terceiro + rt.INCID_SUBMOD_4_1_DEC_TERCEIRO + rt.INCID_MULTA_FGTS_DEC_TERCEIRO + rt.VALOR_FERIAS + rt.VALOR_TERCO + rt.INCID_SUBMOD_4_1_FERIAS + rt.INCID_SUBMOD_4_1_TERCO + rt.INCID_MULTA_FGTS_FERIAS + rt.INCID_MULTA_FGTS_TERCO + rt.VALOR_FERIAS_PROP + rt.VALOR_TERCO_PROP + rt.INCID_SUBMOD_4_1_FERIAS_PROP + rt.INCID_MULTA_FGTS_TERCO_PROP + rt.INCID_MULTA_FGTS_FERIAS_PROP + rt.INCID_MULTA_FGTS_TERCO_PROP + rt.MULTA_FGTS_SALARIO, \n" +
+                    "        rt.AUTORIZADO, \n" +
+                    "        rt.RESTITUIDO \n" +
+                    "   FROM tb_restituicao_rescisao rt \n" +
+                    "    JOIN tb_terceirizado_contrato tc ON tc.cod = rt.cod_terceirizado_contrato \n" +
+                    "    JOIN tb_funcao_terceirizado ft ON ft.cod_terceirizado_contrato = tc.cod \n" +
+                    "    JOIN tb_terceirizado t ON t.cod = tc.cod_terceirizado \n" +
+                    "    JOIN tb_contrato c ON c.cod = tc.cod_contrato \n" +
+                    "    JOIN tb_tipo_restituicao tr ON tr.cod = rt.cod_tipo_restituicao \n" +
+                    "    JOIN tb_tipo_rescisao trr ON trr.cod = rt.cod_tipo_rescisao \n" +
+                    "    JOIN tb_historico_gestao_contrato hgc ON hgc.cod_contrato = c.cod \n" +
+                    "    JOIN tb_usuario u ON u.cod = hgc.cod_usuario \n" +
+                    "    JOIN tb_funcao_contrato fc ON fc.cod = ft.cod_funcao_contrato \n" +
+                    "    JOIN tb_funcao f ON f.cod = fc.cod_funcao \n" +
+                    "   WHERE tc.COD_CONTRATO = ? AND (AUTORIZADO ='S' OR AUTORIZADO = 's') AND RESTITUIDO IS NULL";
             try(PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 preparedStatement.setInt(1, codigoContrato);
                 try (ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -390,25 +467,42 @@ public class RescisaoDAO {
                         if(autorizado.equals("S") && restituido == null) {
                             status = "Em Análise";
                         }
-                        CalcularFeriasModel calcularFeriasModel = new CalcularFeriasModel(resultSet.getInt("COD"),
-                                resultSet.getString("Tipo de restituição"),
-                                resultSet.getInt("Dias vendidos"),
-                                resultSet.getDate("Início do usufruto"),
-                                resultSet.getDate("Fim do usufruto"),
-                                resultSet.getDate("Início do período aquisitivo"),
-                                resultSet.getDate("Fim do período aquisitivo"),
+                        CalcularRescisaoModel calcularRescisaoModel = new CalcularRescisaoModel(resultSet.getInt(2),
+                                resultSet.getString(6),
+                                resultSet.getString(7),
+                                resultSet.getDate(10),
+                                resultSet.getDate(11),
+                                resultSet.getDate(12),
+                                resultSet.getDate(13),
+                                resultSet.getDate(14),
+                                resultSet.getDate(15),
                                 0,
-                                resultSet.getInt("PARCELA"),
-                                resultSet.getFloat("TOTAL"),
-                                resultSet.getFloat("Valor de férias"),
-                                resultSet.getFloat("Valor de 1/3"),
-                                resultSet.getFloat("Incidência sobre férias"),
-                                resultSet.getFloat("Incidência sobre 1/3"));
-                        CalculoPendenteModel calculoPendenteModel = new CalculoPendenteModel(resultSet.getInt("CODIGO"), calcularFeriasModel,
-                                resultSet.getString("Terceirizado"),
-                                resultSet.getString("Cargo"),
+                                0,
+                                0,
+                                resultSet.getFloat(16),
+                                resultSet.getFloat(17),
+                                resultSet.getFloat(18),
+                                resultSet.getFloat(19),
+                                resultSet.getFloat(20),
+                                resultSet.getFloat(21),
+                                resultSet.getFloat(22),
+                                resultSet.getFloat(23),
+                                resultSet.getFloat(24),
+                                resultSet.getFloat(25),
+                                resultSet.getFloat(26),
+                                resultSet.getFloat(27),
+                                resultSet.getFloat(28),
+                                resultSet.getFloat(29),
+                                resultSet.getFloat(30),
+                                resultSet.getFloat(31));
+
+
+                        CalculoPendenteRescisaoModel calculoPendenteModel = new CalculoPendenteRescisaoModel(resultSet.getInt(1),
+                                calcularRescisaoModel,
+                                resultSet.getString(8),
+                                resultSet.getString(9),
                                 status,
-                                resultSet.getFloat("Total"));
+                                resultSet.getFloat(32));
                         lista.add(calculoPendenteModel);
                     }
                 }
@@ -421,44 +515,57 @@ public class RescisaoDAO {
         }
     }
 
-    public List<CalculoPendenteModel> getCalculosNaoPendentesNegados(int codigoContrato, int codigoUsuario) {
+    public List<CalculoPendenteRescisaoModel> getCalculosNaoPendentesNegados(int codigoContrato, int codigoUsuario) {
         int codigoGestor = new UsuarioDAO(this.connection).verifyPermission(codigoUsuario, codigoContrato);
         int codGestor = new ContratoDAO(this.connection).codigoGestorContrato(codigoUsuario, codigoContrato);
         if(codigoGestor == codGestor) {
-            List<CalculoPendenteModel> lista = new ArrayList<>();
-            String sql = "SELECT rt.COD_TERCEIRIZADO_CONTRATO AS \"COD\"," +
-                    " u.nome AS \"Gestor\"," +
-                    " c.nome_empresa AS \"Empresa\"," +
-                    " c.numero_contrato AS \"Contrato N°\"," +
-                    " tr.nome AS \"Tipo de restituição\"," +
-                    " t.nome AS \"Terceirizado\"," +
-                    " f.nome AS \"Cargo\"," +
-                    " rt.data_inicio_periodo_aquisitivo AS \"Início do período aquisitivo\"," +
-                    " rt.data_fim_periodo_aquisitivo AS \"Fim do período aquisitivo\"," +
-                    " rt.data_inicio_usufruto AS \"Início do usufruto\"," +
-                    " rt.data_fim_usufruto AS \"Fim do usufruto\"," +
-                    " rt.dias_vendidos AS \"Dias vendidos\"," +
-                    " rt.parcela AS \"PARCELA\"," +
-                    " rt.valor_ferias AS \"Valor de férias\"," +
-                    " rt.valor_terco_constitucional AS \"Valor de 1/3\"," +
-                    " rt.incid_submod_4_1_ferias AS \"Incidência sobre férias\"," +
-                    " rt.incid_submod_4_1_terco AS \"Incidência sobre 1/3\"," +
-                    " rt.valor_ferias + rt.valor_terco_constitucional + rt.incid_submod_4_1_ferias + rt.incid_submod_4_1_terco AS \"Total\"," +
-                    " rt.AUTORIZADO," +
-                    " rt.RESTITUIDO," +
-                    " rt.COD AS CODIGO," +
-                    " rt.OBSERVACAO" +
-                    " FROM tb_restituicao_ferias rt" +
-                    " JOIN tb_terceirizado_contrato tc ON tc.cod = rt.cod_terceirizado_contrato" +
-                    " JOIN tb_funcao_terceirizado ft ON ft.cod_terceirizado_contrato = tc.cod" +
-                    " JOIN tb_terceirizado t ON t.cod = tc.cod_terceirizado" +
-                    " JOIN tb_contrato c ON c.cod = tc.cod_contrato" +
-                    " JOIN tb_tipo_restituicao tr ON tr.cod = rt.cod_tipo_restituicao" +
-                    " JOIN tb_historico_gestao_contrato hgc ON hgc.cod_contrato = c.cod" +
-                    " JOIN tb_usuario u ON u.cod = hgc.cod_usuario" +
-                    " JOIN tb_funcao_contrato fc ON fc.cod = ft.cod_funcao_contrato" +
-                    " JOIN tb_funcao f ON f.cod = fc.cod_funcao" +
-                    " WHERE tc.COD_CONTRATO = ? AND ((AUTORIZADO ='S' OR AUTORIZADO ='s') AND (RESTITUIDO = 'N' OR RESTITUIDO='n'))";
+            List<CalculoPendenteRescisaoModel> lista = new ArrayList<>();
+            String sql = "SELECT rt.COD,\n" +
+                    "        rt.COD_TERCEIRIZADO_CONTRATO, \n" +
+                    "        u.nome, \n" +
+                    "        c.nome_empresa, \n" +
+                    "        c.numero_contrato, \n" +
+                    "        tr.nome, \n" +
+                    "        trr.TIPO_RESCISAO, \n" +
+                    "        t.nome, \n" +
+                    "        f.nome, \n" +
+                    "        rt.data_desligamento, \n" +
+                    "        rt.data_inicio_ferias, \n" +
+                    "        rt.data_fim_ferias, \n" +
+                    "        rt.data_inicio_ferias_prop, \n" +
+                    "        rt.data_fim_ferias_prop, \n" +
+                    "        rt.data_inicio_contagem_dec_ter,\n" +
+                    "        rt.valor_decimo_terceiro, \n" +
+                    "        rt.INCID_SUBMOD_4_1_DEC_TERCEIRO, \n" +
+                    "        rt.INCID_MULTA_FGTS_DEC_TERCEIRO, \n" +
+                    "        rt.VALOR_FERIAS, \n" +
+                    "        rt.VALOR_TERCO, \n" +
+                    "        rt.INCID_SUBMOD_4_1_FERIAS, \n" +
+                    "        rt.INCID_SUBMOD_4_1_TERCO,\n" +
+                    "        rt.INCID_MULTA_FGTS_FERIAS,\n" +
+                    "        rt.INCID_MULTA_FGTS_TERCO,\n" +
+                    "        rt.VALOR_FERIAS_PROP,\n" +
+                    "        rt.VALOR_TERCO_PROP,\n" +
+                    "        rt.INCID_SUBMOD_4_1_FERIAS_PROP,\n" +
+                    "        rt.INCID_SUBMOD_4_1_TERCO_PROP,\n" +
+                    "        rt.INCID_MULTA_FGTS_FERIAS_PROP,\n" +
+                    "        rt.INCID_MULTA_FGTS_TERCO_PROP,\n" +
+                    "        rt.MULTA_FGTS_SALARIO,\n" +
+                    "        rt.valor_decimo_terceiro + rt.INCID_SUBMOD_4_1_DEC_TERCEIRO + rt.INCID_MULTA_FGTS_DEC_TERCEIRO + rt.VALOR_FERIAS + rt.VALOR_TERCO + rt.INCID_SUBMOD_4_1_FERIAS + rt.INCID_SUBMOD_4_1_TERCO + rt.INCID_MULTA_FGTS_FERIAS + rt.INCID_MULTA_FGTS_TERCO + rt.VALOR_FERIAS_PROP + rt.VALOR_TERCO_PROP + rt.INCID_SUBMOD_4_1_FERIAS_PROP + rt.INCID_MULTA_FGTS_TERCO_PROP + rt.INCID_MULTA_FGTS_FERIAS_PROP + rt.INCID_MULTA_FGTS_TERCO_PROP + rt.MULTA_FGTS_SALARIO, \n" +
+                    "        rt.AUTORIZADO, \n" +
+                    "        rt.RESTITUIDO \n" +
+                    "   FROM tb_restituicao_rescisao rt \n" +
+                    "    JOIN tb_terceirizado_contrato tc ON tc.cod = rt.cod_terceirizado_contrato \n" +
+                    "    JOIN tb_funcao_terceirizado ft ON ft.cod_terceirizado_contrato = tc.cod \n" +
+                    "    JOIN tb_terceirizado t ON t.cod = tc.cod_terceirizado \n" +
+                    "    JOIN tb_contrato c ON c.cod = tc.cod_contrato \n" +
+                    "    JOIN tb_tipo_restituicao tr ON tr.cod = rt.cod_tipo_restituicao \n" +
+                    "    JOIN tb_tipo_rescisao trr ON trr.cod = rt.cod_tipo_rescisao \n" +
+                    "    JOIN tb_historico_gestao_contrato hgc ON hgc.cod_contrato = c.cod \n" +
+                    "    JOIN tb_usuario u ON u.cod = hgc.cod_usuario \n" +
+                    "    JOIN tb_funcao_contrato fc ON fc.cod = ft.cod_funcao_contrato \n" +
+                    "    JOIN tb_funcao f ON f.cod = fc.cod_funcao \n" +
+                    "   WHERE tc.COD_CONTRATO = ? AND (AUTORIZADO ='S' OR AUTORIZADO = 's') AND (RESTITUIDO = 'N' OR RESTITUIDO='n')";
             try(PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 preparedStatement.setInt(1, codigoContrato);
                 try (ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -481,25 +588,42 @@ public class RescisaoDAO {
                         }else if(restituido.equals("N")){
                             status = "NEGADO";
                         }
-                        CalcularFeriasModel calcularFeriasModel = new CalcularFeriasModel(resultSet.getInt("COD"),
-                                resultSet.getString("Tipo de restituição"),
-                                resultSet.getInt("Dias vendidos"),
-                                resultSet.getDate("Início do usufruto"),
-                                resultSet.getDate("Fim do usufruto"),
-                                resultSet.getDate("Início do período aquisitivo"),
-                                resultSet.getDate("Fim do período aquisitivo"),
+                        CalcularRescisaoModel calcularRescisaoModel = new CalcularRescisaoModel(resultSet.getInt(2),
+                                resultSet.getString(6),
+                                resultSet.getString(7),
+                                resultSet.getDate(10),
+                                resultSet.getDate(11),
+                                resultSet.getDate(12),
+                                resultSet.getDate(13),
+                                resultSet.getDate(14),
+                                resultSet.getDate(15),
                                 0,
-                                resultSet.getInt("PARCELA"),
-                                resultSet.getFloat("TOTAL"),
-                                resultSet.getFloat("Valor de férias"),
-                                resultSet.getFloat("Valor de 1/3"),
-                                resultSet.getFloat("Incidência sobre férias"),
-                                resultSet.getFloat("Incidência sobre 1/3"));
-                        CalculoPendenteModel calculoPendenteModel = new CalculoPendenteModel(resultSet.getInt("CODIGO"), calcularFeriasModel,
-                                resultSet.getString("Terceirizado"),
-                                resultSet.getString("Cargo"),
+                                0,
+                                0,
+                                resultSet.getFloat(16),
+                                resultSet.getFloat(17),
+                                resultSet.getFloat(18),
+                                resultSet.getFloat(19),
+                                resultSet.getFloat(20),
+                                resultSet.getFloat(21),
+                                resultSet.getFloat(22),
+                                resultSet.getFloat(23),
+                                resultSet.getFloat(24),
+                                resultSet.getFloat(25),
+                                resultSet.getFloat(26),
+                                resultSet.getFloat(27),
+                                resultSet.getFloat(28),
+                                resultSet.getFloat(29),
+                                resultSet.getFloat(30),
+                                resultSet.getFloat(31));
+
+
+                        CalculoPendenteRescisaoModel calculoPendenteModel = new CalculoPendenteRescisaoModel(resultSet.getInt(1),
+                                calcularRescisaoModel,
+                                resultSet.getString(8),
+                                resultSet.getString(9),
                                 status,
-                                resultSet.getFloat("Total"));
+                                resultSet.getFloat(32));
                         calculoPendenteModel.setObservacoes(resultSet.getString("OBSERVACAO"));
                         lista.add(calculoPendenteModel);
                     }
