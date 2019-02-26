@@ -663,7 +663,7 @@ public class RescisaoDAO {
     }
 
     public boolean salvarExecucaoRescisao(AvaliacaoRescisao avaliacaoRescisao) {
-        String sql = "UPDATE tb_restituicao_ferias" +
+        String sql = "UPDATE tb_restituicao_rescisao" +
                 " SET " +
                 " RESTITUIDO = ?," +
                 " OBSERVACAO = ?," +
@@ -672,10 +672,10 @@ public class RescisaoDAO {
                 " WHERE COD = ?";
         try(PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             for (CalculoPendenteRescisaoModel calculoPendenteModel : avaliacaoRescisao.getCalculosAvaliados()) {
-                preparedStatement.setString(11,calculoPendenteModel.getStatus());
-                preparedStatement.setString(12, calculoPendenteModel.getObservacoes());
-                preparedStatement.setString(13, avaliacaoRescisao.getUser().getUsername().toUpperCase());
-                preparedStatement.setInt(14, calculoPendenteModel.getCod());
+                preparedStatement.setString(1,calculoPendenteModel.getStatus());
+                preparedStatement.setString(2, calculoPendenteModel.getObservacoes());
+                preparedStatement.setString(3, avaliacaoRescisao.getUser().getUsername().toUpperCase());
+                preparedStatement.setInt(4, calculoPendenteModel.getCod());
                 preparedStatement.executeUpdate();
             }
         }catch (SQLException sqle) {

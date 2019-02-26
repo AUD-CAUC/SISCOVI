@@ -151,7 +151,7 @@ public class RescisaoController {
         String json = "";
         try {
             JsonArray jsonArray = new JsonArray();
-            List<ContratoModel> contratos = new ContratoDAO(connectSQLServer.dbConnect()).getCodigosContratosCalculosPendentes(codigoUsuario, 1);
+            List<ContratoModel> contratos = new ContratoDAO(connectSQLServer.dbConnect()).getCodigosContratosCalculosPendentes(codigoUsuario, 3);
             for (ContratoModel contrato : contratos) {
                 jsonArray.add(CalculosPendentesRescisaoHelper.formataCalculosPendentes(contrato, gson, rescisaoDAO,
                               codigoUsuario, 1));
@@ -174,7 +174,7 @@ public class RescisaoController {
         String json = "";
         try {
             JsonArray jsonArray = new JsonArray();
-            List<ContratoModel> contratos = new ContratoDAO(connectSQLServer.dbConnect()).getCodigosContratosCalculosPendentesNegados(codigoUsuario, 1);
+            List<ContratoModel> contratos = new ContratoDAO(connectSQLServer.dbConnect()).getCodigosContratosCalculosPendentesNegados(codigoUsuario, 3);
             for (ContratoModel contrato : contratos) {
                 jsonArray.add(CalculosPendentesRescisaoHelper.formataCalculosPendentes(contrato, gson, rescisaoDAO, codigoUsuario, 2));
             }
@@ -196,8 +196,7 @@ public class RescisaoController {
         String json = "";
         try {
             JsonArray jsonArray = new JsonArray();
-            List<ContratoModel> contratos = new ContratoDAO(connectSQLServer.dbConnect())
-                    .getContratosCalculosPendentesExecucao(codigoUsuario, 1);
+            List<ContratoModel> contratos = new ContratoDAO(connectSQLServer.dbConnect()).getContratosCalculosPendentesExecucao(codigoUsuario, 3);
             for(ContratoModel contrato : contratos){
                 jsonArray.add(CalculosPendentesRescisaoHelper.formataCalculosPendentes(contrato, gson, rescisaoDAO,
                         codigoUsuario, 3));
@@ -243,7 +242,7 @@ public class RescisaoController {
         String json = null;
         try {
             List<ContratoModel> contratos = new ContratoDAO(connectSQLServer.dbConnect())
-                    .getCodigosContratosCalculosNaoPendentesNegados(codigoUsuario, 1);
+                    .getCodigosContratosCalculosNaoPendentesNegados(codigoUsuario, 3);
             JsonArray jsonArray = new JsonArray();
             for(ContratoModel contrato : contratos) {
                 jsonArray.add(CalculosPendentesRescisaoHelper.formataCalculosPendentes(contrato, gson, rescisaoDAO,

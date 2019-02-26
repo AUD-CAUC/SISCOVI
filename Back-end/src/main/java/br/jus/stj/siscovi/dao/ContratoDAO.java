@@ -524,6 +524,7 @@ public class ContratoDAO {
         /*
             vCalculo: 1 - Férias
                       2 - Décimo Terceiro
+                      3 - Rescisão
          */
         List<ContratoModel> contratos = new ArrayList<>();
         String sql = "";
@@ -542,6 +543,12 @@ public class ContratoDAO {
                         " JOIN TB_CONTRATO C ON C.COD=TC.COD_CONTRATO" +
                         " WHERE RDT.AUTORIZADO IS NULL";
             }
+            if(vCalculo == 3) {
+                sql = "SELECT DISTINCT C.COD, C.CNPJ, C.NOME_EMPRESA, C.NUMERO_CONTRATO, C.NUMERO_PROCESSO_STJ FROM tb_restituicao_rescisao RR" +
+                        " JOIN TB_TERCEIRIZADO_CONTRATO TC ON TC.COD=RR.COD_TERCEIRIZADO_CONTRATO" +
+                        " JOIN TB_CONTRATO C ON C.COD=TC.COD_CONTRATO" +
+                        " WHERE RR.AUTORIZADO IS NULL";
+            }
         }else {
             if(vCalculo == 1) {
                 sql = "SELECT DISTINCT C.COD, C.CNPJ, C.NOME_EMPRESA, C.NUMERO_CONTRATO, C.NUMERO_PROCESSO_STJ FROM tb_restituicao_ferias RF" +
@@ -557,6 +564,14 @@ public class ContratoDAO {
                         " JOIN TB_CONTRATO C ON C.COD=TC.COD_CONTRATO" +
                         " JOIN tb_historico_gestao_contrato HGC ON HGC.COD_CONTRATO=C.COD" +
                         " WHERE RDT.AUTORIZADO IS NULL AND HGC.COD_CONTRATO=?";
+            }
+
+            if(vCalculo == 3) {
+                sql = "SELECT DISTINCT C.COD, C.CNPJ, C.NOME_EMPRESA, C.NUMERO_CONTRATO, C.NUMERO_PROCESSO_STJ FROM tb_restituicao_rescisao RR" +
+                        " JOIN TB_TERCEIRIZADO_CONTRATO TC ON TC.COD=RR.COD_TERCEIRIZADO_CONTRATO" +
+                        " JOIN TB_CONTRATO C ON C.COD=TC.COD_CONTRATO" +
+                        " JOIN tb_historico_gestao_contrato HGC ON HGC.COD_CONTRATO=C.COD" +
+                        " WHERE RR.AUTORIZADO IS NULL AND HGC.COD_CONTRATO=?";
             }
         }
 
@@ -586,6 +601,7 @@ public class ContratoDAO {
         /*
             vCalculo: 1 - Férias
                       2 - Décimo Terceiro
+                      3 - Rescisão
          */
         List<ContratoModel> contratos = new ArrayList<>();
         String sql = "";
@@ -605,6 +621,13 @@ public class ContratoDAO {
                         " JOIN TB_CONTRATO C ON C.COD=TC.COD_CONTRATO" +
                         " WHERE ((AUTORIZADO ='S' OR AUTORIZADO ='s') AND (RESTITUIDO IS NULL))";
             }
+
+            if(vCalculo == 3) {
+                sql = "SELECT DISTINCT C.COD, C.CNPJ, C.NOME_EMPRESA, C.NUMERO_CONTRATO, C.NUMERO_PROCESSO_STJ FROM tb_restituicao_rescisao RR" +
+                        " JOIN TB_TERCEIRIZADO_CONTRATO TC ON TC.COD=RR.COD_TERCEIRIZADO_CONTRATO" +
+                        " JOIN TB_CONTRATO C ON C.COD=TC.COD_CONTRATO" +
+                        " WHERE ((AUTORIZADO ='S' OR AUTORIZADO ='s') AND (RESTITUIDO IS NULL))";
+            }
         }else {
             if(vCalculo == 1) {
                 sql = "SELECT DISTINCT C.COD, C.CNPJ, C.NOME_EMPRESA, C.NUMERO_CONTRATO, C.NUMERO_PROCESSO_STJ FROM tb_restituicao_ferias RF" +
@@ -617,6 +640,14 @@ public class ContratoDAO {
             if(vCalculo == 2) {
                 sql = "SELECT DISTINCT C.COD, C.CNPJ, C.NOME_EMPRESA, C.NUMERO_CONTRATO, C.NUMERO_PROCESSO_STJ FROM tb_restituicao_decimo_terceiro RDT" +
                         " JOIN TB_TERCEIRIZADO_CONTRATO TC ON TC.COD=RDT.COD_TERCEIRIZADO_CONTRATO" +
+                        " JOIN TB_CONTRATO C ON C.COD=TC.COD_CONTRATO" +
+                        " JOIN tb_historico_gestao_contrato HGC ON HGC.COD_CONTRATO=C.COD" +
+                        " WHERE ((AUTORIZADO ='S' OR AUTORIZADO ='s') AND (RESTITUIDO IS NULL)) AND HGC.COD_USUARIO = ?";
+            }
+
+            if(vCalculo == 3) {
+                sql = "SELECT DISTINCT C.COD, C.CNPJ, C.NOME_EMPRESA, C.NUMERO_CONTRATO, C.NUMERO_PROCESSO_STJ FROM tb_restituicao_rescisao RR" +
+                        " JOIN TB_TERCEIRIZADO_CONTRATO TC ON TC.COD=RR.COD_TERCEIRIZADO_CONTRATO" +
                         " JOIN TB_CONTRATO C ON C.COD=TC.COD_CONTRATO" +
                         " JOIN tb_historico_gestao_contrato HGC ON HGC.COD_CONTRATO=C.COD" +
                         " WHERE ((AUTORIZADO ='S' OR AUTORIZADO ='s') AND (RESTITUIDO IS NULL)) AND HGC.COD_USUARIO = ?";
@@ -646,6 +677,7 @@ public class ContratoDAO {
         /*
             vCalcuo: 1 - Ferias
                      2 - Décimo Terceiro
+                     3 - Rescisão
          */
         List<ContratoModel> contratos = new ArrayList<>();
         String sql = "";
@@ -663,6 +695,12 @@ public class ContratoDAO {
                         " JOIN TB_CONTRATO C ON C.COD=TC.COD_CONTRATO" +
                         " WHERE (AUTORIZADO='N' OR AUTORIZADO='n')";
             }
+            if(vCalculo == 3) {
+                sql = "SELECT DISTINCT C.COD, C.CNPJ, C.NOME_EMPRESA, C.NUMERO_CONTRATO, C.NUMERO_PROCESSO_STJ FROM tb_restituicaorescisao RR" +
+                        " JOIN TB_TERCEIRIZADO_CONTRATO TC ON TC.COD=RR.COD_TERCEIRIZADO_CONTRATO" +
+                        " JOIN TB_CONTRATO C ON C.COD=TC.COD_CONTRATO" +
+                        " WHERE (AUTORIZADO='N' OR AUTORIZADO='n')";
+            }
         }else {
             if(vCalculo == 1) {
                 sql = "SELECT DISTINCT C.COD, C.CNPJ, C.NOME_EMPRESA, C.NUMERO_CONTRATO, C.NUMERO_PROCESSO_STJ FROM tb_restituicao_ferias RF" +
@@ -674,6 +712,13 @@ public class ContratoDAO {
             if(vCalculo == 2){
                 sql = "SELECT DISTINCT C.COD, C.CNPJ, C.NOME_EMPRESA, C.NUMERO_CONTRATO, C.NUMERO_PROCESSO_STJ FROM tb_restituicao_decimo_terceiro RDT" +
                         " JOIN TB_TERCEIRIZADO_CONTRATO TC ON TC.COD=RDT.COD_TERCEIRIZADO_CONTRATO" +
+                        " JOIN TB_CONTRATO C ON C.COD=TC.COD_CONTRATO" +
+                        " JOIN tb_historico_gestao_contrato HGC ON HGC.COD_CONTRATO=C.COD" +
+                        " WHERE (AUTORIZADO='N' OR AUTORIZADO='n') AND HGC.COD_USUARIO = ?";
+            }
+            if(vCalculo == 3){
+                sql = "SELECT DISTINCT C.COD, C.CNPJ, C.NOME_EMPRESA, C.NUMERO_CONTRATO, C.NUMERO_PROCESSO_STJ FROM tb_restituicao_rescisao RR" +
+                        " JOIN TB_TERCEIRIZADO_CONTRATO TC ON TC.COD=RR.COD_TERCEIRIZADO_CONTRATO" +
                         " JOIN TB_CONTRATO C ON C.COD=TC.COD_CONTRATO" +
                         " JOIN tb_historico_gestao_contrato HGC ON HGC.COD_CONTRATO=C.COD" +
                         " WHERE (AUTORIZADO='N' OR AUTORIZADO='n') AND HGC.COD_USUARIO = ?";
@@ -707,6 +752,7 @@ public class ContratoDAO {
         /*
             vCalculo: 1 - Ferias
                       2 - Décimo Terceiro
+                      3 - Rescisão
          */
         List<ContratoModel> contratos = new ArrayList<>();
         String sql = "";
@@ -725,6 +771,13 @@ public class ContratoDAO {
                         " JOIN TB_CONTRATO C ON C.COD=TC.COD_CONTRATO" +
                         " WHERE ((AUTORIZADO ='S' OR AUTORIZADO ='s') AND (RESTITUIDO = 'N' OR RESTITUIDO='n'))";
             }
+
+            if(vCalculo == 3) {
+                sql = "SELECT DISTINCT C.COD, C.CNPJ, C.NOME_EMPRESA, C.NUMERO_CONTRATO, C.NUMERO_PROCESSO_STJ FROM tb_restituicao_rescisao RR" +
+                        " JOIN TB_TERCEIRIZADO_CONTRATO TC ON TC.COD=RR.COD_TERCEIRIZADO_CONTRATO" +
+                        " JOIN TB_CONTRATO C ON C.COD=TC.COD_CONTRATO" +
+                        " WHERE ((AUTORIZADO ='S' OR AUTORIZADO ='s') AND (RESTITUIDO = 'N' OR RESTITUIDO='n'))";
+            }
         }else {
 
             if(vCalculo == 1) {
@@ -739,6 +792,15 @@ public class ContratoDAO {
 
                 sql = "SELECT DISTINCT C.COD, C.CNPJ, C.NOME_EMPRESA, C.NUMERO_CONTRATO, C.NUMERO_PROCESSO_STJ FROM tb_restituicao_decimo_terceiro RDT" +
                         " JOIN TB_TERCEIRIZADO_CONTRATO TC ON TC.COD=RDT.COD_TERCEIRIZADO_CONTRATO" +
+                        " JOIN TB_CONTRATO C ON C.COD=TC.COD_CONTRATO" +
+                        " JOIN tb_historico_gestao_contrato HGC ON HGC.COD_CONTRATO=C.COD" +
+                        " WHERE ((AUTORIZADO ='S' OR AUTORIZADO ='s') AND (RESTITUIDO = 'N' OR RESTITUIDO='n')) AND HGC.COD_USUARIO = ?";
+            }
+
+            if(vCalculo == 3) {
+
+                sql = "SELECT DISTINCT C.COD, C.CNPJ, C.NOME_EMPRESA, C.NUMERO_CONTRATO, C.NUMERO_PROCESSO_STJ FROM tb_restituicao_rescisao RR" +
+                        " JOIN TB_TERCEIRIZADO_CONTRATO TC ON TC.COD=RR.COD_TERCEIRIZADO_CONTRATO" +
                         " JOIN TB_CONTRATO C ON C.COD=TC.COD_CONTRATO" +
                         " JOIN tb_historico_gestao_contrato HGC ON HGC.COD_CONTRATO=C.COD" +
                         " WHERE ((AUTORIZADO ='S' OR AUTORIZADO ='s') AND (RESTITUIDO = 'N' OR RESTITUIDO='n')) AND HGC.COD_USUARIO = ?";
