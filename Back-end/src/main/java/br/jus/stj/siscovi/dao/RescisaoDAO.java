@@ -1,6 +1,7 @@
 package br.jus.stj.siscovi.dao;
 
 import br.jus.stj.siscovi.calculos.Ferias;
+import br.jus.stj.siscovi.model.AvaliacaoRescisao;
 import br.jus.stj.siscovi.model.CalcularRescisaoModel;
 import br.jus.stj.siscovi.model.CalculoPendenteRescisaoModel;
 import br.jus.stj.siscovi.model.TerceirizadoRescisao;
@@ -635,5 +636,51 @@ public class RescisaoDAO {
         }else {
             throw new NullPointerException("A operação foi negada ! Este usuário não tem permissão para realizar esta operação.");
         }
+    }
+
+    public boolean salvaAvaliacaoCalculosRescisao(AvaliacaoRescisao avaliacaoRescisao) {
+        String sql = "UPDATE tb_restituicao_rescisao" +
+                " SET " +
+                " AUTORIZADO = ?," +
+                " OBSERVACAO = ?," +
+                " LOGIN_ATUALIZACAO = ?," +
+                " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
+                " WHERE COD_TERCEIRIZADO_CONTRATO = ? AND COD = ?";
+        try(PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            for (CalculoPendenteRescisaoModel calculoPendenteModel : avaliacaoRescisao.getCalculosAvaliados()) {
+                int i = 1;
+                preparedStatement.setString(i++,calculoPendenteModel.getStatus());
+                preparedStatement.setString(i++, calculoPendenteModel.getObservacoes());
+                preparedStatement.setString(i++, avaliacaoRescisao.getUser().getUsername().toUpperCase());
+                preparedStatement.setInt(i++, calculoPendenteModel.getCalcularFeriasModel().getCodTerceirizadoContrato());
+                preparedStatement.setInt(i++, calculoPendenteModel.getCod());
+                preparedStatement.executeUpdate();
+            }
+        }catch (SQLException sqle) {
+
+        }
+        return true;
+    }
+
+    public boolean salvarExecucaoRescisao(AvaliacaoRescisao avaliacaoRescisao) {
+        String sql = "UPDATE tb_restituicao_ferias" +
+                " SET " +
+                " RESTITUIDO = ?," +
+                " OBSERVACAO = ?," +
+                " LOGIN_ATUALIZACAO = ?," +
+                " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
+                " WHERE COD = ?";
+        try(PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            for (CalculoPendenteRescisaoModel calculoPendenteModel : avaliacaoRescisao.getCalculosAvaliados()) {
+                preparedStatement.setString(11,calculoPendenteModel.getStatus());
+                preparedStatement.setString(12, calculoPendenteModel.getObservacoes());
+                preparedStatement.setString(13, avaliacaoRescisao.getUser().getUsername().toUpperCase());
+                preparedStatement.setInt(14, calculoPendenteModel.getCod());
+                preparedStatement.executeUpdate();
+            }
+        }catch (SQLException sqle) {
+
+        }
+        return true;
     }
 }

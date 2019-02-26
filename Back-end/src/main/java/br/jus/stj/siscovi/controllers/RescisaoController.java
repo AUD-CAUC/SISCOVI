@@ -155,8 +155,6 @@ public class RescisaoController {
             for (ContratoModel contrato : contratos) {
                 jsonArray.add(CalculosPendentesRescisaoHelper.formataCalculosPendentes(contrato, gson, rescisaoDAO,
                               codigoUsuario, 1));
-                //JsonArray ja = new JSONArray(rescisaoDAO.getCalculosPendentes(contrato.getCodigo(), codigoUsuario));
-                //jsonObject.addProperty("calculosPendentes", rescisaoDAO.getCalculosPendentes(contrato.getCodigo(), codigoUsuario));
             }
             json = gson.toJson(jsonArray);
             connectSQLServer.dbConnect().close();
@@ -209,6 +207,77 @@ public class RescisaoController {
         } catch (Exception ex) {
             json = gson.toJson(ErrorMessage.handleError(ex));
             return Response.status(Response.Status.BAD_REQUEST).entity(json).build();
+        }
+        return Response.ok(json, MediaType.APPLICATION_JSON).build();
+    }
+    @PUT
+    @Path("/salvarRescisoesAvaliadas")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response salvarRescisoesAvaliadas(String object) {
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+        List<AvaliacaoRescisao> avaliacoesRescisao = gson.fromJson(object, new TypeToken<List<AvaliacaoRescisao>>() {
+        }.getType());
+        ConnectSQLServer connectSQLServer = new ConnectSQLServer();
+        RescisaoDAO rescisaoDAO = new RescisaoDAO(connectSQLServer.dbConnect());
+        String json = "";
+        try {
+            for (AvaliacaoRescisao avaliacaoRescisao : avaliacoesRescisao) {
+                rescisaoDAO.salvaAvaliacaoCalculosRescisao(avaliacaoRescisao);
+            }
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("success", true);
+            json = gson.toJson(jsonObject);
+        } catch (Exception ex) {
+            json = gson.toJson(ErrorMessage.handleError(ex));
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(json).build();
+        }
+        return Response.ok(json, MediaType.APPLICATION_JSON).build();
+    }
+    @GET
+    @Path("/getCalculosNaoPendentesNegados/{codigoUsuario}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getCalculosNaoPendentesNegados(@PathParam("codigoUsuario") int codigoUsuario) {
+        ConnectSQLServer connectSQLServer = new ConnectSQLServer();
+        RescisaoDAO rescisaoDAO = new RescisaoDAO(connectSQLServer.dbConnect());
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+        String json = null;
+        try {
+            List<ContratoModel> contratos = new ContratoDAO(connectSQLServer.dbConnect())
+                    .getCodigosContratosCalculosNaoPendentesNegados(codigoUsuario, 1);
+            JsonArray jsonArray = new JsonArray();
+            for(ContratoModel contrato : contratos) {
+                jsonArray.add(CalculosPendentesRescisaoHelper.formataCalculosPendentes(contrato, gson, rescisaoDAO,
+                        codigoUsuario, 4));
+            }
+            json = gson.toJson(jsonArray);
+            connectSQLServer.dbConnect().close();
+        } catch (Exception ex){
+            json = gson.toJson(ErrorMessage.handleError(ex));
+            return Response.status(Response.Status.BAD_REQUEST).entity(json).build();
+        }
+        return Response.ok(json, MediaType.APPLICATION_JSON).build();
+    }
+    @PUT
+    @Path("/salvarExecucaoRescisao")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response salvarExecucaoRescisao(String object) {
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+        List<AvaliacaoRescisao> avaliacoesRescisao = gson.fromJson(object, new TypeToken<List<AvaliacaoRescisao>>() {
+        }.getType());
+        ConnectSQLServer connectSQLServer = new ConnectSQLServer();
+        RescisaoDAO rescisaoDAO = new RescisaoDAO(connectSQLServer.dbConnect());
+        String json;
+        try{
+            for(AvaliacaoRescisao avaliacaoRescisao : avaliacoesRescisao) {
+                rescisaoDAO.salvarExecucaoRescisao(avaliacaoRescisao);
+            }
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("success", true);
+            json = gson.toJson(jsonObject);
+            connectSQLServer.dbConnect().close();
+        }catch (Exception ex) {
+            json = gson.toJson(ErrorMessage.handleError(ex));
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(json).build();
         }
         return Response.ok(json, MediaType.APPLICATION_JSON).build();
     }
