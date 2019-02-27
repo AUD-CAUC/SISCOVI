@@ -194,4 +194,32 @@ public class CargoController {
         String json = gson.toJson(jsonObject);
         return Response.ok(json).build();
     }
+
+    @POST
+    @Path("/desligarTerceirizado/{codigoContrato}/{username}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response desligarTerceirizado(String object, @PathParam("codigoContrato") int codigoContrato, @PathParam("username") String username) {
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+        List<CargosFuncionariosModel> listaFuncionariosDesligamento = gson.fromJson(object, new TypeToken<List<CargosFuncionariosModel>>() {
+    }.getType());
+        ConnectSQLServer connectSQLServer = new ConnectSQLServer();
+        CargoDAO cargoDAO = new CargoDAO(connectSQLServer.dbConnect());
+        try {
+            for (CargosFuncionariosModel cfm : listaFuncionariosDesligamento) {
+                if (!cargoDAO.desligaTerceirizado(codigoContrato, cfm.getFuncionario().getCodigo(), cfm.getFuncao().getCodigo(), cfm.getDataDesligamento(), username)) {
+                    ErrorMessage errorMessage = new ErrorMessage();
+                    errorMessage.error = "Erro ao tentar desligar um terceirizado. Entre em contato com o administrador do sistema";
+                    return Response.ok(gson.toJson(errorMessage)).build();
+                }
+            }
+            connectSQLServer.dbConnect().close();
+        } catch (Exception ex) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(gson.toJson(ErrorMessage.handleError(ex))).build();
+        }
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("success", "As alterações foram feitas com sucesso");
+        String json = gson.toJson(jsonObject);
+        return Response.ok(json).build();
+    }
 }
