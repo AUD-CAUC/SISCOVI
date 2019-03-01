@@ -1,5 +1,0 @@
-<?xml version = '1.0' encoding = 'UTF-8'?>
-<oracle.dbtools.crest.model.design.relational.RelationalDesign>
-   <object objectType="main_view" objectID="" name="SISCOVI" visible="false"/>
-   <object objectType="sub_view" objectID="37924C61-13ED-FDEF-6266-696B5D2F6BC2" name="SISCOVI - Modelo de Dados" visible="true"/>
-</oracle.dbtools.crest.model.design.relational.RelationalDesign>
