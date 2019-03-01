@@ -440,10 +440,10 @@ public class RestituicaoRescisao {
                     /*Seleciona as datas que compõem os subperíodos gerados pelas alterações de remuneração no mês.*/
 
                     List<Date> datas = consulta.RetornaSubperiodosMesRemuneracao(vCodContrato,
-                            vMes,
-                            vAno,
-                            tupla.getCodFuncaoContrato(),
-                            vDataReferencia);
+                                                                                 vMes,
+                                                                                 vAno,
+                                                                                 tupla.getCodFuncaoContrato(),
+                                                                                 vDataReferencia);
 
                     /*Loop contendo das datas das alterações de remuneração que comporão os subperíodos.*/
 

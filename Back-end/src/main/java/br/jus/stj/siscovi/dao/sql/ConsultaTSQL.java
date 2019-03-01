@@ -766,7 +766,7 @@ public class ConsultaTSQL {
                     " EOMONTH(CONVERT(DATE, CONCAT('28/' , ? , '/' ,?), 103))" +
                     " ELSE" + " CONVERT(DATE, CONCAT('30/' , ? , '/' ,?), 103) END AS data" +
                     " EXCEPT" +
-                    " SELECT CASE WHEN DAY(EOMONTH(CONVERT(DATE, CONCAT('30/' , ? , '/' ,?), 103))) = 31 THEN" +
+                    " SELECT CASE WHEN DAY(EOMONTH(CONVERT(DATE, CONCAT('01/' , ? , '/' ,?), 103))) = 31 THEN" +
                     " CONVERT(DATE, CONCAT('31/' , ? , '/' ,?), 103)" +
                     " ELSE" + " NULL END AS data" +
                     " ORDER BY data ASC");
@@ -855,7 +855,7 @@ public class ConsultaTSQL {
                     " ELSE" +
                     " CONVERT(DATE, CONCAT('30/' , ? , '/' ,?), 103) END AS data" +
                     " EXCEPT" +
-                    " SELECT CASE WHEN DAY(EOMONTH(CONVERT(DATE, CONCAT('30/' , ? , '/' ,?), 103))) = 31 THEN" +
+                    " SELECT CASE WHEN DAY(EOMONTH(CONVERT(DATE, CONCAT('01/' , ? , '/' ,?), 103))) = 31 THEN" +
                     " CONVERT(DATE, CONCAT('31/' , ? , '/' ,?), 103)" +
                     " ELSE" +
                     " NULL END AS data" +
@@ -969,7 +969,7 @@ public class ConsultaTSQL {
                     " ELSE" +
                     " CONVERT(DATE, CONCAT('30/' , ? , '/' ,?), 103) END AS data" +
                     " EXCEPT" +
-                    " SELECT CASE WHEN DAY(EOMONTH(CONVERT(DATE, CONCAT('30/' , ? , '/' ,?), 103))) = 31 THEN" +
+                    " SELECT CASE WHEN DAY(EOMONTH(CONVERT(DATE, CONCAT('01/' , ? , '/' ,?), 103))) = 31 THEN" +
                     " CONVERT(DATE, CONCAT('31/' , ? , '/' ,?), 103)" +
                     " ELSE" +
                     " NULL END AS data" +
