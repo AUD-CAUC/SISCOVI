@@ -44,9 +44,10 @@ public class TestFerias {
         System.out.print("\n");
         System.out.print(fimPeriodoAquisitivo);
 
-
-
-
+        int somaDiasVendidos = ferias.RetornaDiasVendidosPeriodo(1, Date.valueOf("2016-08-05"), Date.valueOf("2017-08-04"));
+        System.out.print("\n");
+        System.out.print(somaDiasVendidos);
+        System.out.print("\n");
     }
 
 }

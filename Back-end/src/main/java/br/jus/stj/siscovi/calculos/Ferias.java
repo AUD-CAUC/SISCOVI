@@ -427,6 +427,46 @@ public class Ferias {
     }
 
     /**
+     * Função que retorna o número de dias que um funcionários vendeu os dias de férias em um determinado período aquisitivo.
+     * @param pCodTerceirizadoContrato
+     * @param pDataInicio
+     * @param pDataFim
+     * @return int
+     */
+
+    public int RetornaDiasVendidosPeriodo (int pCodTerceirizadoContrato, Date pDataInicio, Date pDataFim) {
+        int vDiasVendidos = -1;
+
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+
+        try {
+            preparedStatement = connection.prepareStatement("SELECT SUM(DIAS_VENDIDOS) from tb_restituicao_ferias\n" +
+                    " WHERE COD_TERCEIRIZADO_CONTRATO = ? AND DATA_INICIO_PERIODO_AQUISITIVO = ? AND DATA_FIM_PERIODO_AQUISITIVO = ?;");
+
+            preparedStatement.setInt(1, pCodTerceirizadoContrato);
+            preparedStatement.setDate(2, pDataInicio);
+            preparedStatement.setDate(3, pDataFim);
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+
+                vDiasVendidos = resultSet.getInt(1);
+
+            }
+
+        } catch (SQLException sqle) {
+
+            sqle.printStackTrace();
+
+            throw new NullPointerException("Não foi possível recuperar os dias de férias vendidos no período.");
+
+        }
+
+        return vDiasVendidos;
+    }
+
+    /**
      * Função que retorna o número de dias que um funcionários usufruiu em um determinado período aquisitivo.
      * @param pCodTerceirizadoContrato
      * @param pDataInicio
