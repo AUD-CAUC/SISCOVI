@@ -1,0 +1,7 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<BusinessInfoDesign class="oracle.dbtools.crest.model.businessinfo.BusinessInfoDesign" name="Business Information" id="155B7D5E-DD8B-69F7-C2E1-8CA632850E07">
+<createdBy>vssousa</createdBy>
+<createdTime>2019-03-01 16:46:39 UTC</createdTime>
+<ownerDesignName>Modelo de dados SISCOVI</ownerDesignName>
+<shouldBeOpen>false</shouldBeOpen>
+</BusinessInfoDesign>
