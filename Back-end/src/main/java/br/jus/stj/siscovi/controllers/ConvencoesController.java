@@ -3,6 +3,7 @@ package br.jus.stj.siscovi.controllers;
 import br.jus.stj.siscovi.dao.ConnectSQLServer;
 import br.jus.stj.siscovi.dao.ConvencoesDAO;
 import br.jus.stj.siscovi.helpers.ErrorMessage;
+import br.jus.stj.siscovi.model.CadastroConvencaoModel;
 import br.jus.stj.siscovi.model.ConvencaoColetivaModel;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -53,5 +54,28 @@ public class ConvencoesController {
             return Response.ok(json, MediaType.APPLICATION_JSON).build();
         }
         return Response.ok(json, MediaType.APPLICATION_JSON).build();
+    }
+
+    @POST
+    @Path("/criarConvencao")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response insertConvencao(String object) {
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+        String json;
+        CadastroConvencaoModel cadastroConvencaoModel = gson.fromJson(object, CadastroConvencaoModel.class);
+        ConnectSQLServer connectSQLServer = new ConnectSQLServer();
+        ConvencoesDAO convencoesDAO = new ConvencoesDAO(connectSQLServer.dbConnect());
+        if (convencoesDAO.InsertConvencao(cadastroConvencaoModel.getConvencaoModel(), cadastroConvencaoModel.getCurrentUser())) {
+            json = "Rubrica Cadastrada Com sucesso !";
+        }else {
+            json = "Algum erro impossibilitou o cadastro da respectiva rubrica";
+        }
+        try {
+            connectSQLServer.dbConnect().close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Response.ok(gson.toJson(json)).build();
     }
 }

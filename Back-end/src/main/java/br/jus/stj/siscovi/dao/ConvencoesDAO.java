@@ -1,5 +1,6 @@
 package br.jus.stj.siscovi.dao;
 
+import br.jus.stj.siscovi.model.CadastroConvencaoModel;
 import br.jus.stj.siscovi.model.ConvencaoColetivaModel;
 import br.jus.stj.siscovi.model.ListaConvencoesModel;
 
@@ -60,6 +61,24 @@ public class ConvencoesDAO {
         throw new RuntimeException("Erro ao tentar recuperar as convenções coletivas desta função no contrato !");
         }
         return convencaoColetivaModel;
+    }
+
+    public boolean InsertConvencao(ConvencaoColetivaModel cadastroConvencaoModel, String currentUser) throws RuntimeException{
+        PreparedStatement preparedStatement;
+        try {
+            preparedStatement = connection.prepareStatement("INSERT INTO TB_CONVENCAO_COLETIVA (NOME, SIGLA, DATA_BASE, DESCRICAO, LOGIN_ATUALIZACAO, DATA_ATUALIZACAO) " +
+                    "VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)");
+            preparedStatement.setString(1, cadastroConvencaoModel.getNome());
+            preparedStatement.setString(2, cadastroConvencaoModel.getSigla());
+            preparedStatement.setDate(3, cadastroConvencaoModel.getDataBase());
+            preparedStatement.setString(4, cadastroConvencaoModel.getDescricao());
+            preparedStatement.setString(5, currentUser.toUpperCase());
+            preparedStatement.executeUpdate();
+            return true;
+        }catch(SQLException sqle) {
+            sqle.printStackTrace();
+        }
+        return false;
     }
     /*public ArrayList getConvencoesContrato(int codigoContrato) {
         PreparedStatement preparedStatement = null;
