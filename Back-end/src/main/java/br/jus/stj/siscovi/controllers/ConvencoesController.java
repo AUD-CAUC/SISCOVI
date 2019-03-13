@@ -56,6 +56,25 @@ public class ConvencoesController {
         return Response.ok(json, MediaType.APPLICATION_JSON).build();
     }
 
+    @GET
+    @Path("/getConvencao={codigo}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllConvencoes(@PathParam("codigo") int codigo) {
+        ConnectSQLServer connectSQLServer = new ConnectSQLServer();
+        Connection connection = connectSQLServer.dbConnect();
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+        ConvencoesDAO convencoesDAO = new ConvencoesDAO(connection);
+        String json = "";
+        try {
+            json = gson.toJson(convencoesDAO.getConvencaoColetiva(codigo));
+            connection.close();
+        } catch (SQLException e) {
+            json = gson.toJson(ErrorMessage.handleError(e));
+            return Response.ok(json, MediaType.APPLICATION_JSON).build();
+        }
+        return Response.ok(json, MediaType.APPLICATION_JSON).build();
+    }
+
     @POST
     @Path("/criarConvencao")
     @Consumes(MediaType.APPLICATION_JSON)
