@@ -224,7 +224,7 @@ public class Ferias {
                     " data_fim_periodo_aquisitivo," +
                     " SUM(DATEDIFF(day, data_inicio_usufruto, data_fim_usufruto) + dias_vendidos + 1)" +
                     " FROM tb_restituicao_ferias" +
-                    " WHERE cod_terceirizado_contrato = ?" +
+                    " WHERE cod_terceirizado_contrato = ? AND AUTORIZADO = 'S'" +
                     " AND data_inicio_periodo_aquisitivo = (SELECT MAX(data_inicio_periodo_aquisitivo)" +
                     " FROM tb_restituicao_ferias" +
                     " WHERE cod_terceirizado_contrato = ?)" +
@@ -655,6 +655,47 @@ public class Ferias {
         }
 
         return ultFimUsufruto;
+    }
+
+    public boolean RetornaStatusAnalise (int pCodTerceirizadoContrato) {
+
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+
+        int vNumeroRestituicoes = 0;
+
+        String query = "SELECT COUNT(cod)\n" +
+                " FROM tb_restituicao_ferias\n" +
+                " WHERE cod_terceirizado_contrato = ? AND autorizado IS NULL AND restituido IS NULL";
+
+        try {
+
+            preparedStatement = connection.prepareStatement(query);
+
+            preparedStatement.setInt(1, pCodTerceirizadoContrato);
+
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+
+                vNumeroRestituicoes = resultSet.getInt(1);
+
+            }
+
+        } catch (SQLException sqle) {
+
+            throw new NullPointerException("Não foi possível recuperar restituições de férias anteriores.");
+
+        }
+
+        if (vNumeroRestituicoes == 0) {
+
+            return false;
+
+        }
+
+        return true;
+
     }
 
 }
