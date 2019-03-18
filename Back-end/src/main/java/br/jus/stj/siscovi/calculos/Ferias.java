@@ -224,10 +224,10 @@ public class Ferias {
                     " data_fim_periodo_aquisitivo," +
                     " SUM(DATEDIFF(day, data_inicio_usufruto, data_fim_usufruto) + dias_vendidos + 1)" +
                     " FROM tb_restituicao_ferias" +
-                    " WHERE cod_terceirizado_contrato = ? AND AUTORIZADO = 'S'" +
+                    " WHERE cod_terceirizado_contrato = ? AND RESTITUIDO = 'S'" +
                     " AND data_inicio_periodo_aquisitivo = (SELECT MAX(data_inicio_periodo_aquisitivo)" +
                     " FROM tb_restituicao_ferias" +
-                    " WHERE cod_terceirizado_contrato = ?)" +
+                    " WHERE cod_terceirizado_contrato = ? AND RESTITUIDO = 'S')" +
                     " GROUP BY data_inicio_periodo_aquisitivo, data_fim_periodo_aquisitivo");
 
             preparedStatement.setInt(1, pCodTerceirizadoContrato);
@@ -657,7 +657,7 @@ public class Ferias {
         return ultFimUsufruto;
     }
 
-    public boolean RetornaStatusAnalise (int pCodTerceirizadoContrato) {
+    public boolean RetornaStatusAnalise (int pCodTerceirizadoContrato, Date pDataInicio, Date pDataFim) {
 
         PreparedStatement preparedStatement;
         ResultSet resultSet;
@@ -666,13 +666,17 @@ public class Ferias {
 
         String query = "SELECT COUNT(cod)\n" +
                 " FROM tb_restituicao_ferias\n" +
-                " WHERE cod_terceirizado_contrato = ? AND autorizado IS NULL AND restituido IS NULL";
+                " WHERE cod_terceirizado_contrato = ?\n" +
+                " AND DATA_INICIO_PERIODO_AQUISITIVO = ? AND DATA_FIM_PERIODO_AQUISITIVO = ?\n" +
+                "AND (AUTORIZADO != 'N' OR AUTORIZADO IS NULL)";
 
         try {
 
             preparedStatement = connection.prepareStatement(query);
 
             preparedStatement.setInt(1, pCodTerceirizadoContrato);
+            preparedStatement.setDate(2, pDataInicio);
+            preparedStatement.setDate(3, pDataFim);
 
             resultSet = preparedStatement.executeQuery();
 
