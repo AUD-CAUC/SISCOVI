@@ -27,7 +27,8 @@ public class RubricasDAO {
             resultSet = preparedStatement.executeQuery();
             /*Preenche os arrays ate */
             while(resultSet.next()){
-                RubricaModel rubrica = new RubricaModel(resultSet.getString("NOME"), resultSet.getString("SIGLA"), resultSet.getInt("COD"));
+                RubricaModel rubrica = new RubricaModel(resultSet.getString("NOME"), resultSet.getString("SIGLA"),
+                        resultSet.getInt("COD"));
                 /*se o campo DESCRICAO de uma Rubrica nao estiver preenchido a ferramenta o preenchera com o caractere '-'*/
                 if(resultSet.getString("DESCRICAO") != null){
                     rubrica.setDescricao(resultSet.getString("DESCRICAO"));
@@ -56,12 +57,15 @@ public class RubricasDAO {
         os dados de cada percentual estatico*/
         PercentuaisEstaticosModel meuPercentual;
         try{
-            preparedStatement = connection.prepareStatement("SELECT COD_RUBRICA,NOME,PERCENTUAL, DATA_INICIO, DATA_FIM, DATA_ADITAMENTO FROM tb_percentual_estatico JOIN tb_rubrica R ON " +
+            preparedStatement = connection.prepareStatement("SELECT pe.COD, COD_RUBRICA,NOME,PERCENTUAL, DATA_INICIO, DATA_FIM, " +
+                    "DATA_ADITAMENTO FROM tb_percentual_estatico pe JOIN tb_rubrica R ON " +
                     " COD_RUBRICA=R.cod");
             resultSet = preparedStatement.executeQuery();
             while(resultSet.next()) {
-                meuPercentual = new PercentuaisEstaticosModel(resultSet.getInt("COD_RUBRICA"), resultSet.getString("NOME"), resultSet.getFloat("PERCENTUAL"),
-                        resultSet.getDate("DATA_INICIO"), resultSet.getDate("DATA_FIM"), resultSet.getDate("DATA_ADITAMENTO"));
+                meuPercentual = new PercentuaisEstaticosModel(resultSet.getInt("COD"), resultSet.getInt("COD_RUBRICA"),
+                        resultSet.getString("NOME"), resultSet.getFloat("PERCENTUAL"),
+                        resultSet.getDate("DATA_INICIO"), resultSet.getDate("DATA_FIM"),
+                        resultSet.getDate("DATA_ADITAMENTO"));
                 listaDePercentuais.add(meuPercentual);
             }
             return listaDePercentuais;
@@ -84,7 +88,8 @@ public class RubricasDAO {
             preparedStatement = connection.prepareStatement("SELECT * FROM tb_percentual_dinamico");
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                meuPercentual = new PercentuaisDinamicosModel(resultSet.getFloat("PERCENTUAL"), resultSet.getString("LOGIN_ATUALIZACAO"),
+                meuPercentual = new PercentuaisDinamicosModel(resultSet.getFloat("PERCENTUAL"),
+                        resultSet.getString("LOGIN_ATUALIZACAO"),
                         resultSet.getDate("DATA_ATUALIZACAO"));
                 listaDePercentuaisDinamicos.add(meuPercentual);
             }
@@ -108,13 +113,15 @@ public class RubricasDAO {
         InsertTSQL insertTSQL = new InsertTSQL(connection);
         Date novaDataInicio = Date.valueOf(percentuaisEstaticosModel.getDataInicio().toLocalDate().minusDays(1));
         try {
-            preparedStatement = connection.prepareStatement("UPDATE tb_percentual_estatico SET DATA_FIM = ? WHERE COD_RUBRICA = ? AND DATA_FIM is NULL");
+            preparedStatement = connection.prepareStatement("UPDATE tb_percentual_estatico SET DATA_FIM = ? WHERE COD_RUBRICA = ? " +
+                    "AND DATA_FIM is NULL");
             preparedStatement.setDate(1, novaDataInicio);
-            preparedStatement.setInt(2, percentuaisEstaticosModel.getCodigo());
+            preparedStatement.setInt(2, percentuaisEstaticosModel.getCodigoRubrica());
             preparedStatement.executeUpdate();
 
-            insertTSQL.InsertPercentualEstatico(percentuaisEstaticosModel.getCodigo(), percentuaisEstaticosModel.getPercentual(), percentuaisEstaticosModel.getDataInicio(),
-                    percentuaisEstaticosModel.getDataFim(), percentuaisEstaticosModel.getDataAditamento(), currentUser);
+            insertTSQL.InsertPercentualEstatico(percentuaisEstaticosModel.getCodigoRubrica(), percentuaisEstaticosModel.getPercentual(),
+                    percentuaisEstaticosModel.getDataInicio(), percentuaisEstaticosModel.getDataFim(),
+                    percentuaisEstaticosModel.getDataAditamento(), currentUser);
         } catch (SQLException sqle) {
             sqle.printStackTrace();
             return false;
@@ -125,7 +132,8 @@ public class RubricasDAO {
     public boolean InsertRubrica(RubricaModel rubricaModel, String currentUser) {
         PreparedStatement preparedStatement;
         try {
-            preparedStatement = connection.prepareStatement("INSERT INTO TB_RUBRICA (NOME, SIGLA, DESCRICAO, LOGIN_ATUALIZACAO, DATA_ATUALIZACAO) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)");
+            preparedStatement = connection.prepareStatement("INSERT INTO TB_RUBRICA (NOME, SIGLA, DESCRICAO, LOGIN_ATUALIZACAO, " +
+                    "DATA_ATUALIZACAO) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)");
             preparedStatement.setString(1, rubricaModel.getNome());
             preparedStatement.setString(2, rubricaModel.getSigla());
             preparedStatement.setString(3, rubricaModel.getDescricao());
@@ -146,7 +154,8 @@ public class RubricasDAO {
             preparedStatement.setInt(1, codigo);
             resultSet = preparedStatement.executeQuery();
             if(resultSet.next()) {
-                rubrica = new RubricaModel(resultSet.getString("NOME"), resultSet.getString("SIGLA"), resultSet.getInt("COD"));
+                rubrica = new RubricaModel(resultSet.getString("NOME"), resultSet.getString("SIGLA"),
+                        resultSet.getInt("COD"));
                 if (resultSet.getString("DESCRICAO") == null) {
                     rubrica.setDescricao("-");
                 }else {
@@ -165,14 +174,16 @@ public class RubricasDAO {
         PreparedStatement preparedStatement;
         ResultSet resultSet;
         try {
-            preparedStatement = connection.prepareStatement("SELECT COD_RUBRICA, NOME, PERCENTUAL, DATA_INICIO, DATA_FIM, DATA_ADITAMENTO FROM tb_percentual_estatico JOIN tb_rubrica R ON" +
-                    " COD_RUBRICA = R.cod WHERE COD_RUBRICA=?");
+            preparedStatement = connection.prepareStatement("SELECT pe.COD, COD_RUBRICA, NOME, PERCENTUAL, DATA_INICIO, " +
+                                                                "DATA_FIM, DATA_ADITAMENTO FROM tb_percentual_estatico pe JOIN tb_rubrica R ON" +
+                                                                " COD_RUBRICA = R.cod WHERE COD_RUBRICA=?");
             preparedStatement.setInt(1, codigo); /*pega o codigo da rubrica desejada*/
             resultSet = preparedStatement.executeQuery();
             if(resultSet.next()) { /*Preenche o modelo Percentual com todas suas informações*/
-                percentualestatico = new PercentuaisEstaticosModel(resultSet.getInt("COD_RUBRICA"),
+                percentualestatico = new PercentuaisEstaticosModel(resultSet.getInt("COD"), resultSet.getInt("COD_RUBRICA"),
                         resultSet.getString("NOME"), resultSet.getFloat("PERCENTUAL"),
-                        resultSet.getDate("DATA_INICIO"), resultSet.getDate("DATA_FIM"), resultSet.getDate("DATA_ADITAMENTO"));
+                        resultSet.getDate("DATA_INICIO"), resultSet.getDate("DATA_FIM"),
+                        resultSet.getDate("DATA_ADITAMENTO"));
                 return percentualestatico;
             }
         }catch(SQLException sqle) {
@@ -213,14 +224,16 @@ public class RubricasDAO {
     public boolean AlteraPercentualEstatico(PercentuaisEstaticosModel percentualestatico, String currentUser) {
         PreparedStatement preparedStatement;
         try {
-            preparedStatement = connection.prepareStatement("UPDATE TB_PERCENTUAL_ESTATICO SET PERCENTUAL=?, DATA_INICIO=?, DATA_FIM=?, DATA_ADITAMENTO=?," + "LOGIN_ATUALIZACAO=?, DATA_ATUALIZACAO=CURRENT_TIMESTAMP WHERE COD_RUBRICA=?");
-            preparedStatement.setString(1, percentualestatico.getNome());
-            preparedStatement.setFloat(2, percentualestatico.getPercentual());
-            preparedStatement.setDate(3, percentualestatico.getDataInicio());
-            preparedStatement.setDate(4, percentualestatico.getDataFim());
-            preparedStatement.setDate(5, percentualestatico.getDataAditamento());
-            preparedStatement.setString(6, currentUser);
-            preparedStatement.setInt(7, percentualestatico.getCodigo());
+            preparedStatement = connection.prepareStatement("UPDATE tb_percentual_estatico SET PERCENTUAL=?, DATA_INICIO=?, " +
+                                                                "DATA_FIM=?, DATA_ADITAMENTO=?," +
+                                                                "LOGIN_ATUALIZACAO=?, DATA_ATUALIZACAO=CURRENT_TIMESTAMP WHERE COD_RUBRICA=?");
+//            preparedStatement.setString(1, percentualestatico.getNome());
+            preparedStatement.setFloat(1, percentualestatico.getPercentual());
+            preparedStatement.setDate(2, percentualestatico.getDataInicio());
+            preparedStatement.setDate(3, percentualestatico.getDataFim());
+            preparedStatement.setDate(4, percentualestatico.getDataAditamento());
+            preparedStatement.setString(5, currentUser);
+            preparedStatement.setInt(6, percentualestatico.getCodigoRubrica());
             preparedStatement.executeUpdate();
             return true;
         } catch (SQLException e) {
