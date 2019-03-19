@@ -109,7 +109,7 @@ public class FeriasDAO {
                     " JOIN tb_usuario u ON u.cod = hgc.cod_usuario" +
                     " JOIN tb_funcao_contrato fc ON fc.cod = ft.cod_funcao_contrato" +
                     " JOIN tb_funcao f ON f.cod = fc.cod_funcao" +
-                    " WHERE tc.COD_CONTRATO = ? AND (AUTORIZADO IS NULL) OR (RESTITUIDO = 'N' AND AUTORIZADO = 'S')";
+                    " WHERE tc.COD_CONTRATO = ? AND ((AUTORIZADO IS NULL) OR (RESTITUIDO = 'N' AND AUTORIZADO = 'S'))";
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 preparedStatement.setInt(1, codigoContrato);
                 try (ResultSet resultSet = preparedStatement.executeQuery()) {
