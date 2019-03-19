@@ -48,7 +48,7 @@ public class RubricaController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response buscarPercentualEstatico(@PathParam("codigo") int codigo) {
         ConnectSQLServer connectSQLServer = new ConnectSQLServer();
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().serializeNulls().setDateFormat("dd/MM/yyyy").create();
         RubricasDAO rubricasDAO = new RubricasDAO(connectSQLServer.dbConnect());
         PercentuaisEstaticosModel percentuaisEstaticosModel = rubricasDAO.GetPercentualEstatico(codigo);
         String json = gson.toJson(percentuaisEstaticosModel);
