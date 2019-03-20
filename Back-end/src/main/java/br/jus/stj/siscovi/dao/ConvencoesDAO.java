@@ -80,6 +80,24 @@ public class ConvencoesDAO {
         }
         return false;
     }
+
+    public boolean AlterarConvencao(ConvencaoColetivaModel convencaoColetiva, String currentUser) {
+        PreparedStatement preparedStatement;
+        try {
+            preparedStatement = connection.prepareStatement("UPDATE TB_CONVENCAO_COLETIVA SET NOME=?, SIGLA=?, DATA_BASE=?, DESCRICAO=?, LOGIN_ATUALIZACAO=?, DATA_ATUALIZACAO=CURRENT_TIMESTAMP WHERE COD=?");
+            preparedStatement.setString(1, convencaoColetiva.getNome());
+            preparedStatement.setString(2, convencaoColetiva.getSigla());
+            preparedStatement.setDate(3, convencaoColetiva.getDataBase());
+            preparedStatement.setString(4, convencaoColetiva.getDescricao());
+            preparedStatement.setString(5, currentUser);
+            preparedStatement.setInt(6, convencaoColetiva.getCodigo());
+            preparedStatement.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
     /*public ArrayList getConvencoesContrato(int codigoContrato) {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;

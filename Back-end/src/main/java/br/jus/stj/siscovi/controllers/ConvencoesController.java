@@ -97,4 +97,26 @@ public class ConvencoesController {
         }
         return Response.ok(gson.toJson(json)).build();
     }
+    @PUT
+    @Path("/alterarConvencao")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response alteraRubrica(String object) {
+        Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").create();
+        CadastroConvencaoModel cadastroConvencaoModel = gson.fromJson(object, CadastroConvencaoModel.class);
+        ConnectSQLServer connectSQLServer = new ConnectSQLServer();
+        ConvencoesDAO rubricasDAO = new ConvencoesDAO(connectSQLServer.dbConnect());
+        String json;
+        if(rubricasDAO.AlterarConvencao(cadastroConvencaoModel.getConvencaoModel(), cadastroConvencaoModel.getCurrentUser())) {
+            json = gson.toJson("Alteração feita com sucesso !");
+        }else {
+            json = gson.toJson("Houve falha na tentativa de Salvar as Alterações");
+        }
+        try {
+            connectSQLServer.dbConnect().close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Response.ok(json, MediaType.APPLICATION_JSON).build();
+    }
 }
