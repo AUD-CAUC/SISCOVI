@@ -47,7 +47,7 @@ public class FeriasDAO {
                     boolean parcela14Dias = ferias.RetornaParcela14DiasFeriasPeriodo(resultSet.getInt("COD"), inicioPeriodoAquisitivo, fimPeriodoAquisitivo);
                     String parcelaAnterior = ferias.RetornaMaiorParcelaConcedidaFeriasPeriodo(resultSet.getInt("COD"), inicioPeriodoAquisitivo, fimPeriodoAquisitivo);
                     Date ultimoFimUsufruto = ferias.RetornaUltimaDataFimUsufruto(resultSet.getInt("COD"), inicioPeriodoAquisitivo, fimPeriodoAquisitivo);
-                    boolean emAnalise = ferias.RetornaStatusAnalise(resultSet.getInt("COD"), inicioPeriodoAquisitivo, fimPeriodoAquisitivo);
+                    boolean emAnalise = ferias.RetornaStatusAnalise(resultSet.getInt("COD"));
 
                     TerceirizadoFerias terceirizadoFerias = new TerceirizadoFerias(resultSet.getInt("COD"),
                             resultSet.getString("NOME"),

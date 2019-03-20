@@ -657,7 +657,7 @@ public class Ferias {
         return ultFimUsufruto;
     }
 
-    public boolean RetornaStatusAnalise (int pCodTerceirizadoContrato, Date pDataInicio, Date pDataFim) {
+    public boolean RetornaStatusAnalise (int pCodTerceirizadoContrato) {
 
         PreparedStatement preparedStatement;
         ResultSet resultSet;
@@ -665,18 +665,15 @@ public class Ferias {
         int vNumeroRestituicoes = 0;
 
         String query = "SELECT COUNT(cod)\n" +
-                " FROM tb_restituicao_ferias\n" +
-                " WHERE cod_terceirizado_contrato = ?\n" +
-                " AND DATA_INICIO_PERIODO_AQUISITIVO = ? AND DATA_FIM_PERIODO_AQUISITIVO = ?\n" +
-                "AND (AUTORIZADO != 'N' OR AUTORIZADO IS NULL)";
+                "FROM tb_restituicao_ferias\n" +
+                "WHERE cod_terceirizado_contrato = ?\n" +
+                "AND ((AUTORIZADO IS NULL AND RESTITUIDO IS NULL) OR (AUTORIZADO = 'S' AND RESTITUIDO IS NULL) OR (AUTORIZADO = 'S' AND RESTITUIDO = 'N'));";
 
         try {
 
             preparedStatement = connection.prepareStatement(query);
 
             preparedStatement.setInt(1, pCodTerceirizadoContrato);
-            preparedStatement.setDate(2, pDataInicio);
-            preparedStatement.setDate(3, pDataFim);
 
             resultSet = preparedStatement.executeQuery();
 
