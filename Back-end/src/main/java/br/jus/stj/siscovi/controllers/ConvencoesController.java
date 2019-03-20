@@ -119,4 +119,24 @@ public class ConvencoesController {
         }
         return Response.ok(json, MediaType.APPLICATION_JSON).build();
     }
+    @DELETE
+    @Path("/deleteConvencao/{codigo}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response apagarRubrica(@PathParam("codigo") int codigo) {
+        ConnectSQLServer connectSQLServer = new ConnectSQLServer();
+        ConvencoesDAO convencoesDAO = new ConvencoesDAO(connectSQLServer.dbConnect());
+        Gson gson = new Gson();
+        String json;
+        if (convencoesDAO.DeleteConvencao(codigo)) {
+            json = gson.toJson("Convencao Apagada Com sucesso !");
+        }else {
+            json = gson.toJson("Houve uma falha ao tentar apagar a Rubrica !");
+        }
+        try {
+            connectSQLServer.dbConnect().close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Response.ok(json, MediaType.APPLICATION_JSON).build();
+    }
 }

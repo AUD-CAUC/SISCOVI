@@ -98,6 +98,18 @@ public class ConvencoesDAO {
         }
         return false;
     }
+    public boolean DeleteConvencao(int codigo) {
+        PreparedStatement preparedStatement;
+        try{
+            preparedStatement = connection.prepareStatement("DELETE FROM TB_CONVENCAO_COLETIVA WHERE COD=?");
+            preparedStatement.setInt(1, codigo);
+            preparedStatement.executeUpdate();
+            return true;
+        }catch(SQLException sqle) {
+            sqle.printStackTrace();
+        }
+        return false;
+    }
     /*public ArrayList getConvencoesContrato(int codigoContrato) {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
