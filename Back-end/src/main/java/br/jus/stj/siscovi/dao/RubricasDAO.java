@@ -176,7 +176,7 @@ public class RubricasDAO {
         try {
             preparedStatement = connection.prepareStatement("SELECT pe.COD, COD_RUBRICA, NOME, PERCENTUAL, DATA_INICIO, " +
                                                                 "DATA_FIM, DATA_ADITAMENTO FROM tb_percentual_estatico pe JOIN tb_rubrica R ON" +
-                                                                " COD_RUBRICA = R.cod WHERE COD_RUBRICA=?");
+                                                                " COD_RUBRICA = R.cod WHERE pe.COD=?");
             preparedStatement.setInt(1, codigo); /*pega o codigo da rubrica desejada*/
             resultSet = preparedStatement.executeQuery();
             if(resultSet.next()) { /*Preenche o modelo Percentual com todas suas informações*/
@@ -226,14 +226,14 @@ public class RubricasDAO {
         try {
             preparedStatement = connection.prepareStatement("UPDATE tb_percentual_estatico SET PERCENTUAL=?, DATA_INICIO=?, " +
                                                                 "DATA_FIM=?, DATA_ADITAMENTO=?," +
-                                                                "LOGIN_ATUALIZACAO=?, DATA_ATUALIZACAO=CURRENT_TIMESTAMP WHERE COD_RUBRICA=?");
+                                                                "LOGIN_ATUALIZACAO=?, DATA_ATUALIZACAO=CURRENT_TIMESTAMP WHERE COD=?");
 //            preparedStatement.setString(1, percentualestatico.getNome());
             preparedStatement.setFloat(1, percentualestatico.getPercentual());
             preparedStatement.setDate(2, percentualestatico.getDataInicio());
             preparedStatement.setDate(3, percentualestatico.getDataFim());
             preparedStatement.setDate(4, percentualestatico.getDataAditamento());
             preparedStatement.setString(5, currentUser);
-            preparedStatement.setInt(6, percentualestatico.getCodigoRubrica());
+            preparedStatement.setInt(6, percentualestatico.getCod());
             preparedStatement.executeUpdate();
             return true;
         } catch (SQLException e) {
@@ -244,7 +244,7 @@ public class RubricasDAO {
     public boolean DeletePercentualEstatico(int codigo) {
         PreparedStatement preparedStatement;
         try{
-            preparedStatement = connection.prepareStatement("DELETE FROM tb_percentual_estatico WHERE COD_RUBRICA=?");
+            preparedStatement = connection.prepareStatement("DELETE FROM tb_percentual_estatico WHERE COD=?");
             preparedStatement.setInt(1, codigo);
             preparedStatement.executeUpdate();
             return true;
