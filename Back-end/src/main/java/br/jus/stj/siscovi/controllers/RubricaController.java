@@ -210,7 +210,7 @@ public class RubricaController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response alteraPercentualEstatico(String object) {
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
         CadastroPercentualEstaticoModel cadastroPercentualEstaticoModel = gson.fromJson(object, CadastroPercentualEstaticoModel.class);
         ConnectSQLServer connectSQLServer = new ConnectSQLServer();
         RubricasDAO rubricasDAO = new RubricasDAO(connectSQLServer.dbConnect());
