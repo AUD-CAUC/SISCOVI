@@ -47,6 +47,7 @@ public class FeriasDAO {
                     boolean parcela14Dias = ferias.RetornaParcela14DiasFeriasPeriodo(resultSet.getInt("COD"), inicioPeriodoAquisitivo, fimPeriodoAquisitivo);
                     String parcelaAnterior = ferias.RetornaMaiorParcelaConcedidaFeriasPeriodo(resultSet.getInt("COD"), inicioPeriodoAquisitivo, fimPeriodoAquisitivo);
                     Date ultimoFimUsufruto = ferias.RetornaUltimaDataFimUsufruto(resultSet.getInt("COD"), inicioPeriodoAquisitivo, fimPeriodoAquisitivo);
+                    boolean emAnalise = ferias.RetornaStatusAnalise(resultSet.getInt("COD"));
 
                     TerceirizadoFerias terceirizadoFerias = new TerceirizadoFerias(resultSet.getInt("COD"),
                             resultSet.getString("NOME"),
@@ -57,7 +58,8 @@ public class FeriasDAO {
                             parcela14Dias,
                             ferias.ExisteFeriasTerceirizado(resultSet.getInt("COD")),
                             parcelaAnterior,
-                            ultimoFimUsufruto);
+                            ultimoFimUsufruto,
+                            emAnalise);
                     terceirizados.add(terceirizadoFerias);
                 }
             }
@@ -107,7 +109,7 @@ public class FeriasDAO {
                     " JOIN tb_usuario u ON u.cod = hgc.cod_usuario" +
                     " JOIN tb_funcao_contrato fc ON fc.cod = ft.cod_funcao_contrato" +
                     " JOIN tb_funcao f ON f.cod = fc.cod_funcao" +
-                    " WHERE tc.COD_CONTRATO = ? AND (AUTORIZADO IS NULL)";
+                    " WHERE tc.COD_CONTRATO = ? AND ((AUTORIZADO IS NULL) OR (RESTITUIDO = 'N' AND AUTORIZADO = 'S'))";
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 preparedStatement.setInt(1, codigoContrato);
                 try (ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -162,6 +164,7 @@ public class FeriasDAO {
                 " PARCELA = ?," +
                 " DATA_REFERENCIA = GETDATE()," +
                 " AUTORIZADO = ?," +
+                " RESTITUIDO = NULL," +
                 " OBSERVACAO = ?," +
                 " LOGIN_ATUALIZACAO = ?," +
                 " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
@@ -184,7 +187,7 @@ public class FeriasDAO {
                 preparedStatement.setString(i++, calculoPendenteModel.getObservacoes());
                 preparedStatement.setString(i++, avaliacaoFerias.getUser().getUsername().toUpperCase());
                 preparedStatement.setInt(i++, calculoPendenteModel.getCalcularFeriasModel().getCodTerceirizadoContrato());
-                preparedStatement.setInt(i++, calculoPendenteModel.getCod());
+                preparedStatement.setInt(i, calculoPendenteModel.getCod());
                 preparedStatement.executeUpdate();
             }
         }catch (SQLException sqle) {

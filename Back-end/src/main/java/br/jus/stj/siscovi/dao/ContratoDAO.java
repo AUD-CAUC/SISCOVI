@@ -535,7 +535,7 @@ public class ContratoDAO {
                 sql = "SELECT DISTINCT C.COD, C.CNPJ, C.NOME_EMPRESA, C.NUMERO_CONTRATO, C.NUMERO_PROCESSO_STJ FROM tb_restituicao_ferias RF" +
                         " JOIN TB_TERCEIRIZADO_CONTRATO TC ON TC.COD=RF.COD_TERCEIRIZADO_CONTRATO" +
                         " JOIN TB_CONTRATO C ON C.COD=TC.COD_CONTRATO" +
-                        " WHERE RF.AUTORIZADO IS NULL";
+                        " WHERE RF.AUTORIZADO IS NULL OR (RF.RESTITUIDO = 'N' AND RF.AUTORIZADO = 'S')";
             }
             if(vCalculo == 2) {
                 sql = "SELECT DISTINCT C.COD, C.CNPJ, C.NOME_EMPRESA, C.NUMERO_CONTRATO, C.NUMERO_PROCESSO_STJ FROM tb_restituicao_decimo_terceiro RDT" +

@@ -224,10 +224,10 @@ public class Ferias {
                     " data_fim_periodo_aquisitivo," +
                     " SUM(DATEDIFF(day, data_inicio_usufruto, data_fim_usufruto) + dias_vendidos + 1)" +
                     " FROM tb_restituicao_ferias" +
-                    " WHERE cod_terceirizado_contrato = ?" +
+                    " WHERE cod_terceirizado_contrato = ? AND RESTITUIDO = 'S'" +
                     " AND data_inicio_periodo_aquisitivo = (SELECT MAX(data_inicio_periodo_aquisitivo)" +
                     " FROM tb_restituicao_ferias" +
-                    " WHERE cod_terceirizado_contrato = ?)" +
+                    " WHERE cod_terceirizado_contrato = ? AND RESTITUIDO = 'S')" +
                     " GROUP BY data_inicio_periodo_aquisitivo, data_fim_periodo_aquisitivo");
 
             preparedStatement.setInt(1, pCodTerceirizadoContrato);
@@ -655,6 +655,48 @@ public class Ferias {
         }
 
         return ultFimUsufruto;
+    }
+
+    public boolean RetornaStatusAnalise (int pCodTerceirizadoContrato) {
+
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+
+        int vNumeroRestituicoes = 0;
+
+        String query = "SELECT COUNT(cod)\n" +
+                "FROM tb_restituicao_ferias\n" +
+                "WHERE cod_terceirizado_contrato = ?\n" +
+                "AND ((AUTORIZADO IS NULL AND RESTITUIDO IS NULL) OR (AUTORIZADO = 'S' AND RESTITUIDO IS NULL) OR (AUTORIZADO = 'S' AND RESTITUIDO = 'N'));";
+
+        try {
+
+            preparedStatement = connection.prepareStatement(query);
+
+            preparedStatement.setInt(1, pCodTerceirizadoContrato);
+
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+
+                vNumeroRestituicoes = resultSet.getInt(1);
+
+            }
+
+        } catch (SQLException sqle) {
+
+            throw new NullPointerException("Não foi possível recuperar restituições de férias anteriores.");
+
+        }
+
+        if (vNumeroRestituicoes == 0) {
+
+            return false;
+
+        }
+
+        return true;
+
     }
 
 }
