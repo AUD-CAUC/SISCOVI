@@ -69,7 +69,7 @@ public class RubricasDAO {
         }
         return null;
     }
-    public ArrayList<PercentuaisDinamicosModel> SelectPercentuaisDinamicos() {
+    public ArrayList<PercentuaisDinamicosModel> SelectAllPercentuaisDinamicos() {
         ResultSet resultSet = null;
         PreparedStatement preparedStatement = null;
         ArrayList<PercentuaisDinamicosModel> listaDePercentuaisDinamicos = new ArrayList<PercentuaisDinamicosModel>();
@@ -179,6 +179,18 @@ public class RubricasDAO {
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+        return false;
+    }
+    public boolean DeletePercentualDinamico(int codigo) {
+        PreparedStatement preparedStatement;
+        try{
+            preparedStatement = connection.prepareStatement("DELETE FROM tb_percentual_dinamico WHERE COD=?");
+            preparedStatement.setInt(1, codigo);
+            preparedStatement.executeUpdate();
+            return true;
+        }catch(SQLException sqle) {
+            sqle.printStackTrace();
         }
         return false;
     }

@@ -45,14 +45,14 @@ public class RubricaController {
         return Response.ok(json, MediaType.APPLICATION_JSON).build();
     }
     @GET
-    @Path("/getDinamicPercent")
+    @Path("/getAllDinamicPercent")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getPercentuaisDinamicos() throws SQLException {
+    public Response getAllPercentuaisDinamicos() throws SQLException {
         ConnectSQLServer connectSQLServer = new ConnectSQLServer();
         Gson gson = new GsonBuilder().serializeNulls().setDateFormat("dd/MM/yyyy").create();
         String json;
         RubricasDAO rubricasDAO = new RubricasDAO(connectSQLServer.dbConnect());
-        json = gson.toJson(rubricasDAO.SelectPercentuaisDinamicos());
+        json = gson.toJson(rubricasDAO.SelectAllPercentuaisDinamicos());
         connectSQLServer.dbConnect().close();
         return Response.ok(json, MediaType.APPLICATION_JSON).build();
     }
@@ -176,6 +176,26 @@ public class RubricaController {
             json = gson.toJson("Alteração feita com sucesso !");
         }else {
             json = gson.toJson("Houve falha na tentativa de Salvar as Alterações");
+        }
+        try {
+            connectSQLServer.dbConnect().close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Response.ok(json, MediaType.APPLICATION_JSON).build();
+    }
+    @DELETE
+    @Path("/deleteDinamicPercent/{codigo}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response apagarPercentuaisDinamicos(@PathParam("codigo") int codigo) {
+        ConnectSQLServer connectSQLServer = new ConnectSQLServer();
+        RubricasDAO rubricasDAO = new RubricasDAO(connectSQLServer.dbConnect());
+        Gson gson = new Gson();
+        String json;
+        if (rubricasDAO.DeletePercentualDinamico(codigo)) {
+            json = gson.toJson("Percentual Dinâmico Apagado Com sucesso !");
+        }else {
+            json = gson.toJson("Houve uma falha ao tentar apagar o Percentual Dinâmico !");
         }
         try {
             connectSQLServer.dbConnect().close();
