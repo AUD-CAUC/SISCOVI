@@ -248,4 +248,16 @@ public class FuncionariosDAO {
         }
         return false;
     }
+    public boolean DeleteTerceirizado(int codigo) {
+        PreparedStatement preparedStatement;
+        try{
+            preparedStatement = connection.prepareStatement("DELETE FROM TB_TERCEIRIZADO WHERE COD=?");
+            preparedStatement.setInt(1, codigo);
+            preparedStatement.executeUpdate();
+            return true;
+        }catch(SQLException sqle) {
+            sqle.printStackTrace();
+        }
+        return false;
+    }
 }

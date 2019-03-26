@@ -8,5 +8,6 @@ public class CadastroPercentualEstaticoModel {
         return currentUser;
     }
 
-    public PercentuaisEstaticosModel getPercentualEstaticoModel() { return percentualEstatico; }
+    public PercentuaisEstaticosModel getPercentualEstaticoModel() {
+        return percentualEstatico; }
 }
