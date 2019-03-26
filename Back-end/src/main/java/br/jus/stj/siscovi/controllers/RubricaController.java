@@ -196,6 +196,28 @@ public class RubricaController {
         }
         return Response.ok(json, MediaType.APPLICATION_JSON).build();
     }
+//    @PUT
+//    @Path("/changeDinamicPercent")
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public Response alteraPercentualDinamico(Float object) {
+//        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+//        CadastroPercentualDinamicoModel cadastroPercentualDinamicoModel = gson.fromJson(object, CadastroPercentualDinamicoModel.class);
+//        ConnectSQLServer connectSQLServer = new ConnectSQLServer();
+//        RubricasDAO rubricasDAO = new RubricasDAO(connectSQLServer.dbConnect());
+//        String json;/*trocar getPercentualEstaticoModel() por getPercentual()*/
+//        if (rubricasDAO.AlteraPercentualDinamico(cadastroPercentualDinamicoModel.getPercentual(), cadastroPercentualDinamicoModel.getCurrentUser())) {
+//            json = gson.toJson("Alteração feita com sucesso !");
+//        } else {
+//            json = gson.toJson("Houve falha na tentativa de Salvar as Alterações");
+//        }
+//        try {
+//            connectSQLServer.dbConnect().close();
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return Response.ok(json, MediaType.APPLICATION_JSON).build();
+//    }
     @DELETE
     @Path("/deleteDinamicPercent/{codigo}")
     @Produces(MediaType.APPLICATION_JSON)
