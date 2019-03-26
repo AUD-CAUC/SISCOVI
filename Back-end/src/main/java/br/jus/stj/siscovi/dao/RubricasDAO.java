@@ -79,7 +79,7 @@ public class RubricasDAO {
             preparedStatement = connection.prepareStatement("SELECT * FROM tb_percentual_dinamico");
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                meuPercentual = new PercentuaisDinamicosModel(resultSet.getFloat("PERCENTUAL"), resultSet.getString("LOGIN_ATUALIZACAO"),
+                meuPercentual = new PercentuaisDinamicosModel(resultSet.getInt("COD"), resultSet.getFloat("PERCENTUAL"), resultSet.getString("LOGIN_ATUALIZACAO"),
                         resultSet.getDate("DATA_ATUALIZACAO"));
                 listaDePercentuaisDinamicos.add(meuPercentual);
             }
@@ -89,6 +89,29 @@ public class RubricasDAO {
         } catch (SQLServerException sqlse) {
             sqlse.printStackTrace();
         } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+        return null;
+    }
+    public ArrayList<PercentuaisDinamicosModel> SelectPercentuaisDinamicos() {
+        ResultSet resultSet = null;
+        PreparedStatement preparedStatement = null;
+        ArrayList<PercentuaisDinamicosModel> listaDePercentuais = new ArrayList<PercentuaisDinamicosModel>();
+        PercentuaisDinamicosModel meuPercentual;
+        try{
+            preparedStatement = connection.prepareStatement("SELECT COD, PERCENTUAL, DATA_ATUALIZACAO FROM tb_percentual_dinamico WHERE COD=?");
+            resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()) {
+                meuPercentual = new PercentuaisDinamicosModel(resultSet.getInt("COD"), resultSet.getFloat("PERCENTUAL"),
+                        resultSet.getString("LOGIN_ATUALIZACAO"), resultSet.getDate("DATA_ATALIZACAO"));
+                listaDePercentuais.add(meuPercentual);
+            }
+            return listaDePercentuais;
+        }catch (NullPointerException npe) {
+            npe.printStackTrace();
+        }catch (SQLServerException sqlse) {
+            sqlse.printStackTrace();
+        }catch (SQLException sqle) {
             sqle.printStackTrace();
         }
         return null;
