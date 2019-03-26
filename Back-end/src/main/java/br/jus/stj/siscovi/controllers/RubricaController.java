@@ -64,7 +64,7 @@ public class RubricaController {
         Gson gson = new GsonBuilder().serializeNulls().setDateFormat("dd/MM/yyyy").create();
         String json;
         RubricasDAO rubricasDAO = new RubricasDAO(connectSQLServer.dbConnect());
-        json = gson.toJson(rubricasDAO.SelectPercentuaisDinamicos());
+        json = gson.toJson(rubricasDAO.SelectPercentualDinamico());
         connectSQLServer.dbConnect().close();
         return Response.ok(json, MediaType.APPLICATION_JSON).build();
     }

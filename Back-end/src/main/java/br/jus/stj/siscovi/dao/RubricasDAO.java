@@ -79,7 +79,7 @@ public class RubricasDAO {
             preparedStatement = connection.prepareStatement("SELECT * FROM tb_percentual_dinamico");
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                meuPercentual = new PercentuaisDinamicosModel(resultSet.getInt("COD"), resultSet.getFloat("PERCENTUAL"), resultSet.getString("LOGIN_ATUALIZACAO"),
+                meuPercentual = new PercentuaisDinamicosModel(resultSet.getFloat("PERCENTUAL"), resultSet.getString("LOGIN_ATUALIZACAO"),
                         resultSet.getDate("DATA_ATUALIZACAO"));
                 listaDePercentuaisDinamicos.add(meuPercentual);
             }
@@ -93,20 +93,20 @@ public class RubricasDAO {
         }
         return null;
     }
-    public ArrayList<PercentuaisDinamicosModel> SelectPercentuaisDinamicos() {
+    public ArrayList<PercentuaisDinamicosModel> SelectPercentualDinamico() {
         ResultSet resultSet = null;
         PreparedStatement preparedStatement = null;
-        ArrayList<PercentuaisDinamicosModel> listaDePercentuais = new ArrayList<PercentuaisDinamicosModel>();
+        ArrayList<PercentuaisDinamicosModel> listaDePercentuaisDinamicos = new ArrayList<PercentuaisDinamicosModel>();
         PercentuaisDinamicosModel meuPercentual;
         try{
-            preparedStatement = connection.prepareStatement("SELECT COD, PERCENTUAL, DATA_ATUALIZACAO FROM tb_percentual_dinamico WHERE COD=?");
+            preparedStatement = connection.prepareStatement("SELECT PERCENTUAL, DATA_ATUALIZACAO FROM tb_percentual_dinamico WHERE COD=?");
             resultSet = preparedStatement.executeQuery();
             while(resultSet.next()) {
-                meuPercentual = new PercentuaisDinamicosModel(resultSet.getInt("COD"), resultSet.getFloat("PERCENTUAL"),
+                meuPercentual = new PercentuaisDinamicosModel(resultSet.getFloat("PERCENTUAL"),
                         resultSet.getString("LOGIN_ATUALIZACAO"), resultSet.getDate("DATA_ATALIZACAO"));
-                listaDePercentuais.add(meuPercentual);
+                listaDePercentuaisDinamicos.add(meuPercentual);
             }
-            return listaDePercentuais;
+            return listaDePercentuaisDinamicos;
         }catch (NullPointerException npe) {
             npe.printStackTrace();
         }catch (SQLServerException sqlse) {
