@@ -59,7 +59,7 @@ public class RubricaController {
     @GET
     @Path("/getDinamicPercent/{codigo}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getPercentuaisDinamicos() throws SQLException {
+    public Response getPercentuaisDinamicos(@PathParam("codigo") int codigo) throws SQLException {
         ConnectSQLServer connectSQLServer = new ConnectSQLServer();
         Gson gson = new GsonBuilder().serializeNulls().setDateFormat("dd/MM/yyyy").create();
         String json;
@@ -72,7 +72,7 @@ public class RubricaController {
     @Path("/cadastrarPercentualDinamico")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response insertPercentualDinamico(String object) throws SQLException {
+    public Response insertPercentualDinamico(String object) {
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
         String json;
         CadastroPercentualDinamicoModel cadastroPercentualDinamicoModel = gson.fromJson(object, CadastroPercentualDinamicoModel.class);
@@ -196,28 +196,28 @@ public class RubricaController {
         }
         return Response.ok(json, MediaType.APPLICATION_JSON).build();
     }
-    @PUT
-    @Path("/changeDinamicPercent")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response alteraPercentualDinamico(String object) {
-        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
-        CadastroPercentualDinamicoModel cadastroPercentualDinamicoModel = gson.fromJson(object, CadastroPercentualDinamicoModel.class);
-        ConnectSQLServer connectSQLServer = new ConnectSQLServer();
-        RubricasDAO rubricasDAO = new RubricasDAO(connectSQLServer.dbConnect());
-        String json;/*trocar getPercentualEstaticoModel() por getPercentual()*/
-        if (rubricasDAO.AlteraPercentualDinamico(cadastroPercentualDinamicoModel.getPercentual(), cadastroPercentualDinamicoModel.getCurrentUser())) {
-            json = gson.toJson("Alteração feita com sucesso !");
-        } else {
-            json = gson.toJson("Houve falha na tentativa de Salvar as Alterações");
-        }
-        try {
-            connectSQLServer.dbConnect().close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return Response.ok(json, MediaType.APPLICATION_JSON).build();
-    }
+//    @PUT
+//    @Path("/changeDinamicPercent")
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public Response alteraPercentualDinamico(String object) {
+//        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+//        CadastroPercentualDinamicoModel cadastroPercentualDinamicoModel = gson.fromJson(object, CadastroPercentualDinamicoModel.class);
+//        ConnectSQLServer connectSQLServer = new ConnectSQLServer();
+//        RubricasDAO rubricasDAO = new RubricasDAO(connectSQLServer.dbConnect());
+//        String json;
+//        if (rubricasDAO.AlteraPercentualDinamico(cadastroPercentualDinamicoModel.getPercentual(), cadastroPercentualDinamicoModel.getCurrentUser())) {
+//            json = gson.toJson("Alteração feita com sucesso !");
+//        } else {
+//            json = gson.toJson("Houve falha na tentativa de Salvar as Alterações");
+//        }
+//        try {
+//            connectSQLServer.dbConnect().close();
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return Response.ok(json, MediaType.APPLICATION_JSON).build();
+//    }
     @DELETE
     @Path("/deleteDinamicPercent/{codigo}")
     @Produces(MediaType.APPLICATION_JSON)
