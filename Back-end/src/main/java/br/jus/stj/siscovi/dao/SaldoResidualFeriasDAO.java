@@ -25,7 +25,8 @@ public class SaldoResidualFeriasDAO {
 
         ArrayList<SaldoResidualRestituidoFerias> lista = new ArrayList<>();
 
-        String sql = "SELECT t.nome, " +
+        String sql = "SELECT ft.cod_terceirizado_contrato," +
+                            "t.nome, " +
                             "t.cpf, " +
                             "srf.valor_ferias, " +
                             "srf.valor_terco, " +
@@ -58,14 +59,15 @@ public class SaldoResidualFeriasDAO {
 
                         SaldoResidualRestituidoFerias saldo =
 
-                                new SaldoResidualRestituidoFerias(resultSet.getString(1),
+                                new SaldoResidualRestituidoFerias(resultSet.getInt(1),
                                         resultSet.getString(2),
-                                        resultSet.getFloat(3),
+                                        resultSet.getString(3),
                                         resultSet.getFloat(4),
                                         resultSet.getFloat(5),
                                         resultSet.getFloat(6),
-                                        resultSet.getFloat(3) + resultSet.getFloat(4) + resultSet.getFloat(5) + resultSet.getFloat(6),
-                                        resultSet.getString(7));
+                                        resultSet.getFloat(7),
+                                        resultSet.getFloat(4) + resultSet.getFloat(5) + resultSet.getFloat(6) + resultSet.getFloat(7),
+                                        resultSet.getString(8));
 
                         lista.add(saldo);
 
