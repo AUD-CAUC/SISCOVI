@@ -205,19 +205,19 @@ public class RubricasDAO {
         }
         return false;
     }
-//    public boolean AlteraPercentualDinamico(PercentuaisDinamicosModel percentual, String currentUser) {
-//        PreparedStatement preparedStatement;
-//        try {
-//            preparedStatement = connection.prepareStatement("UPDATE TB_PERCENTUAL_DINAMICO SET PERCENTUAL=?, LOGIN_ATUALIZACAO=?, DATA_ATUALIZACAO=CURRENT_TIMESTAMP WHERE COD=?");
-//            preparedStatement.setFloat(1, percentual.getPercentual());
-//            preparedStatement.setString(2, currentUser);
-//            preparedStatement.executeUpdate();
-//            return true;
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        return false;
-//    }
+    public boolean AlteraPercentualDinamico(PercentuaisDinamicosModel percentual, String currentUser) {
+        PreparedStatement preparedStatement;
+        try {
+            preparedStatement = connection.prepareStatement("UPDATE TB_PERCENTUAL_DINAMICO SET PERCENTUAL=?, LOGIN_ATUALIZACAO=?, DATA_ATUALIZACAO=CURRENT_TIMESTAMP WHERE COD=?");
+            preparedStatement.setFloat(1, percentual.getPercentual());
+            preparedStatement.setString(2, currentUser);
+            preparedStatement.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
     public boolean DeletePercentualDinamico(int codigo) {
         PreparedStatement preparedStatement;
         try{
