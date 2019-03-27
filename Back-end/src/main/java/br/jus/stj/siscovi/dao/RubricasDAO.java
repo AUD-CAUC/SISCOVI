@@ -1,9 +1,7 @@
 package br.jus.stj.siscovi.dao;
 
 import br.jus.stj.siscovi.dao.sql.InsertTSQL;
-import br.jus.stj.siscovi.model.PercentuaisEstaticosModel;
-import br.jus.stj.siscovi.model.PercentuaisDinamicosModel;
-import br.jus.stj.siscovi.model.RubricaModel;
+import br.jus.stj.siscovi.model.*;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 
 import java.sql.*;
@@ -93,17 +91,18 @@ public class RubricasDAO {
         }
         return null;
     }
-    public ArrayList<PercentuaisDinamicosModel> SelectPercentualDinamico() {
+    public ArrayList<PercentuaisDinamicosModel> SelectPercentualDinamico(int codigo) {
         ResultSet resultSet = null;
         PreparedStatement preparedStatement = null;
         ArrayList<PercentuaisDinamicosModel> listaDePercentuaisDinamicos = new ArrayList<PercentuaisDinamicosModel>();
         PercentuaisDinamicosModel meuPercentual;
         try{
             preparedStatement = connection.prepareStatement("SELECT * FROM tb_percentual_dinamico WHERE COD=?");
+            preparedStatement.setInt(1, codigo);
             resultSet = preparedStatement.executeQuery();
             while(resultSet.next()) {
                 meuPercentual = new PercentuaisDinamicosModel(resultSet.getInt("COD"), resultSet.getFloat("PERCENTUAL"),
-                        resultSet.getString("LOGIN_ATUALIZACAO"), resultSet.getDate("DATA_ATALIZACAO"));
+                        resultSet.getString("LOGIN_ATUALIZACAO"), resultSet.getDate("DATA_ATUALIZACAO"));
                 listaDePercentuaisDinamicos.add(meuPercentual);
             }
             return listaDePercentuaisDinamicos;
@@ -205,12 +204,13 @@ public class RubricasDAO {
         }
         return false;
     }
-    public boolean AlteraPercentualDinamico(PercentuaisDinamicosModel percentual, String currentUser) {
+    public boolean AlteraPercentualDinamico(CadastroPercentualDinamicoModel percentual, String currentUser) {
         PreparedStatement preparedStatement;
         try {
             preparedStatement = connection.prepareStatement("UPDATE TB_PERCENTUAL_DINAMICO SET PERCENTUAL=?, LOGIN_ATUALIZACAO=?, DATA_ATUALIZACAO=CURRENT_TIMESTAMP WHERE COD=?");
             preparedStatement.setFloat(1, percentual.getPercentual());
             preparedStatement.setString(2, currentUser);
+            preparedStatement.setInt(3, percentual.getCodigo());
             preparedStatement.executeUpdate();
             return true;
         } catch (SQLException e) {
