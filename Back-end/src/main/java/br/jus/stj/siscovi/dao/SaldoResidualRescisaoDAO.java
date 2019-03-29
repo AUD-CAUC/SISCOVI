@@ -23,7 +23,7 @@ public class SaldoResidualRescisaoDAO {
 
         ArrayList<SaldoResidualRescisao> lista = new ArrayList<>();
 
-        String sql = "SELECT ft.cod_terceirizado_contrato" +
+        String sql = "SELECT ft.cod_terceirizado_contrato," +
                             "t.nome, " +
                             "t.cpf, " +
                             "srr.incid_submod_4_1_dec_terceiro, " +
@@ -62,17 +62,18 @@ public class SaldoResidualRescisaoDAO {
 
                         SaldoResidualRescisao saldo =
 
-                                new SaldoResidualRescisao(resultSet.getString(1),
+                                new SaldoResidualRescisao(resultSet.getInt(1),
                                         resultSet.getString(2),
-                                        resultSet.getFloat(3),
+                                        resultSet.getString(3),
                                         resultSet.getFloat(4),
                                         resultSet.getFloat(5),
                                         resultSet.getFloat(6),
                                         resultSet.getFloat(7),
                                         resultSet.getFloat(8),
                                         resultSet.getFloat(9),
-                                        resultSet.getFloat(3) + resultSet.getFloat(4) + resultSet.getFloat(5) + resultSet.getFloat(6) +resultSet.getFloat(7)+ resultSet.getFloat(8) + resultSet.getFloat(9),
-                                        resultSet.getString(10));
+                                        resultSet.getFloat(10),
+                                        resultSet.getFloat(4) + resultSet.getFloat(5) + resultSet.getFloat(6) + resultSet.getFloat(7) +resultSet.getFloat(8)+ resultSet.getFloat(9) + resultSet.getFloat(10),
+                                        resultSet.getString(11));
 
                         lista.add(saldo);
 

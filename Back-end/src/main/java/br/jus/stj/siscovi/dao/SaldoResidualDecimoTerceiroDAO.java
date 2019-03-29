@@ -22,7 +22,7 @@ public class SaldoResidualDecimoTerceiroDAO {
 
         ArrayList<SaldoResidualRestituidoDecimoTerceiro> lista = new ArrayList<>();
 
-        String sql = "SELECT ft.cod_terceirizado_contrato" +
+        String sql = "SELECT ft.cod_terceirizado_contrato," +
                             "t.nome, " +
                             "t.cpf, " +
                             "srdt.valor, " +
@@ -54,12 +54,13 @@ public class SaldoResidualDecimoTerceiroDAO {
 
                         SaldoResidualRestituidoDecimoTerceiro saldo =
 
-                                new SaldoResidualRestituidoDecimoTerceiro(resultSet.getString(1),
+                                new SaldoResidualRestituidoDecimoTerceiro(resultSet.getInt(1),
                                         resultSet.getString(2),
-                                        resultSet.getFloat(3),
+                                        resultSet.getString(3),
                                         resultSet.getFloat(4),
-                                        resultSet.getFloat(3) + resultSet.getFloat(4),
-                                        resultSet.getString(5));
+                                        resultSet.getFloat(5),
+                                        resultSet.getFloat(4) + resultSet.getFloat(5),
+                                        resultSet.getString(6));
 
                         lista.add(saldo);
 
