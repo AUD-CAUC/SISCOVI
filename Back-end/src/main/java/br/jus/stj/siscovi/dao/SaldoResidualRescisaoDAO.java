@@ -23,7 +23,8 @@ public class SaldoResidualRescisaoDAO {
 
         ArrayList<SaldoResidualRescisao> lista = new ArrayList<>();
 
-        String sql = "SELECT t.nome, " +
+        String sql = "SELECT ft.cod_terceirizado_contrato" +
+                            "t.nome, " +
                             "t.cpf, " +
                             "srr.incid_submod_4_1_dec_terceiro, " +
                             "srr.incid_multa_fgts_dec_terceiro, " +
