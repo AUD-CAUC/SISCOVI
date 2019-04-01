@@ -80,7 +80,7 @@ public class FeriasDAO {
         if(codigoGestor == codGestor) {
             List<CalculoPendenteModel> lista = new ArrayList<>();
             String sql = "SELECT rt.COD_TERCEIRIZADO_CONTRATO AS \"COD\"," +
-                    " u.nome AS \"Gestor\"," +
+//                    " u.nome AS \"Gestor\"," +
                     " c.nome_empresa AS \"Empresa\"," +
                     " c.numero_contrato AS \"Contrato N°\"," +
                     " tr.nome AS \"Tipo de restituição\"," +
@@ -105,8 +105,8 @@ public class FeriasDAO {
                     " JOIN tb_terceirizado t ON t.cod = tc.cod_terceirizado" +
                     " JOIN tb_contrato c ON c.cod = tc.cod_contrato" +
                     " JOIN tb_tipo_restituicao tr ON tr.cod = rt.cod_tipo_restituicao" +
-                    " JOIN tb_historico_gestao_contrato hgc ON hgc.cod_contrato = c.cod" +
-                    " JOIN tb_usuario u ON u.cod = hgc.cod_usuario" +
+//                    " JOIN tb_historico_gestao_contrato hgc ON hgc.cod_contrato = c.cod" +
+//                    " JOIN tb_usuario u ON u.cod = hgc.cod_usuario" +
                     " JOIN tb_funcao_contrato fc ON fc.cod = ft.cod_funcao_contrato" +
                     " JOIN tb_funcao f ON f.cod = fc.cod_funcao" +
                     " WHERE tc.COD_CONTRATO = ? AND ((AUTORIZADO IS NULL) OR (RESTITUIDO = 'N' AND AUTORIZADO = 'S'))";
@@ -246,7 +246,7 @@ public class FeriasDAO {
         if(codigoGestor == codGestor) {
             List<CalculoPendenteModel> lista = new ArrayList<>();
             String sql = "SELECT rt.COD_TERCEIRIZADO_CONTRATO AS \"COD\"," +
-                    " u.nome AS \"Gestor\"," +
+//                    " u.nome AS \"Gestor\"," +
                     " c.nome_empresa AS \"Empresa\"," +
                     " c.numero_contrato AS \"Contrato N°\"," +
                     " tr.nome AS \"Tipo de restituição\"," +
@@ -272,8 +272,8 @@ public class FeriasDAO {
                     " JOIN tb_terceirizado t ON t.cod = tc.cod_terceirizado" +
                     " JOIN tb_contrato c ON c.cod = tc.cod_contrato" +
                     " JOIN tb_tipo_restituicao tr ON tr.cod = rt.cod_tipo_restituicao" +
-                    " JOIN tb_historico_gestao_contrato hgc ON hgc.cod_contrato = c.cod" +
-                    " JOIN tb_usuario u ON u.cod = hgc.cod_usuario" +
+//                    " JOIN tb_historico_gestao_contrato hgc ON hgc.cod_contrato = c.cod" +
+//                    " JOIN tb_usuario u ON u.cod = hgc.cod_usuario" +
                     " JOIN tb_funcao_contrato fc ON fc.cod = ft.cod_funcao_contrato" +
                     " JOIN tb_funcao f ON f.cod = fc.cod_funcao" +
                     " WHERE tc.COD_CONTRATO = ? AND (AUTORIZADO='N' OR AUTORIZADO='n')";
@@ -341,7 +341,7 @@ public class FeriasDAO {
         if(codigoGestor == codGestor) {
             List<CalculoPendenteModel> lista = new ArrayList<>();
             String sql = "SELECT rt.COD_TERCEIRIZADO_CONTRATO AS \"COD\"," +
-                    " u.nome AS \"Gestor\"," +
+//                    " u.nome AS \"Gestor\"," +
                     " c.nome_empresa AS \"Empresa\"," +
                     " c.numero_contrato AS \"Contrato N°\"," +
                     " tr.nome AS \"Tipo de restituição\"," +
@@ -367,8 +367,8 @@ public class FeriasDAO {
                     " JOIN tb_terceirizado t ON t.cod = tc.cod_terceirizado" +
                     " JOIN tb_contrato c ON c.cod = tc.cod_contrato" +
                     " JOIN tb_tipo_restituicao tr ON tr.cod = rt.cod_tipo_restituicao" +
-                    " JOIN tb_historico_gestao_contrato hgc ON hgc.cod_contrato = c.cod" +
-                    " JOIN tb_usuario u ON u.cod = hgc.cod_usuario" +
+//                    " JOIN tb_historico_gestao_contrato hgc ON hgc.cod_contrato = c.cod" +
+//                    " JOIN tb_usuario u ON u.cod = hgc.cod_usuario" +
                     " JOIN tb_funcao_contrato fc ON fc.cod = ft.cod_funcao_contrato" +
                     " JOIN tb_funcao f ON f.cod = fc.cod_funcao" +
                     " WHERE tc.COD_CONTRATO = ? AND ((AUTORIZADO ='S' OR AUTORIZADO ='s') AND (RESTITUIDO IS NULL))";
@@ -429,7 +429,7 @@ public class FeriasDAO {
         if(codigoGestor == codGestor) {
             List<CalculoPendenteModel> lista = new ArrayList<>();
             String sql = "SELECT rt.COD_TERCEIRIZADO_CONTRATO AS \"COD\"," +
-                    " u.nome AS \"Gestor\"," +
+//                    " u.nome AS \"Gestor\"," +
                     " c.nome_empresa AS \"Empresa\"," +
                     " c.numero_contrato AS \"Contrato N°\"," +
                     " tr.nome AS \"Tipo de restituição\"," +
@@ -456,8 +456,8 @@ public class FeriasDAO {
                     " JOIN tb_terceirizado t ON t.cod = tc.cod_terceirizado" +
                     " JOIN tb_contrato c ON c.cod = tc.cod_contrato" +
                     " JOIN tb_tipo_restituicao tr ON tr.cod = rt.cod_tipo_restituicao" +
-                    " JOIN tb_historico_gestao_contrato hgc ON hgc.cod_contrato = c.cod" +
-                    " JOIN tb_usuario u ON u.cod = hgc.cod_usuario" +
+//                    " JOIN tb_historico_gestao_contrato hgc ON hgc.cod_contrato = c.cod" +
+//                    " JOIN tb_usuario u ON u.cod = hgc.cod_usuario" +
                     " JOIN tb_funcao_contrato fc ON fc.cod = ft.cod_funcao_contrato" +
                     " JOIN tb_funcao f ON f.cod = fc.cod_funcao" +
                     " WHERE tc.COD_CONTRATO = ? AND ((AUTORIZADO ='S' OR AUTORIZADO ='s') AND (RESTITUIDO = 'N' OR RESTITUIDO='n'))";
@@ -521,7 +521,7 @@ public class FeriasDAO {
         List<CalculoPendenteModel> lista = new ArrayList<>();
         if(cod == codGestor) {
             String sql = "SELECT rt.COD_TERCEIRIZADO_CONTRATO AS \"COD\"," +
-                    " u.nome AS \"Gestor\"," +
+//                    " u.nome AS \"Gestor\"," +
                     " c.nome_empresa AS \"Empresa\"," +
                     " c.numero_contrato AS \"Contrato N°\"," +
                     " tr.nome AS \"Tipo de restituição\"," +
@@ -547,8 +547,8 @@ public class FeriasDAO {
                     " JOIN tb_terceirizado t ON t.cod = tc.cod_terceirizado" +
                     " JOIN tb_contrato c ON c.cod = tc.cod_contrato" +
                     " JOIN tb_tipo_restituicao tr ON tr.cod = rt.cod_tipo_restituicao" +
-                    " JOIN tb_historico_gestao_contrato hgc ON hgc.cod_contrato = c.cod" +
-                    " JOIN tb_usuario u ON u.cod = hgc.cod_usuario" +
+//                    " JOIN tb_historico_gestao_contrato hgc ON hgc.cod_contrato = c.cod" +
+//                    " JOIN tb_usuario u ON u.cod = hgc.cod_usuario" +
                     " JOIN tb_funcao_contrato fc ON fc.cod = ft.cod_funcao_contrato" +
                     " JOIN tb_funcao f ON f.cod = fc.cod_funcao" +
                     " WHERE tc.COD_CONTRATO = ? AND ((AUTORIZADO ='S' OR AUTORIZADO ='s') AND (RESTITUIDO = 'S' OR RESTITUIDO='s'))";

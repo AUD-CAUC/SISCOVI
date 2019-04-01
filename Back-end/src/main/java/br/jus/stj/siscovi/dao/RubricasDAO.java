@@ -1,9 +1,7 @@
 package br.jus.stj.siscovi.dao;
 
 import br.jus.stj.siscovi.dao.sql.InsertTSQL;
-import br.jus.stj.siscovi.model.PercentuaisEstaticosModel;
-import br.jus.stj.siscovi.model.PercentuaisDinamicosModel;
-import br.jus.stj.siscovi.model.RubricaModel;
+import br.jus.stj.siscovi.model.*;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 
 import java.sql.*;
@@ -78,7 +76,7 @@ public class RubricasDAO {
         }
         return null;
     }
-    public ArrayList<PercentuaisDinamicosModel> SelectPercentuaisDinamicos() {
+    public ArrayList<PercentuaisDinamicosModel> SelectAllPercentuaisDinamicos() {
         ResultSet resultSet = null;
         PreparedStatement preparedStatement = null;
         ArrayList<PercentuaisDinamicosModel> listaDePercentuaisDinamicos = new ArrayList<PercentuaisDinamicosModel>();
@@ -88,8 +86,7 @@ public class RubricasDAO {
             preparedStatement = connection.prepareStatement("SELECT * FROM tb_percentual_dinamico");
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                meuPercentual = new PercentuaisDinamicosModel(resultSet.getFloat("PERCENTUAL"),
-                        resultSet.getString("LOGIN_ATUALIZACAO"),
+                meuPercentual = new PercentuaisDinamicosModel(resultSet.getInt("COD"), resultSet.getFloat("PERCENTUAL"), resultSet.getString("LOGIN_ATUALIZACAO"),
                         resultSet.getDate("DATA_ATUALIZACAO"));
                 listaDePercentuaisDinamicos.add(meuPercentual);
             }
@@ -99,6 +96,30 @@ public class RubricasDAO {
         } catch (SQLServerException sqlse) {
             sqlse.printStackTrace();
         } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+        return null;
+    }
+    public ArrayList<PercentuaisDinamicosModel> SelectPercentualDinamico(int codigo) {
+        ResultSet resultSet = null;
+        PreparedStatement preparedStatement = null;
+        ArrayList<PercentuaisDinamicosModel> listaDePercentuaisDinamicos = new ArrayList<PercentuaisDinamicosModel>();
+        PercentuaisDinamicosModel meuPercentual;
+        try{
+            preparedStatement = connection.prepareStatement("SELECT * FROM tb_percentual_dinamico WHERE COD=?");
+            preparedStatement.setInt(1, codigo);
+            resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()) {
+                meuPercentual = new PercentuaisDinamicosModel(resultSet.getInt("COD"), resultSet.getFloat("PERCENTUAL"),
+                        resultSet.getString("LOGIN_ATUALIZACAO"), resultSet.getDate("DATA_ATUALIZACAO"));
+                listaDePercentuaisDinamicos.add(meuPercentual);
+            }
+            return listaDePercentuaisDinamicos;
+        }catch (NullPointerException npe) {
+            npe.printStackTrace();
+        }catch (SQLServerException sqlse) {
+            sqlse.printStackTrace();
+        }catch (SQLException sqle) {
             sqle.printStackTrace();
         }
         return null;
@@ -221,6 +242,20 @@ public class RubricasDAO {
         }
         return false;
     }
+    public boolean AlteraPercentualDinamico(CadastroPercentualDinamicoModel percentual, String currentUser) {
+        PreparedStatement preparedStatement;
+        try {
+            preparedStatement = connection.prepareStatement("UPDATE TB_PERCENTUAL_DINAMICO SET PERCENTUAL=?, LOGIN_ATUALIZACAO=?, DATA_ATUALIZACAO=CURRENT_TIMESTAMP WHERE COD=?");
+            preparedStatement.setFloat(1, percentual.getPercentual());
+            preparedStatement.setString(2, currentUser);
+            preparedStatement.setInt(3, percentual.getCodigo());
+            preparedStatement.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
     public boolean AlteraPercentualEstatico(PercentuaisEstaticosModel percentualestatico, String currentUser) {
         PreparedStatement preparedStatement;
         try {
@@ -241,10 +276,23 @@ public class RubricasDAO {
         }
         return false;
     }
+    public boolean DeletePercentualDinamico(int codigo) {
+        PreparedStatement preparedStatement;
+        try{
+            preparedStatement = connection.prepareStatement("DELETE FROM tb_percentual_dinamico WHERE COD=?");
+            preparedStatement.setInt(1, codigo);
+            preparedStatement.executeUpdate();
+            return true;
+        }catch(SQLException sqle) {
+            sqle.printStackTrace();
+        }
+        return false;
+    }
     public boolean DeletePercentualEstatico(int codigo) {
         PreparedStatement preparedStatement;
         try{
             preparedStatement = connection.prepareStatement("DELETE FROM tb_percentual_estatico WHERE COD=?");
+
             preparedStatement.setInt(1, codigo);
             preparedStatement.executeUpdate();
             return true;
