@@ -3052,9 +3052,7 @@ public class ConsultaTSQL {
             String sql = "SELECT COD_PERFIL, " +
                     "NOME, " +
                     "LOGIN, " +
-                    "PASSWORD, " +
-                    "login_atualizacao, " +
-                    "data_atualizacao " +
+                    "PASSWORD " +
                     "FROM tb_usuario " +
                     "WHERE cod = ?";
 
@@ -3069,9 +3067,7 @@ public class ConsultaTSQL {
                         resultSet.getInt(1),
                         resultSet.getString(2),
                         resultSet.getString(3),
-                        resultSet.getString(4),
-                        resultSet.getString(5),
-                        resultSet.getTimestamp(6));
+                        resultSet.getString(4));
 
             }
 

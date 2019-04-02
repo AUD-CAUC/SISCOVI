@@ -83,10 +83,11 @@ public class UsuarioController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUsuario(@PathParam("codigo") int codigo) {
         ConnectSQLServer connectSQLServer = new ConnectSQLServer();
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
         ConsultaTSQL consulta = new ConsultaTSQL(connectSQLServer.dbConnect());
         RegistroUsuario registroUsuario = consulta.RetornaRegistroUsuario(codigo);
-        UsuarioModel usuarioModel = new UsuarioModel(registroUsuario.getpCod(),registroUsuario.getpNome(), registroUsuario.getpLogin(),registroUsuario.getpLoginAtualizacao(), Date.valueOf(registroUsuario.getpDataAtualizacao().toString()));
+        UsuarioModel usuarioModel = new UsuarioModel(registroUsuario.getpCod(), registroUsuario.getpCodPerfil() ,registroUsuario.getpNome(),
+                registroUsuario.getpLogin(), registroUsuario.getpPassword(), null, null);
         String json = gson.toJson(usuarioModel);
         try {
             connectSQLServer.dbConnect().close();
