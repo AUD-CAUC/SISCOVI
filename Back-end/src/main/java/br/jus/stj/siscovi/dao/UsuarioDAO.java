@@ -227,7 +227,7 @@ public class UsuarioDAO {
         try {
 
             update.UpdateUsuario(usuario.getCodigo(),consulta.RetornaCodPerfilUsuario(usuario.getPerfil()), usuario.getNome(),
-                    usuario.getLogin(), "SYSTEM");
+                    usuario.getLogin(), usuario.getPassword(), usuario.getLoginAtualizacao());
 
             return true;
 
