@@ -1368,6 +1368,7 @@ public class UpdateTSQL {
                              int pCodPerfil,
                              String pNome,
                              String pLogin,
+                             String pPassword,
                              String pLoginAtualizacao) {
 
         PreparedStatement preparedStatement;
@@ -1379,6 +1380,7 @@ public class UpdateTSQL {
                     " SET COD_PERFIL = ?," +
                     " NOME = ?," +
                     " LOGIN = ?," +
+                    " PASSWORD = ?," +
                     " LOGIN_ATUALIZACAO = ?," +
                     " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
                     " WHERE COD = ?";
@@ -1387,8 +1389,9 @@ public class UpdateTSQL {
             preparedStatement.setInt(1, pCodPerfil);
             preparedStatement.setString(2, pNome);
             preparedStatement.setString(3, pLogin);
-            preparedStatement.setString(4, pLoginAtualizacao);
-            preparedStatement.setInt(5, pCodUsuario);
+            preparedStatement.setString(4, pPassword);
+            preparedStatement.setString(5, pLoginAtualizacao);
+            preparedStatement.setInt(6, pCodUsuario);
 
             preparedStatement.executeUpdate();
 

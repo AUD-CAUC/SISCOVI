@@ -19,8 +19,8 @@ public class UsuarioDAO {
         ResultSet resultSet = null;
         ArrayList<UsuarioModel> usuarios = new ArrayList<UsuarioModel>();
         try {
-            preparedStatement = connection.prepareStatement("SELECT U.cod, U.NOME, LOGIN, SIGLA, U.LOGIN_ATUALIZACAO, U.DATA_ATUALIZACAO FROM tb_usuario U " +
-                    "JOIN TB_PERFIL_USUARIO P ON P.cod=u.COD_PERFIL ORDER BY NOME ASC");
+            preparedStatement = connection.prepareStatement("SELECT U.cod, U.NOME, LOGIN, SIGLA, U.LOGIN_ATUALIZACAO, U.DATA_ATUALIZACAO FROM tb_usuario U" +
+                    " JOIN TB_PERFIL_USUARIO P ON P.cod=u.COD_PERFIL ORDER BY NOME ASC");
             resultSet = preparedStatement.executeQuery();
             while(resultSet.next()) {
                 UsuarioModel usuarioModel = new UsuarioModel(resultSet.getInt("COD"),
@@ -226,7 +226,8 @@ public class UsuarioDAO {
 
         try {
 
-            update.UpdateUsuario(usuario.getCodigo(),consulta.RetornaCodPerfilUsuario(usuario.getPerfil()), usuario.getNome(), usuario.getLogin(), "SYSTEM");
+            update.UpdateUsuario(usuario.getCodigo(),consulta.RetornaCodPerfilUsuario(usuario.getPerfil()), usuario.getNome(),
+                    usuario.getLogin(), "SYSTEM");
 
             return true;
 
