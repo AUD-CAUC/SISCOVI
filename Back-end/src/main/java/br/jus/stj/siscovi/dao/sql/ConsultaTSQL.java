@@ -3052,7 +3052,6 @@ public class ConsultaTSQL {
             String sql = "SELECT COD_PERFIL, " +
                     "NOME, " +
                     "LOGIN, " +
-                    "PASSWORD, " +
                     "login_atualizacao, " +
                     "data_atualizacao " +
                     "FROM tb_usuario " +
@@ -3066,12 +3065,11 @@ public class ConsultaTSQL {
             if (resultSet.next()) {
 
                 registro = new RegistroUsuario(pCodUsuario,
-                        resultSet.getInt(1),
+                        resultSet.getString(1),
                         resultSet.getString(2),
                         resultSet.getString(3),
                         resultSet.getString(4),
-                        resultSet.getString(5),
-                        resultSet.getTimestamp(6));
+                        resultSet.getDate(5));
 
             }
 

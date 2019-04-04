@@ -418,7 +418,6 @@ public class TestInsertTSQL {
         System.out.println(registroUsuario.getpCod());
         System.out.println(registroUsuario.getpNome());
         System.out.println(registroUsuario.getpLogin());
-        System.out.println(registroUsuario.getpPassword());
         System.out.println(registroUsuario.getpLoginAtualizacao());
         System.out.println(registroUsuario.getpDataAtualizacao());
 

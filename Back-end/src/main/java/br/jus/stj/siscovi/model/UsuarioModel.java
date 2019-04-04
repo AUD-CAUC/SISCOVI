@@ -11,12 +11,13 @@ public class UsuarioModel {
     private String loginAtualizacao;
     private Date ultimaAtualizacao;
 
-    public UsuarioModel(int codigo, String nome, String login, String loginAtualizacao, Date ultimaAtualizacao) {
-           this.nome = nome;
-           this.codigo = codigo;
-           this.login = login;
-           this.loginAtualizacao = loginAtualizacao;
-           this.ultimaAtualizacao = ultimaAtualizacao;
+    public UsuarioModel(int codigo, String perfil, String nome, String login, String loginAtualizacao, Date ultimaAtualizacao) {
+        this.codigo = codigo;
+        this.nome = nome;
+        this.perfil = perfil;
+        this.login = login;
+        this.loginAtualizacao = loginAtualizacao;
+        this.ultimaAtualizacao = ultimaAtualizacao;
     }
 
     public String getNome() {
@@ -25,7 +26,6 @@ public class UsuarioModel {
     public String getLogin() {
         return login;
     }
-    public String getPassword() { return password;}
     public String getLoginAtualizacao() {
         return loginAtualizacao;
     }
@@ -40,5 +40,12 @@ public class UsuarioModel {
     }
     public int getCodigo() {
         return codigo;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    public String getPassword() {
+        return password;
     }
 }

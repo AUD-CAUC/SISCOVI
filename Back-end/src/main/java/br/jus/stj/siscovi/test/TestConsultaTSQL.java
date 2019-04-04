@@ -240,7 +240,6 @@ public class TestConsultaTSQL {
         System.out.println(registroUsuario.getpCod());
         System.out.println(registroUsuario.getpNome());
         System.out.println(registroUsuario.getpLogin());
-        System.out.println(registroUsuario.getpPassword());
         System.out.println(registroTotalMensalAReter.getpLoginAtualizacao());
         System.out.println(registroTotalMensalAReter.getpDataAtualizacao());
 

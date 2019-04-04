@@ -65,15 +65,19 @@ public class UsuarioController {
         ConnectSQLServer connectSQLServer = new ConnectSQLServer();
         UsuarioDAO usuarioDAO = new UsuarioDAO(connectSQLServer.dbConnect());
         String json;
-        if(usuarioDAO.alteraUsuario(cadastroUsuarioModel.getUsuario(), cadastroUsuarioModel.getCurrentUser())) {
-            json = gson.toJson("Alteração feita com sucesso !");
-        }else {
-            json = gson.toJson("Houve falha na tentativa de Salvar as Alterações");
-        }
-        try {
-            connectSQLServer.dbConnect().close();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        if (usuarioDAO.verificarSenha(cadastroUsuarioModel.getUsuario().getCodigo(), cadastroUsuarioModel.getPassword())) {
+            if(usuarioDAO.alteraUsuario(cadastroUsuarioModel.getUsuario(), cadastroUsuarioModel.getCurrentUser())) {
+                json = gson.toJson("Alteração feita com sucesso !");
+            }else {
+                json = gson.toJson("Houve falha na tentativa de Salvar as Alterações");
+            }
+            try {
+                connectSQLServer.dbConnect().close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } else {
+            json = gson.toJson("Senha antiga não confere com a senha digitada");
         }
         return Response.ok(json, MediaType.APPLICATION_JSON).build();
     }
@@ -83,10 +87,12 @@ public class UsuarioController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUsuario(@PathParam("codigo") int codigo) {
         ConnectSQLServer connectSQLServer = new ConnectSQLServer();
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
         ConsultaTSQL consulta = new ConsultaTSQL(connectSQLServer.dbConnect());
         RegistroUsuario registroUsuario = consulta.RetornaRegistroUsuario(codigo);
-        UsuarioModel usuarioModel = new UsuarioModel(registroUsuario.getpCod(),registroUsuario.getpNome(), registroUsuario.getpLogin(),registroUsuario.getpLoginAtualizacao(), Date.valueOf(registroUsuario.getpDataAtualizacao().toString()));
+        UsuarioModel usuarioModel = new UsuarioModel(registroUsuario.getpCod(), registroUsuario.getpCodPerfil(), registroUsuario.getpNome(),
+                registroUsuario.getpLogin(),  registroUsuario.getpLoginAtualizacao(),
+                registroUsuario.getpDataAtualizacao());
         String json = gson.toJson(usuarioModel);
         try {
             connectSQLServer.dbConnect().close();

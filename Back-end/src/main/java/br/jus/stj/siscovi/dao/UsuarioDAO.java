@@ -2,6 +2,7 @@ package br.jus.stj.siscovi.dao;
 import br.jus.stj.siscovi.dao.sql.ConsultaTSQL;
 import br.jus.stj.siscovi.dao.sql.UpdateTSQL;
 import br.jus.stj.siscovi.model.UsuarioModel;
+import org.mindrot.jbcrypt.BCrypt;
 
 
 import java.sql.*;
@@ -19,16 +20,16 @@ public class UsuarioDAO {
         ResultSet resultSet = null;
         ArrayList<UsuarioModel> usuarios = new ArrayList<UsuarioModel>();
         try {
-            preparedStatement = connection.prepareStatement("SELECT U.cod, U.NOME, LOGIN, SIGLA, U.LOGIN_ATUALIZACAO, U.DATA_ATUALIZACAO FROM tb_usuario U" +
+            preparedStatement = connection.prepareStatement("SELECT U.cod, U.NOME, LOGIN, SIGLA, U.PASSWORD, U.LOGIN_ATUALIZACAO, U.DATA_ATUALIZACAO FROM tb_usuario U" +
                     " JOIN TB_PERFIL_USUARIO P ON P.cod=u.COD_PERFIL ORDER BY NOME ASC");
             resultSet = preparedStatement.executeQuery();
             while(resultSet.next()) {
                 UsuarioModel usuarioModel = new UsuarioModel(resultSet.getInt("COD"),
+                        resultSet.getString("SIGLA"),
                         resultSet.getString("NOME"),
                         resultSet.getString("LOGIN"),
                         resultSet.getString("LOGIN_ATUALIZACAO"),
                         resultSet.getDate("DATA_ATUALIZACAO"));
-                usuarioModel.setPerfil(resultSet.getString("SIGLA"));
                 usuarios.add(usuarioModel);
             }
             return usuarios;
@@ -118,11 +119,11 @@ public class UsuarioDAO {
             try(ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
                     UsuarioModel usuarioModel = new UsuarioModel(resultSet.getInt("COD"),
+                            resultSet.getString("SIGLA"),
                             resultSet.getString("NOME"),
                             resultSet.getString("LOGIN"),
                             resultSet.getString("LOGIN_ATUALIZACAO"),
                             resultSet.getDate("DATA_ATUALIZACAO"));
-                    usuarioModel.setPerfil(resultSet.getString("SIGLA"));
                     usuarios.add(usuarioModel);
                 }
             }
@@ -252,6 +253,26 @@ public class UsuarioDAO {
             }
         } catch (SQLException e) {
             throw new RuntimeException("Usuário não existe !");
+        }
+        return false;
+    }
+
+    public boolean verificarSenha(int cod, String password) {
+        String sql = "SELECT PASSWORD FROM TB_USUARIO WHERE cod = ?";
+
+        try(PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+            preparedStatement.setInt(1, cod);
+            try(ResultSet resultSet = preparedStatement.executeQuery()) {
+                if(resultSet.next()){
+                    System.out.println(password);
+                    System.out.println(resultSet.getString("PASSWORD"));
+                    if (BCrypt.checkpw(password, resultSet.getString("PASSWORD"))) {
+                        return true;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new NullPointerException("Não foi possível verificar a senha.");
         }
         return false;
     }
