@@ -29,8 +29,8 @@ public class SaldoResidualDAO {
                 "srf.valor_ferias, " +
                 "srf.valor_terco, " +
                 "srf.incid_submod_4_1_ferias, " +
-                "srf.incid_submod_4_1_terco, " +
-                "CASE WHEN srf.restituido = 'S' THEN 'SIM' ELSE 'NÃO' END " +
+                "srf.incid_submod_4_1_terco " +
+                // "CASE WHEN srf.restituido = 'S' THEN 'SIM' ELSE 'NÃO' END " +
                 "FROM tb_restituicao_ferias rt " +
                 "JOIN tb_terceirizado_contrato tc ON tc.cod = rt.cod_terceirizado_contrato " +
                 "JOIN tb_funcao_terceirizado ft ON ft.cod_terceirizado_contrato = tc.cod " +
@@ -64,8 +64,7 @@ public class SaldoResidualDAO {
                                         resultSet.getFloat(5),
                                         resultSet.getFloat(6),
                                         resultSet.getFloat(7),
-                                        resultSet.getFloat(4) + resultSet.getFloat(5) + resultSet.getFloat(6) + resultSet.getFloat(7),
-                                        resultSet.getString(8));
+                                        resultSet.getFloat(4) + resultSet.getFloat(5) + resultSet.getFloat(6) + resultSet.getFloat(7));
 
                         lista.add(saldo);
 
@@ -238,8 +237,8 @@ public class SaldoResidualDAO {
                     "srf.valor_ferias, " +
                     "srf.valor_terco, " +
                     "srf.incid_submod_4_1_ferias, " +
-                    "srf.incid_submod_4_1_terco, " +
-                    "CASE WHEN srf.restituido = 'S' THEN 'SIM' ELSE 'NÃO' END " +
+                    "srf.incid_submod_4_1_terco " +
+//                    "CASE WHEN srf.restituido = 'S' THEN 'SIM' ELSE 'NÃO' END " +
                     "FROM tb_restituicao_ferias rt " +
                     "JOIN tb_terceirizado_contrato tc ON tc.cod = rt.cod_terceirizado_contrato " +
                     "JOIN tb_funcao_terceirizado ft ON ft.cod_terceirizado_contrato = tc.cod " +
@@ -273,8 +272,7 @@ public class SaldoResidualDAO {
                                             resultSet.getFloat(5),
                                             resultSet.getFloat(6),
                                             resultSet.getFloat(7),
-                                            resultSet.getFloat(4) + resultSet.getFloat(5) + resultSet.getFloat(6) + resultSet.getFloat(7),
-                                            resultSet.getString(8));
+                                            resultSet.getFloat(4) + resultSet.getFloat(5) + resultSet.getFloat(6) + resultSet.getFloat(7));
 
                             lista.add(saldo);
 

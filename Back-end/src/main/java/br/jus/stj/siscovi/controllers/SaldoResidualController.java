@@ -48,6 +48,30 @@ public class SaldoResidualController {
     }
 
     @GET
+    @Path("/getCalculosPendentes/{codigoUsuario}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getCalculosPendentes(@PathParam("codigoUsuario") int codigoUsuario) {
+        ConnectSQLServer connectSQLServer = new ConnectSQLServer();
+        SaldoResidualDAO saldoResidualDAO = new SaldoResidualDAO(connectSQLServer.dbConnect());
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+        String json = "";
+        try {
+            JsonArray jsonArray = new JsonArray();
+            List<ContratoModel> contratos = new ContratoDAO(connectSQLServer.dbConnect()).getCodigosContratosCalculosPendentes(codigoUsuario, 4);
+            for (ContratoModel contrato : contratos) {
+                jsonArray.add(CalculosPendentesResiduaisHelper.formataCalculosPendentes(contrato, gson, saldoResidualDAO,
+                       codigoUsuario, 1));
+                }
+            json = gson.toJson(jsonArray);
+            connectSQLServer.dbConnect().close();
+        } catch (Exception ex) {
+            json = gson.toJson(ErrorMessage.handleError(ex));
+            return Response.status(Response.Status.NOT_FOUND).entity(json).build();
+        }
+        return Response.ok(json, MediaType.APPLICATION_JSON).build();
+    }
+
+    @GET
     @Path("/getSaldoResidualDecimoTerceiro/{codigoContrato}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getSaldoResidualDecimoTerceiro(@PathParam("codigoContrato") int codigoContrato) {
