@@ -52,9 +52,12 @@ BEGIN
 
   --Insert em tb_perfil_gestao.
   
-  INSERT INTO tb_perfil_gestao (nome, sigla, login_atualizacao, data_atualizacao) VALUES ('Gestor do contrato', 'GESTOR', @vLoginAtualizacao, @vDataAtualizacao);
-  INSERT INTO tb_perfil_gestao (nome, sigla, login_atualizacao, data_atualizacao) VALUES ('1° Substituto do gestor do contrato', '1° SUBSTITUTO', @vLoginAtualizacao, @vDataAtualizacao);
-  INSERT INTO tb_perfil_gestao (nome, sigla, login_atualizacao, data_atualizacao) VALUES ('2° Substituto do gestor do contrato', '2° SUBSTITUTO', @vLoginAtualizacao, @vDataAtualizacao);
+  INSERT INTO tb_perfil_gestao (cod, nome, sigla, login_atualizacao, data_atualizacao) VALUES (1, 'Gestor do contrato', 'GESTOR', @vLoginAtualizacao, @vDataAtualizacao);
+  INSERT INTO tb_perfil_gestao (cod, nome, sigla, login_atualizacao, data_atualizacao) VALUES (2, '1° Substituto do gestor do contrato', '1° SUBSTITUTO', @vLoginAtualizacao, @vDataAtualizacao);
+  INSERT INTO tb_perfil_gestao (cod, nome, sigla, login_atualizacao, data_atualizacao) VALUES (3, '2° Substituto do gestor do contrato', '2° SUBSTITUTO', @vLoginAtualizacao, @vDataAtualizacao);
+  INSERT INTO tb_perfil_gestao (cod, nome, sigla, login_atualizacao, data_atualizacao) VALUES (4, '3° Substituto do gestor do contrato', '3° SUBSTITUTO', @vLoginAtualizacao, @vDataAtualizacao);
+  INSERT INTO tb_perfil_gestao (cod, nome, sigla, login_atualizacao, data_atualizacao) VALUES (5, '4° Substituto do gestor do contrato', '4° SUBSTITUTO', @vLoginAtualizacao, @vDataAtualizacao);
+
 
   --Carregamento das variáveis de perfil
 
