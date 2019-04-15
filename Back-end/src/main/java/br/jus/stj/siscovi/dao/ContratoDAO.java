@@ -109,7 +109,7 @@ public class ContratoDAO {
         ResultSet resultSet;
         try {
             preparedStatement = connection.prepareStatement("SELECT U.NOME FROM TB_USUARIO U JOIN tb_historico_gestao_contrato HGC ON HGC.COD_USUARIO=U.cod " +
-                    "JOIN TB_CONTRATO C ON  C.cod=HGC.COD_CONTRATO WHERE C.COD = ?");
+                    "JOIN TB_CONTRATO C ON  C.cod=HGC.COD_CONTRATO WHERE C.COD = ? AND DATA_FIM IS NULL ");
             preparedStatement.setInt(1, codigo);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
