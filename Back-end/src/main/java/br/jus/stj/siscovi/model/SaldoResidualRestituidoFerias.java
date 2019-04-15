@@ -10,7 +10,7 @@ public class SaldoResidualRestituidoFerias {
     private float valorIncidenciaFeriasResidual;
     private float valorIncidenciaTercoResidual;
     private float valorTotalResidual;
-//    private String restituidoFlag;
+    private String status;
 
     public SaldoResidualRestituidoFerias(
             int codigoTerceirizadoContrato,
@@ -20,7 +20,8 @@ public class SaldoResidualRestituidoFerias {
             float valorTercoResidual,
             float valorIncidenciaFeriasResidual,
             float valorIncidenciaTercoResidual,
-            float valorTotalResidual) {
+            float valorTotalResidual,
+            String status) {
 
         this.codigoTerceirizadoContrato = codigoTerceirizadoContrato;
         this.terceirizado = terceirizado;
@@ -30,8 +31,7 @@ public class SaldoResidualRestituidoFerias {
         this.valorIncidenciaFeriasResidual = valorIncidenciaFeriasResidual;
         this.valorIncidenciaTercoResidual = valorIncidenciaTercoResidual;
         this.valorTotalResidual = valorTotalResidual;
-//        this.restituidoFlag = restituidoFlag;
-
+        this.status = status;
     }
 
 }
