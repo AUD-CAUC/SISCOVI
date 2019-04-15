@@ -455,11 +455,13 @@ public class ContratoDAO {
                         hgc.getCodigoPerfilGestao());
                 if (vCodHistoricoGestaoVigente != 0) {
                     updateTSQL.UpdateDataFimHistoricoGestaoContrato(vCodHistoricoGestaoVigente, hgc.getInicio(), username);
-                    insereHistoricoGestaoContrato(contrato.getCodigo(), hgc.getGestor(),
-                            hgc.getCodigoPerfilGestao(), hgc.getInicio(), username);
+//                    insereHistoricoGestaoContrato(contrato.getCodigo(), hgc.getGestor(),
+//                            hgc.getCodigoPerfilGestao(), hgc.getInicio(), username);
                 } else {
-                    throw new SQLException("Nenhum historico encontrado para ser atualizado");
+                    // throw new SQLException("Nenhum historico encontrado para ser atualizado");
                 }
+                insereHistoricoGestaoContrato(contrato.getCodigo(), hgc.getGestor(),
+                        hgc.getCodigoPerfilGestao(), hgc.getInicio(), username);
             }
 
             for (PercentualModel pcm : contrato.getPercentuais()) {
