@@ -139,7 +139,7 @@ public class ContratoDAO {
                     if (resultSet.getInt("COD_USUARIO") == codigoUsuario) {
                         codigoGestor = codigoUsuario;
                     } else if (resultSet.getString("USUARIO").equals("USUÁRIO") || resultSet.getString(1).equals("GESTOR") || resultSet.getString(1).equals("1° SUBSTITUTO") ||
-                            resultSet.getString(1).equals("2° SUBSTITUTO")) {
+                            resultSet.getString(1).equals("2° SUBSTITUTO") || resultSet.getString(1).equals("3° SUBSTITUTO") || resultSet.getString(1).equals("4° SUBSTITUTO")) {
                         codigoGestor = resultSet.getInt("COD_USUARIO");
                     }
                     if (resultSet.getString(1).equals("ADMINISTRADOR")) {
@@ -155,7 +155,7 @@ public class ContratoDAO {
 
     /**
      * Função que insere um contrato no sistema, isto é, insere o nome da empresa, o CNPJ, o número do contrato no STJ,
-     * o número do processo no STJ, a descrição do objeto deste contrato, os gestores (O gestor em si, e até dois
+     * o número do processo no STJ, a descrição do objeto deste contrato, os gestores (O gestor em si, e até quatro
      * substitutos), os percentuais, as funções com suas respectivas remunerações e convenções coletivas e a vigência do
      * contrato
      *
