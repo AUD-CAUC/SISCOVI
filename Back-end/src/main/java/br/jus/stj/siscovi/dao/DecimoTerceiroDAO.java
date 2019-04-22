@@ -38,11 +38,13 @@ public class DecimoTerceiroDAO {
                 while (resultSet.next()) {
                     Date inicioContagem = decimoTerceiro.RetornaDataInicioContagem(resultSet.getInt("COD"), pAnoContagem);
                     vSaldoDecimoTericeiro = saldoDecimoTerceiro.getSaldoContaVinculada(resultSet.getInt("COD"), inicioContagem.toLocalDate().getYear(), 1, 3);
+                    boolean emAnalise = decimoTerceiro.RetornaStatusAnalise(resultSet.getInt("COD"));
                     TerceirizadoDecimoTerceiro terceirizadoDecimoTerceiro = new TerceirizadoDecimoTerceiro(resultSet.getInt("COD"),
                             resultSet.getString("NOME"),
                             inicioContagem,
                             vSaldoDecimoTericeiro,
                             0);
+                    terceirizadoDecimoTerceiro.setEmAnalise(emAnalise);
                     terceirizados.add(terceirizadoDecimoTerceiro);
                 }
             }
@@ -77,7 +79,7 @@ public class DecimoTerceiroDAO {
                     " JOIN tb_funcao_terceirizado FT ON FT.COD_TERCEIRIZADO_CONTRATO= TC.cod" +
                     " JOIN tb_funcao_contrato FC ON FC.COD=FT.COD_FUNCAO_CONTRATO" +
                     " JOIN tb_funcao TF  ON TF.COD=FC.COD_FUNCAO" +
-                    " WHERE TC.COD_CONTRATO = ? AND T.ATIVO = 'S' AND (AUTORIZADO IS NULL)";
+                    " WHERE TC.COD_CONTRATO = ? AND ((AUTORIZADO IS NULL) OR (RESTITUIDO = 'N' AND AUTORIZADO = 'S'))";
             try(PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 preparedStatement.setInt(1, codigoContrato);
                 try(ResultSet resultSet = preparedStatement.executeQuery()) {
