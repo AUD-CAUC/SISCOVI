@@ -131,8 +131,14 @@ public class DecimoTerceiroDAO {
         int codigo = new UsuarioDAO(connection).verifyPermission(avaliacaoDecimoTerceiro.getUser().getId(), avaliacaoDecimoTerceiro.getCodigoContrato());
         int codGestor = new ContratoDAO(connection).codigoGestorContrato(avaliacaoDecimoTerceiro.getUser().getId(), avaliacaoDecimoTerceiro.getCodigoContrato());
         if(codGestor == codigo) {
-            String sql = "UPDATE TB_RESTITUICAO_DECIMO_TERCEIRO SET AUTORIZADO=?, OBSERVACAO=?, LOGIN_ATUALIZACAO=?, " +
-                    "DATA_ATUALIZACAO=CURRENT_TIMESTAMP WHERE COD_TERCEIRIZADO_CONTRATO=? AND COD=?";
+            String sql = "UPDATE TB_RESTITUICAO_DECIMO_TERCEIRO " +
+                    "SET " +
+                    "AUTORIZADO=?, " +
+                    "RESTITUIDO=NULL," +
+                    "OBSERVACAO=?, " +
+                    "LOGIN_ATUALIZACAO=?, " +
+                    "DATA_ATUALIZACAO=CURRENT_TIMESTAMP " +
+                    "WHERE COD_TERCEIRIZADO_CONTRATO=? AND COD=?";
             List<DecimoTerceiroPendenteModel> lista = avaliacaoDecimoTerceiro.getDecimosTerceirosPendentes();
             return atualizaCalculos(sql, lista, avaliacaoDecimoTerceiro.getUser().getUsername());
         }
