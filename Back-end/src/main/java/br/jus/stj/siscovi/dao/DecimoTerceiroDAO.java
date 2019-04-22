@@ -72,7 +72,7 @@ public class DecimoTerceiroDAO {
                     " RDT.OBSERVACAO" +
                     " FROM tb_terceirizado_contrato TC" +
                     " JOIN tb_terceirizado T ON T.COD = TC.COD_TERCEIRIZADO " +
-                    " JOIN tb_restituicao_decimo_terceiro RDT ON RDT.COD_TERCEIRIZADO_CONTRATO =TC.COD_TERCEIRIZADO" +
+                    " JOIN tb_restituicao_decimo_terceiro RDT ON RDT.COD_TERCEIRIZADO_CONTRATO =TC.COD" +
                     " JOIN tb_tipo_restituicao TR ON TR.COD=RDT.COD_TIPO_RESTITUICAO " +
                     " JOIN tb_funcao_terceirizado FT ON FT.COD_TERCEIRIZADO_CONTRATO= TC.cod" +
                     " JOIN tb_funcao_contrato FC ON FC.COD=FT.COD_FUNCAO_CONTRATO" +
@@ -157,7 +157,7 @@ public class DecimoTerceiroDAO {
                     " RDT.OBSERVACAO" +
                     " FROM tb_terceirizado_contrato TC" +
                     " JOIN tb_terceirizado T ON T.COD = TC.COD_TERCEIRIZADO " +
-                    " JOIN tb_restituicao_decimo_terceiro RDT ON RDT.COD_TERCEIRIZADO_CONTRATO =TC.COD_TERCEIRIZADO" +
+                    " JOIN tb_restituicao_decimo_terceiro RDT ON RDT.COD_TERCEIRIZADO_CONTRATO =TC.COD" +
                     " JOIN tb_tipo_restituicao TR ON TR.COD=RDT.COD_TIPO_RESTITUICAO " +
                     " JOIN tb_funcao_terceirizado FT ON FT.COD_TERCEIRIZADO_CONTRATO= TC.cod" +
                     " JOIN tb_funcao_contrato FC ON FC.COD=FT.COD_FUNCAO_CONTRATO" +
@@ -209,7 +209,7 @@ public class DecimoTerceiroDAO {
                     " RDT.OBSERVACAO" +
                     " FROM tb_terceirizado_contrato TC" +
                     " JOIN tb_terceirizado T ON T.COD = TC.COD_TERCEIRIZADO " +
-                    " JOIN tb_restituicao_decimo_terceiro RDT ON RDT.COD_TERCEIRIZADO_CONTRATO =TC.COD_TERCEIRIZADO" +
+                    " JOIN tb_restituicao_decimo_terceiro RDT ON RDT.COD_TERCEIRIZADO_CONTRATO =TC.COD" +
                     " JOIN tb_tipo_restituicao TR ON TR.COD=RDT.COD_TIPO_RESTITUICAO " +
                     " JOIN tb_funcao_terceirizado FT ON FT.COD_TERCEIRIZADO_CONTRATO= TC.cod" +
                     " JOIN tb_funcao_contrato FC ON FC.COD=FT.COD_FUNCAO_CONTRATO" +
@@ -261,7 +261,7 @@ public class DecimoTerceiroDAO {
                     " RDT.OBSERVACAO" +
                     " FROM tb_terceirizado_contrato TC" +
                     " JOIN tb_terceirizado T ON T.COD = TC.COD_TERCEIRIZADO " +
-                    " JOIN tb_restituicao_decimo_terceiro RDT ON RDT.COD_TERCEIRIZADO_CONTRATO =TC.COD_TERCEIRIZADO" +
+                    " JOIN tb_restituicao_decimo_terceiro RDT ON RDT.COD_TERCEIRIZADO_CONTRATO =TC.COD" +
                     " JOIN tb_tipo_restituicao TR ON TR.COD=RDT.COD_TIPO_RESTITUICAO " +
                     " JOIN tb_funcao_terceirizado FT ON FT.COD_TERCEIRIZADO_CONTRATO= TC.cod" +
                     " JOIN tb_funcao_contrato FC ON FC.COD=FT.COD_FUNCAO_CONTRATO" +
