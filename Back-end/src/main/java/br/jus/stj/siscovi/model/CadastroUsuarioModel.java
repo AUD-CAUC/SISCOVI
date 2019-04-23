@@ -5,6 +5,8 @@ public class CadastroUsuarioModel {
     private String password;
     private String newPassword;
     private String currentUser;
+
+
     public UsuarioModel getUsuario() {
         return usuario;
     }
@@ -20,4 +22,5 @@ public class CadastroUsuarioModel {
     public String getCurrentUser() {
         return currentUser;
     }
+
 }
