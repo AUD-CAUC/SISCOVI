@@ -60,13 +60,13 @@ public class UsuarioController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response alterarUsuario(String object) {
-        Gson gson = new Gson();
-        CadastroUsuarioModel cadastroUsuarioModel = gson.fromJson(object, CadastroUsuarioModel.class);
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
         ConnectSQLServer connectSQLServer = new ConnectSQLServer();
         UsuarioDAO usuarioDAO = new UsuarioDAO(connectSQLServer.dbConnect());
+        CadastroUsuarioModel usuario = gson.fromJson(object, CadastroUsuarioModel.class);
         String json;
-        if (usuarioDAO.verificarSenha(cadastroUsuarioModel.getUsuario().getCodigo(), cadastroUsuarioModel.getPassword())) {
-            if(usuarioDAO.alteraUsuario(cadastroUsuarioModel.getUsuario(), cadastroUsuarioModel.getCurrentUser())) {
+        if (usuarioDAO.verificarSenha(usuario.getUsuario().getCodigo(), usuario.getPassword())) {
+            if(usuarioDAO.alteraUsuario(usuario)) {
                 json = gson.toJson("Alteração feita com sucesso !");
             }else {
                 json = gson.toJson("Houve falha na tentativa de Salvar as Alterações");
@@ -91,7 +91,7 @@ public class UsuarioController {
         ConsultaTSQL consulta = new ConsultaTSQL(connectSQLServer.dbConnect());
         RegistroUsuario registroUsuario = consulta.RetornaRegistroUsuario(codigo);
         UsuarioModel usuarioModel = new UsuarioModel(registroUsuario.getpCod(), registroUsuario.getpCodPerfil(), registroUsuario.getpNome(),
-                registroUsuario.getpLogin(),  registroUsuario.getpLoginAtualizacao(),
+                registroUsuario.getpLogin(), registroUsuario.getpLoginAtualizacao(),
                 registroUsuario.getpDataAtualizacao());
         String json = gson.toJson(usuarioModel);
         try {
