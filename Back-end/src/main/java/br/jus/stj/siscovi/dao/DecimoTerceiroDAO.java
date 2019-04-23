@@ -25,7 +25,8 @@ public class DecimoTerceiroDAO {
     public ArrayList<TerceirizadoDecimoTerceiro> getListaTerceirizadoParaCalculoDeDecimoTerceiro(int codigoContrato, int pAnoContagem) {
         ArrayList<TerceirizadoDecimoTerceiro> terceirizados = new ArrayList<>();
         String sql = "SELECT TC.COD, " +
-                " T.NOME" +
+                " T.NOME," +
+                " year(TC.DATA_DISPONIBILIZACAO) AS \"ANO DISPONIBILIZACAO\" " +
                 " FROM tb_terceirizado_contrato TC " +
                 " JOIN tb_terceirizado T ON T.COD = TC.COD_TERCEIRIZADO " +
                 " WHERE COD_CONTRATO = ? AND T.ATIVO = 'S'";
@@ -36,16 +37,20 @@ public class DecimoTerceiroDAO {
             float vSaldoDecimoTericeiro = 0; //Este saldo é correspondente ao ano da data de início da contagem.
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
-                    Date inicioContagem = decimoTerceiro.RetornaDataInicioContagem(resultSet.getInt("COD"), pAnoContagem);
-                    vSaldoDecimoTericeiro = saldoDecimoTerceiro.getSaldoContaVinculada(resultSet.getInt("COD"), inicioContagem.toLocalDate().getYear(), 1, 3);
-                    boolean emAnalise = decimoTerceiro.RetornaStatusAnalise(resultSet.getInt("COD"));
-                    TerceirizadoDecimoTerceiro terceirizadoDecimoTerceiro = new TerceirizadoDecimoTerceiro(resultSet.getInt("COD"),
-                            resultSet.getString("NOME"),
-                            inicioContagem,
-                            vSaldoDecimoTericeiro,
-                            0);
-                    terceirizadoDecimoTerceiro.setEmAnalise(emAnalise);
-                    terceirizados.add(terceirizadoDecimoTerceiro);
+                    if (!decimoTerceiro.RetornaRestituido(resultSet.getInt("COD"), pAnoContagem)) {
+                        Date inicioContagem = decimoTerceiro.RetornaDataInicioContagem(resultSet.getInt("COD"), pAnoContagem);
+                        vSaldoDecimoTericeiro = saldoDecimoTerceiro.getSaldoContaVinculada(resultSet.getInt("COD"), inicioContagem.toLocalDate().getYear(), 1, 3);
+                        boolean emAnalise = decimoTerceiro.RetornaStatusAnalise(resultSet.getInt("COD"));
+                        boolean restituidoAnoPassado = decimoTerceiro.RetornaRestituidoAnoPassado(resultSet.getInt("COD"), pAnoContagem, resultSet.getInt("ANO DISPONIBILIZACAO"));
+                        TerceirizadoDecimoTerceiro terceirizadoDecimoTerceiro = new TerceirizadoDecimoTerceiro(resultSet.getInt("COD"),
+                                resultSet.getString("NOME"),
+                                inicioContagem,
+                                vSaldoDecimoTericeiro,
+                                0);
+                        terceirizadoDecimoTerceiro.setEmAnalise(emAnalise);
+                        terceirizadoDecimoTerceiro.setRestituidoAnoPassado(restituidoAnoPassado);
+                        terceirizados.add(terceirizadoDecimoTerceiro);
+                    }
                 }
             }
         } catch (SQLException e) {

@@ -88,4 +88,68 @@ public class DecimoTerceiro {
         return true;
     }
 
+    public boolean RetornaRestituido (int pCodTerceirizadoContrato, int pAnoContagem) {
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+
+        String sql = "SELECT * FROM tb_restituicao_decimo_terceiro " +
+                "WHERE AUTORIZADO = 'S' AND RESTITUIDO = 'S' AND year(DATA_INICIO_CONTAGEM) = ? AND COD_TERCEIRIZADO_CONTRATO = ? AND (PARCELA = 0 OR PARCELA = 2)";
+
+        try {
+
+            preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setInt(1, pAnoContagem);
+            preparedStatement.setInt(2, pCodTerceirizadoContrato);
+
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+
+                return true;
+
+            }
+
+        } catch (SQLException sqle) {
+
+            throw new NullPointerException("Não foi possível recuperar restituições de férias anteriores.");
+
+        }
+
+        return false;
+    }
+    public boolean RetornaRestituidoAnoPassado (int pCodTerceirizadoContrato, int pAnoContagem, int anoDisponibilizacao) {
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+
+        String sql = "SELECT * FROM tb_restituicao_decimo_terceiro " +
+                "WHERE AUTORIZADO = 'S' AND RESTITUIDO = 'S' AND year(DATA_INICIO_CONTAGEM) = ? AND COD_TERCEIRIZADO_CONTRATO = ? AND (PARCELA = 0 OR PARCELA = 2)";
+
+        if (pAnoContagem > anoDisponibilizacao) {
+            try {
+
+                preparedStatement = connection.prepareStatement(sql);
+
+                preparedStatement.setInt(1, pAnoContagem-1);
+                preparedStatement.setInt(2, pCodTerceirizadoContrato);
+
+                resultSet = preparedStatement.executeQuery();
+
+                if (resultSet.next()) {
+
+                    return true;
+
+                }
+
+            } catch (SQLException sqle) {
+
+                throw new NullPointerException("Não foi possível recuperar restituições de férias anteriores.");
+
+            }
+            return false;
+        }
+
+        return true;
+    }
+
 }
