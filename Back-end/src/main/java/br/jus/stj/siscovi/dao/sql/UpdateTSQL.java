@@ -1,5 +1,8 @@
 package br.jus.stj.siscovi.dao.sql;
 
+import br.jus.stj.siscovi.model.CadastroUsuarioModel;
+import org.mindrot.jbcrypt.BCrypt;
+
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -1364,12 +1367,7 @@ public class UpdateTSQL {
 
     }
 
-    public int UpdateUsuario(int pCodUsuario,
-                             int pCodPerfil,
-                             String pNome,
-                             String pLogin,
-                             String pPassword,
-                             String pLoginAtualizacao) {
+    public int UpdateUsuario(CadastroUsuarioModel usuario) {
 
         PreparedStatement preparedStatement;
         int vRetorno = -1;
@@ -1385,13 +1383,14 @@ public class UpdateTSQL {
                     " DATA_ATUALIZACAO = CURRENT_TIMESTAMP" +
                     " WHERE COD = ?";
 
+            String hashed = BCrypt.hashpw(usuario.getNewPassword(), BCrypt.gensalt());
             preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, pCodPerfil);
-            preparedStatement.setString(2, pNome);
-            preparedStatement.setString(3, pLogin);
-            preparedStatement.setString(4, pPassword);
-            preparedStatement.setString(5, pLoginAtualizacao);
-            preparedStatement.setInt(6, pCodUsuario);
+            preparedStatement.setInt(1, Integer.parseInt(usuario.getUsuario().getPerfil()));
+            preparedStatement.setString(2, usuario.getUsuario().getNome());
+            preparedStatement.setString(3, usuario.getUsuario().getLogin());
+            preparedStatement.setString(4, hashed);
+            preparedStatement.setString(5, usuario.getCurrentUser());
+            preparedStatement.setInt(6, usuario.getUsuario().getCodigo());
 
             preparedStatement.executeUpdate();
 
