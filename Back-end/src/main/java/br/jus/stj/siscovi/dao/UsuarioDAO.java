@@ -1,6 +1,7 @@
 package br.jus.stj.siscovi.dao;
 import br.jus.stj.siscovi.dao.sql.ConsultaTSQL;
 import br.jus.stj.siscovi.dao.sql.UpdateTSQL;
+import br.jus.stj.siscovi.model.CadastroUsuarioModel;
 import br.jus.stj.siscovi.model.UsuarioModel;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -221,20 +222,19 @@ public class UsuarioDAO {
         return false;
     }
 
-    public boolean alteraUsuario(UsuarioModel usuario, String currentUser) {
+    public boolean alteraUsuario(CadastroUsuarioModel usuario) {
         ConsultaTSQL consulta = new ConsultaTSQL(connection);
-        UpdateTSQL update = new UpdateTSQL(connection);
+        UpdateTSQL updateUsuario = new UpdateTSQL(connection);
 
         try {
 
-            update.UpdateUsuario(usuario.getCodigo(),consulta.RetornaCodPerfilUsuario(usuario.getPerfil()), usuario.getNome(),
-                    usuario.getLogin(), usuario.getPassword(), usuario.getLoginAtualizacao());
+            updateUsuario.UpdateUsuario(usuario);
 
             return true;
 
         } catch (Exception exception) {
 
-            throw new NullPointerException("Não foi possível atualizar o uusuário.");
+            throw new NullPointerException("Não foi possível atualizar o usuário.");
 
         }
 
@@ -264,8 +264,6 @@ public class UsuarioDAO {
             preparedStatement.setInt(1, cod);
             try(ResultSet resultSet = preparedStatement.executeQuery()) {
                 if(resultSet.next()){
-                    System.out.println(password);
-                    System.out.println(resultSet.getString("PASSWORD"));
                     if (BCrypt.checkpw(password, resultSet.getString("PASSWORD"))) {
                         return true;
                     }
