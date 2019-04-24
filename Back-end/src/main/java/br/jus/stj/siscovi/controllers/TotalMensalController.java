@@ -236,4 +236,24 @@ public class TotalMensalController {
 
         return Response.ok().build();
     }
+
+    @GET
+    @Path("/getNumFuncAtivos/{mesSelecionado}/{anoSelecionado}/{codigoContrato}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getNumeroFuncionariosAtivos(@PathParam("mesSelecionado") int mesCalculo, @PathParam("anoSelecionado") int anoCalculo, @PathParam("codigoContrato") int codigoContrato) {
+        Gson gson = new Gson();
+        ConnectSQLServer connectSQLServer = new ConnectSQLServer();
+        String json = "";
+        int numFuncionariosAtivos;
+        try{
+            TotalMensalDAO totalMensalDAO = new TotalMensalDAO(connectSQLServer.dbConnect());
+            numFuncionariosAtivos = totalMensalDAO.getNumFuncionariosAtivos(mesCalculo, anoCalculo, codigoContrato);
+            json = gson.toJson(numFuncionariosAtivos);
+        }catch (Exception ex) {
+            System.err.println(ex.getStackTrace());
+            json = gson.toJson(ErrorMessage.handleError(ex));
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(json).build();
+        }
+        return Response.ok(json, MediaType.APPLICATION_JSON).build();
+    }
 }

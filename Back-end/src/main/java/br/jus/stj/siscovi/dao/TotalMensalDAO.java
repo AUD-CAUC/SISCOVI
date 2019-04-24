@@ -441,4 +441,27 @@ public class TotalMensalDAO {
         return meses;
     }
 
+    public int getNumFuncionariosAtivos(int mesCalculo, int anoCalculo, int codContrato) {
+
+        int numFunc;
+        String data = Integer.toString(anoCalculo) + '-' + Integer.toString(mesCalculo) + '-' + "01";
+
+        String sql = "SELECT COUNT(COD) FROM tb_terceirizado_contrato WHERE COD_CONTRATO = ? AND (DATA_DESLIGAMENTO IS NULL OR DATA_DESLIGAMENTO > ?)";
+
+        try(PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, codContrato);
+            preparedStatement.setString(2, data);
+
+            try(ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getInt(1);
+                }
+            }
+        }catch(SQLException sqle) {
+            System.err.println(sqle.getStackTrace());
+            throw new RuntimeException("Erro ao tentar recuperar o número dos terceirizados do contrato " + codContrato);
+        }
+        return 0;
+    }
+
 }
