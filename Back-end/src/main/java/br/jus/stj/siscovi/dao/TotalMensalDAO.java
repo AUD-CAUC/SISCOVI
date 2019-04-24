@@ -441,6 +441,32 @@ public class TotalMensalDAO {
         return meses;
     }
 
+    public List<Integer> getAnosValidosdoContrato(int codigoContrato) {
+        List<Integer> anos = new ArrayList<>();
+        int menorAno = 0, maiorAno =0;
+
+        String sql = "SELECT YEAR(MIN(DATA_INICIO_VIGENCIA)), YEAR(MAX(DATA_FIM_VIGENCIA)) FROM tb_evento_contratual where COD_CONTRATO = ?";
+
+        try(PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, codigoContrato);
+            try(ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                   menorAno = resultSet.getInt(1);
+                   maiorAno = resultSet.getInt(2);
+                }
+
+                for (int i = menorAno; i <= maiorAno; i++) {
+                    anos.add(i);
+                }
+            }
+        }catch(SQLException sqle) {
+            sqle.printStackTrace();
+            throw new RuntimeException("Erro ao tentar recuperar os anos válidos para o contrato" + codigoContrato +
+                    ". Causado por: " + sqle.getMessage());
+        }
+        return anos;
+    }
+
     public int getNumFuncionariosAtivos(int mesCalculo, int anoCalculo, int codContrato) {
 
         int numFunc;

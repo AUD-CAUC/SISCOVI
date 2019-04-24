@@ -224,6 +224,25 @@ public class TotalMensalController {
         return Response.ok(json, MediaType.APPLICATION_JSON).build();
     }
 
+    @GET
+    @Path("/getAnosValidosContrato/{codigoContrato}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAnosValidosContrato(@PathParam("codigoContrato") int codigoContrato) {
+        Gson gson = new Gson();
+        ConnectSQLServer connectSQLServer = new ConnectSQLServer();
+        String json = "";
+        try{
+            TotalMensalDAO totalMensalDAO = new TotalMensalDAO(connectSQLServer.dbConnect());
+            List<Integer> anos = totalMensalDAO.getAnosValidosdoContrato(codigoContrato);
+            json = gson.toJson(anos);
+        }catch (Exception ex) {
+            System.err.println(ex.getStackTrace());
+            json = gson.toJson(ErrorMessage.handleError(ex));
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(json).build();
+        }
+        return Response.ok(json, MediaType.APPLICATION_JSON).build();
+    }
+
     @DELETE
     @Path("/apagarTotalMensalAReter/{codigoContrato}/{codigoUsuario}/{anoReferencia}/{mesReferencia}")
     @Produces(MediaType.APPLICATION_JSON)
