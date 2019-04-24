@@ -8,8 +8,10 @@ import com.sun.org.apache.regexp.internal.RESyntaxException;
 import com.sun.scenario.effect.impl.prism.ps.PPSBlend_REDPeer;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class ContratoDAO {
     private Connection connection;
@@ -394,6 +396,26 @@ public class ContratoDAO {
         return false;
     }
 
+    public boolean verificaAtivo (LocalDate dataFim, int codigoContrato) {
+        String sql = "SELECT EC.DATA_FIM_VIGENCIA FROM TB_CONTRATO C JOIN TB_EVENTO_CONTRATUAL EC ON EC.COD_CONTRATO = C.COD WHERE C.COD= ?";
+        LocalDate date = LocalDate.now();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, codigoContrato);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    if (dataFim.compareTo(date) > 0) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            }
+        }catch (SQLException e) {
+            e.printStackTrace();
+            throw new  RuntimeException("Erro ao tentar verificar a data de vigência do contrato. Causado por: "+ e.getMessage());
+        }
+        return false;
+    }
 
     public List<TipoEventoContratualModel> getTiposEventosContratuais() throws RuntimeException {
         List<TipoEventoContratualModel> tiposEventosContratuais = new ArrayList<>();
@@ -414,8 +436,8 @@ public class ContratoDAO {
     }
 
     /**
-     * Função para cadastrar ajuste. Esta função criar o registro de evento contratual com informações inseridas pelo
-     * usuário e atualizar as informações das outras tabelas como por exemplo definir a data fim para os percentuais
+     * Função para cadastrar ajuste. Esta função cria o registro de evento contratual com informações inseridas pelo
+     * usuário e atualiza as informações das outras tabelas como por exemplo definir a data fim para os percentuais
      * vigentes e acrescentar o novo registro para os novos percentuais
      *
      * @param contrato objeto que contém as informações do contrato a serem atualizadas
