@@ -1,6 +1,7 @@
 package br.jus.stj.siscovi.dao;
 
 import br.jus.stj.siscovi.calculos.Ferias;
+import br.jus.stj.siscovi.dao.sql.ConsultaTSQL;
 import br.jus.stj.siscovi.model.AvaliacaoFerias;
 import br.jus.stj.siscovi.model.CalcularFeriasModel;
 import br.jus.stj.siscovi.model.CalculoPendenteModel;
@@ -36,6 +37,7 @@ public class FeriasDAO {
         try(PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, codigoContrato);
             Ferias ferias = new Ferias(connection);
+            ConsultaTSQL consulta = new ConsultaTSQL(connection);
             try(ResultSet resultSet = preparedStatement.executeQuery()){
 
                 while(resultSet.next()) {
@@ -48,6 +50,7 @@ public class FeriasDAO {
                     String parcelaAnterior = ferias.RetornaMaiorParcelaConcedidaFeriasPeriodo(resultSet.getInt("COD"), inicioPeriodoAquisitivo, fimPeriodoAquisitivo);
                     Date ultimoFimUsufruto = ferias.RetornaUltimaDataFimUsufruto(resultSet.getInt("COD"), inicioPeriodoAquisitivo, fimPeriodoAquisitivo);
                     boolean emAnalise = ferias.RetornaStatusAnalise(resultSet.getInt("COD"));
+                    Date dataDesligamento = consulta.RetornaDataDesligamento(resultSet.getInt("COD"), codigoContrato);
 
                     TerceirizadoFerias terceirizadoFerias = new TerceirizadoFerias(resultSet.getInt("COD"),
                             resultSet.getString("NOME"),
@@ -59,7 +62,8 @@ public class FeriasDAO {
                             ferias.ExisteFeriasTerceirizado(resultSet.getInt("COD")),
                             parcelaAnterior,
                             ultimoFimUsufruto,
-                            emAnalise);
+                            emAnalise,
+                            dataDesligamento);
                     terceirizados.add(terceirizadoFerias);
                 }
             }

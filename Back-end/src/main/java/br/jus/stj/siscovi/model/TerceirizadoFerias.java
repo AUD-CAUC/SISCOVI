@@ -14,6 +14,7 @@ public class TerceirizadoFerias {
     private final String parcelaAnterior;
     private final Date ultimoFimUsufruto;
     private final boolean emAnalise;
+    private final Date dataDesligamento;
 
     public TerceirizadoFerias(int codigoTerceirizadoContrato,
                               String nomeTerceirizado,
@@ -25,7 +26,8 @@ public class TerceirizadoFerias {
                               boolean existeCalculoAnterior,
                               String parcelaAnterior,
                               Date ultimoFimUsufruto,
-                              boolean emAnalise) {
+                              boolean emAnalise,
+                              Date dataDesligamento) {
         this.codigoTerceirizadoContrato = codigoTerceirizadoContrato;
         this.nomeTerceirizado = nomeTerceirizado;
         this.inicioPeriodoAquisitivo = inicioPeriodoAquisitivo;
@@ -37,5 +39,6 @@ public class TerceirizadoFerias {
         this.parcelaAnterior = parcelaAnterior;
         this.ultimoFimUsufruto = ultimoFimUsufruto;
         this.emAnalise = emAnalise;
+        this.dataDesligamento = dataDesligamento;
     }
 }

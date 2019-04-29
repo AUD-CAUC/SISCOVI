@@ -3174,4 +3174,38 @@ public class ConsultaTSQL {
         return vFuncaoRemuneracaoVigente;
     }
 
+    public Date RetornaDataDesligamento (int pCodTerceirizadoContrato, int codigoContrato) {
+
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+
+        Date dataDesligamento = null;
+
+        String query = "SELECT DATA_DESLIGAMENTO FROM tb_terceirizado_contrato WHERE COD = ? AND COD_CONTRATO = ?;";
+
+        try {
+
+            preparedStatement = connection.prepareStatement(query);
+
+            preparedStatement.setInt(1, pCodTerceirizadoContrato);
+            preparedStatement.setInt(2, codigoContrato);
+
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+
+                dataDesligamento = resultSet.getDate(1);
+
+            }
+
+        } catch (SQLException sqle) {
+
+            throw new NullPointerException("Não foi possível recuperar a data de desligamento.");
+
+        }
+
+        return dataDesligamento;
+
+    }
+
 }
