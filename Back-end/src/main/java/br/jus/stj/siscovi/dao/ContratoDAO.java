@@ -395,28 +395,6 @@ public class ContratoDAO {
         }
         return false;
     }
-
-    public boolean verificaAtivo (LocalDate dataFim, int codigoContrato) {
-        String sql = "SELECT EC.DATA_FIM_VIGENCIA FROM TB_CONTRATO C JOIN TB_EVENTO_CONTRATUAL EC ON EC.COD_CONTRATO = C.COD WHERE C.COD= ?";
-        LocalDate date = LocalDate.now();
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setInt(1, codigoContrato);
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                if (resultSet.next()) {
-                    if (dataFim.compareTo(date) > 0) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }
-            }
-        }catch (SQLException e) {
-            e.printStackTrace();
-            throw new  RuntimeException("Erro ao tentar verificar a data de vigência do contrato. Causado por: "+ e.getMessage());
-        }
-        return false;
-    }
-
     public List<TipoEventoContratualModel> getTiposEventosContratuais() throws RuntimeException {
         List<TipoEventoContratualModel> tiposEventosContratuais = new ArrayList<>();
         String sql = "SELECT * FROM TB_TIPO_EVENTO_CONTRATUAL TEC  WHERE TEC.TIPO !='CONTRATO'; ";
