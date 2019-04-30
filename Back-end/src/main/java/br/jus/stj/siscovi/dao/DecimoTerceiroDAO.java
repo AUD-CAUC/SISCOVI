@@ -29,9 +29,10 @@ public class DecimoTerceiroDAO {
                 " year(TC.DATA_DISPONIBILIZACAO) AS \"ANO DISPONIBILIZACAO\" " +
                 " FROM tb_terceirizado_contrato TC " +
                 " JOIN tb_terceirizado T ON T.COD = TC.COD_TERCEIRIZADO " +
-                " WHERE COD_CONTRATO = ? AND T.ATIVO = 'S'";
+                " WHERE COD_CONTRATO = ? AND T.ATIVO = 'S' AND (DATA_DESLIGAMENTO IS NULL OR year(DATA_DESLIGAMENTO) >= ?)";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, codigoContrato);
+            preparedStatement.setInt(2, pAnoContagem);
             DecimoTerceiro decimoTerceiro = new DecimoTerceiro(connection);
             Saldo saldoDecimoTerceiro = new Saldo(connection);
             float vSaldoDecimoTericeiro = 0; //Este saldo é correspondente ao ano da data de início da contagem.
