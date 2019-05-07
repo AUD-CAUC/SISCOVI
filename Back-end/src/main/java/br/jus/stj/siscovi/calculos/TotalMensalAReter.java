@@ -136,11 +136,21 @@ public class TotalMensalAReter {
 
         }
 
-        if (vDataReferencia.before(Date.valueOf(vDataInicioContrato.toLocalDate().minusMonths(1).withDayOfMonth(vDataInicioContrato.toLocalDate().lengthOfMonth()).plusDays(1)))) {
+        try {
+            if (vDataReferencia.before(Date.valueOf(vDataInicioContrato.toLocalDate().minusMonths(1).withDayOfMonth(vDataInicioContrato.toLocalDate().lengthOfMonth()).plusDays(1)))) {
 
-            throw new NullPointerException("O período que se tenta calcular está fora da vigência do contrato.");
+                throw new NullPointerException("O período que se tenta calcular está fora da vigência do contrato.");
 
+            }
+        } catch (java.time.DateTimeException dt) {
+            /** Para casos que o mês anterior não tem 31 dias. */
+            if (vDataReferencia.before(Date.valueOf(vDataInicioContrato.toLocalDate().minusMonths(1).withDayOfMonth(vDataInicioContrato.toLocalDate().lengthOfMonth()-1).plusDays(1)))) {
+
+                throw new NullPointerException("O período que se tenta calcular está fora da vigência do contrato.");
+
+            }
         }
+
 
         if (vDataReferencia.after(Date.valueOf(vDataFimContrato.toLocalDate().minusMonths(1).withDayOfMonth(vDataFimContrato.toLocalDate().lengthOfMonth()).plusDays(1)))) {
 
