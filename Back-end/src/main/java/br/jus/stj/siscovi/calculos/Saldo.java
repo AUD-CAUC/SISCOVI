@@ -690,12 +690,12 @@ public class Saldo {
 
             try {
 
-                preparedStatement = connection.prepareStatement("SELECT SUM(tmr.ferias + CASE WHEN rtm.ferias IS NULL THEN 0 ELSE rtm.ferias END)," +
-                                                                          " SUM(tmr.terco_constitucional + CASE WHEN rtm.terco_constitucional IS NULL THEN 0 ELSE rtm.terco_constitucional END)," +
-                                                                          " SUM(tmr.decimo_terceiro + CASE WHEN rtm.decimo_terceiro IS NULL THEN 0 ELSE rtm.decimo_terceiro END)," +
-                                                                          " SUM(tmr.incidencia_submodulo_4_1 + CASE WHEN rtm.incidencia_submodulo_4_1 IS NULL THEN 0 ELSE rtm.incidencia_submodulo_4_1 END)," +
-                                                                          " SUM(tmr.multa_fgts + CASE WHEN rtm.multa_fgts IS NULL THEN 0 ELSE rtm.multa_fgts END)," +
-                                                                          " SUM(tmr.total + CASE WHEN rtm.total IS NULL THEN 0 ELSE rtm.total END)" +
+                preparedStatement = connection.prepareStatement("SELECT ROUND(SUM(tmr.ferias + CASE WHEN rtm.ferias IS NULL THEN 0 ELSE rtm.ferias END),2 )," +
+                                                                          " ROUND(SUM(tmr.terco_constitucional + CASE WHEN rtm.terco_constitucional IS NULL THEN 0 ELSE rtm.terco_constitucional END),2 )," +
+                                                                          " ROUND(SUM(tmr.decimo_terceiro + CASE WHEN rtm.decimo_terceiro IS NULL THEN 0 ELSE rtm.decimo_terceiro END),2 )," +
+                                                                          " ROUND(SUM(tmr.incidencia_submodulo_4_1 + CASE WHEN rtm.incidencia_submodulo_4_1 IS NULL THEN 0 ELSE rtm.incidencia_submodulo_4_1 END),2 )," +
+                                                                          " ROUND(SUM(tmr.multa_fgts + CASE WHEN rtm.multa_fgts IS NULL THEN 0 ELSE rtm.multa_fgts END),2 )," +
+                                                                          " ROUND(SUM(tmr.total + CASE WHEN rtm.total IS NULL THEN 0 ELSE rtm.total END),2 )" +
                                                                      " FROM tb_total_mensal_a_reter tmr\n" +
                                                                        " JOIN tb_terceirizado_contrato tc ON tc.cod = tmr.cod_terceirizado_contrato\n" +
                                                                        " LEFT JOIN tb_retroatividade_total_mensal rtm ON rtm.cod_total_mensal_a_reter = tmr.cod\n" +
