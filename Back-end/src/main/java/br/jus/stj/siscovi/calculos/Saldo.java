@@ -410,7 +410,7 @@ public class Saldo {
                         "      FROM tb_total_mensal_a_reter tmr\n" +
                         "        JOIN tb_terceirizado_contrato tc ON tc.cod = tmr.cod_terceirizado_contrato\n" +
                         "        LEFT JOIN tb_retroatividade_total_mensal rtm ON rtm.cod_total_mensal_a_reter = tmr.cod\n" +
-                        "      WHERE tc.cod = ?");
+                        "      WHERE tc.cod = ? AND tmr.RETIDO = 'S'");
 
                 preparedStatement.setInt(1, pCodTerceirizadoContrato);
                 resultSet = preparedStatement.executeQuery();
