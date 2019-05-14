@@ -76,9 +76,10 @@ public class RestituicaoDecimoTerceiro {
 
         int vDiasSubperiodo;
 
+
         /*Checagem dos parâmetros passados.*/
 
-        if (pInicioContagem == null || pFimContagem == null) {
+        if (pInicioContagem == null) {
 
             throw new NullPointerException("Erro na checagem dos parâmetros.");
 
@@ -87,6 +88,24 @@ public class RestituicaoDecimoTerceiro {
         /*Carrega o código do contrato.*/
 
         vCodContrato = consulta.RetornaContratoTerceirizado(pCodTerceirizadoContrato);
+
+
+        /*Define data final da contagem*/
+
+        /*Caso o contrato termine antes do ano de referência.*/
+        Date pFimContrato = consulta.RetornaPeriodoContrato(vCodContrato, 2);
+        if (pFimContrato.before(pFimContagem)) {
+            pFimContagem = pFimContrato;
+        }
+
+        /*Caso o funcionário seja desligado antes do fim do contrato ou do ano de referência.*/
+        Date pDataDesligamento = consulta.RetornaDataDesligamento(pCodTerceirizadoContrato, vCodContrato);
+        if (pDataDesligamento != null) {
+            if (pDataDesligamento.before(pFimContagem)) {
+                pFimContagem = pDataDesligamento;
+            }
+        }
+
 
         /*Define o valor das variáveis vMes e Vano de acordo com a adata de inínio do período aquisitivo.*/
 
