@@ -17,6 +17,7 @@ public class TerceirizadoDecimoTerceiro {
     private String nomeCargo;
     private boolean emAnalise;
     private boolean restituidoAnoPassado;
+    private String parcelaAnterior;
 
     public TerceirizadoDecimoTerceiro(int codigoTerceirizadoContrato, String nomeTerceirizado, Date inicioContagem, float valorDisponivel, float valorMovimentado) {
         this.codigoTerceirizadoContrato = codigoTerceirizadoContrato;
@@ -93,6 +94,10 @@ public class TerceirizadoDecimoTerceiro {
     public boolean getRestituidoAnoPassado() { return this.restituidoAnoPassado; }
 
     public void setRestituidoAnoPassado(boolean restituidoAnoPassado) { this.restituidoAnoPassado = restituidoAnoPassado; }
+
+    public String getParcelaAnterior() { return this.parcelaAnterior; }
+
+    public void setParcelaAnterior(String parcelaAnterior) { this.parcelaAnterior = parcelaAnterior; }
 
 
 
