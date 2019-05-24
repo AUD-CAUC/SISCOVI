@@ -4,6 +4,7 @@ import br.jus.stj.siscovi.model.CodTerceirizadoECodFuncaoTerceirizadoModel;
 
 import javax.validation.constraints.Null;
 import java.sql.*;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -151,12 +152,20 @@ public class TotalMensalAReter {
             }
         }
 
+        try {
+            if (vDataReferencia.after(Date.valueOf(vDataFimContrato.toLocalDate().minusMonths(1).withDayOfMonth(vDataFimContrato.toLocalDate().lengthOfMonth()).plusDays(1)))) {
 
-        if (vDataReferencia.after(Date.valueOf(vDataFimContrato.toLocalDate().minusMonths(1).withDayOfMonth(vDataFimContrato.toLocalDate().lengthOfMonth()).plusDays(1)))) {
+                throw new NullPointerException("A data passada deve ser anterior a data de validade do contrato.");
 
-            throw new NullPointerException("A data passada deve ser anterior a data de validade do contrato.");
+            }
+        } catch (java.time.DateTimeException dt) {
+            if (vDataReferencia.after(Date.valueOf(vDataFimContrato.toLocalDate().minusMonths(1).withDayOfMonth(vDataFimContrato.toLocalDate().lengthOfMonth()-1).plusDays(1)))) {
 
+                throw new NullPointerException("A data passada deve ser anterior a data de validade do contrato.");
+
+            }
         }
+
 
         /**Verificação da existência de cálculo para aquele mês e consequente deleção.*/
 
