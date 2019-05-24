@@ -152,4 +152,40 @@ public class DecimoTerceiro {
         return true;
     }
 
+    public String RetornaMaiorParcelaConcedidaDecimoTerceiroPeriodo (int pCodTerceirizadoContrato, Date inicioContagem) {
+
+        String vParcela = null;
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+
+        try {
+
+            preparedStatement = connection.prepareStatement("SELECT MAX(parcela)\n" +
+                    "    FROM tb_restituicao_decimo_terceiro\n" +
+                    "    WHERE COD_TERCEIRIZADO_CONTRATO = ?\n" +
+                    "    AND DATA_INICIO_CONTAGEM = ?\n" +
+                    "    AND (autorizado IS null OR autorizado != 'N')\n" +
+                    "    AND (restituido IS null OR restituido != 'N');");
+
+            preparedStatement.setInt(1, pCodTerceirizadoContrato);
+            preparedStatement.setDate(2, inicioContagem);
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+
+                vParcela = resultSet.getString(1);
+
+            }
+
+        } catch (SQLException sqle) {
+
+            sqle.printStackTrace();
+
+            throw new NullPointerException("Não foi possível identificar se já houve registro da parcela de 14 dias.");
+
+        }
+
+        return vParcela;
+    }
+
 }

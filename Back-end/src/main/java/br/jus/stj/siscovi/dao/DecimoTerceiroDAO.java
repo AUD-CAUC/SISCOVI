@@ -43,6 +43,7 @@ public class DecimoTerceiroDAO {
                         vSaldoDecimoTericeiro = saldoDecimoTerceiro.getSaldoContaVinculada(resultSet.getInt("COD"), inicioContagem.toLocalDate().getYear(), 1, 3);
                         boolean emAnalise = decimoTerceiro.RetornaStatusAnalise(resultSet.getInt("COD"));
                         boolean restituidoAnoPassado = decimoTerceiro.RetornaRestituidoAnoPassado(resultSet.getInt("COD"), pAnoContagem, resultSet.getInt("ANO DISPONIBILIZACAO"));
+                        String parcelaAnterior = decimoTerceiro.RetornaMaiorParcelaConcedidaDecimoTerceiroPeriodo(resultSet.getInt("COD"), inicioContagem);
                         TerceirizadoDecimoTerceiro terceirizadoDecimoTerceiro = new TerceirizadoDecimoTerceiro(resultSet.getInt("COD"),
                                 resultSet.getString("NOME"),
                                 inicioContagem,
@@ -50,6 +51,7 @@ public class DecimoTerceiroDAO {
                                 0);
                         terceirizadoDecimoTerceiro.setEmAnalise(emAnalise);
                         terceirizadoDecimoTerceiro.setRestituidoAnoPassado(restituidoAnoPassado);
+                        terceirizadoDecimoTerceiro.setParcelaAnterior(parcelaAnterior);
                         terceirizados.add(terceirizadoDecimoTerceiro);
                     }
                 }

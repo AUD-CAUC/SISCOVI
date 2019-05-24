@@ -3208,4 +3208,38 @@ public class ConsultaTSQL {
 
     }
 
+    public Date RetornaPeriodoContrato (int pCodContrato, int op) {
+        Date vDataInicioContrato = null;
+        Date vDataFimContrato = null;
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+
+        try {
+
+            preparedStatement = connection.prepareStatement("SELECT MIN(DATA_INICIO_VIGENCIA), MAX(DATA_FIM_VIGENCIA) FROM tb_evento_contratual WHERE COD_CONTRATO = ?");
+            preparedStatement.setInt(1, pCodContrato);
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+
+                vDataInicioContrato = resultSet.getDate(1);
+                vDataFimContrato = resultSet.getDate(2);
+
+            }
+
+        } catch (SQLException sqle) {
+
+            throw new NullPointerException("Erro ao recuperar período de um contrato.");
+
+        }
+
+        if (op == 1) {
+            return vDataInicioContrato;
+        } else if (op == 2) {
+            return vDataFimContrato;
+        } else {
+            throw new NullPointerException("Passagem errada de parâmetro.");
+        }
+    }
+
 }

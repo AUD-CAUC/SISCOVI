@@ -165,6 +165,11 @@ public class TotalMensalAReter {
 
             }
         }
+//        if (vDataReferencia.after(Date.valueOf(vDataFimContrato.toLocalDate().minusMonths(1).withDayOfMonth(vDataFimContrato.toLocalDate().lengthOfMonth()).plusDays(1)))) {
+//
+//            throw new NullPointerException("A data passada deve ser anterior a data de validade do contrato.");
+//
+//        }
 
 
         /**Verificação da existência de cálculo para aquele mês e consequente deleção.*/
