@@ -404,32 +404,75 @@ public class TotalMensalDAO {
 
     public List<Mes> getMesesDeCalculoPermitidosPorAno(int codigoContrato, int ano) {
         List<Mes> meses = new ArrayList<>();
+        int menorMes = 0, maiorMes = 12;
         if(!new ContratoDAO(connection).anoDentroPeriodoVigencia(ano, codigoContrato)) {
             return null;
         }
-        String sql = " SELECT 1, 'Janeiro' \n" +
-                " UNION ALL SELECT 2, 'Fevereiro'" +
-                " UNION ALL SELECT 3, 'Março'" +
-                " UNION ALL SELECT 4, 'Abril'" +
-                " UNION ALL SELECT 5, 'Maio' " +
-                " UNION ALL SELECT 6, 'Junho'" +
-                " UNION ALL SELECT 7, 'Julho'" +
-                " UNION ALL SELECT 8, 'Agosto'" +
-                " UNION ALL SELECT 9, 'Setembro' " +
-                " UNION ALL SELECT 10, 'Outubro' " +
-                " UNION ALL SELECT 11, 'Novembro' " +
-                " UNION ALL SELECT 12, 'Dezembro' " +
-                " EXCEPT SELECT month(data_referencia), datename(month, data_referencia) " +
-                " FROM tb_total_mensal_a_reter tmr " +
-                " JOIN tb_terceirizado_contrato tc on tc.COD=tmr.cod_terceirizado_contrato" +
-                " WHERE YEAR(data_referencia) = ?" +
-                " AND (autorizado = 'S')" +
-                " AND (retido = 'N' OR retido is not null)" +
-                " AND tc.cod_contrato = ?" +
-                " ORDER BY 1 asc";
-        try(PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        String sql1 = "select MIN(month(DATA_INICIO_VIGENCIA)) from tb_evento_contratual " +
+                "where YEAR(DATA_INICIO_VIGENCIA) = ? AND COD_CONTRATO = ?";
+
+        try(PreparedStatement preparedStatement = connection.prepareStatement(sql1)) {
             preparedStatement.setInt(1, ano);
             preparedStatement.setInt(2, codigoContrato);
+            try(ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    menorMes = resultSet.getInt(1);
+                }
+            }
+        }catch(SQLException sqle) {
+            sqle.printStackTrace();
+            throw new RuntimeException("Erro ao tentar recuperar o menor mês válido para se realizar cálculos no ano " + ano + " para o contrato " + codigoContrato +
+                    ". Causado por: " + sqle.getMessage());
+        }
+
+        String sql2 = "select MAX(month(DATA_FIM_VIGENCIA)) from tb_evento_contratual " +
+                "where YEAR(DATA_FIM_VIGENCIA) = ? " +
+                "AND COD_CONTRATO = ? " +
+                "AND COD_TIPO_EVENTO = 2";
+
+        try(PreparedStatement preparedStatement = connection.prepareStatement(sql2)) {
+            preparedStatement.setInt(1, ano);
+            preparedStatement.setInt(2, codigoContrato);
+            try(ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    maiorMes = resultSet.getInt(1);
+                }
+                if (maiorMes == 0) {
+                    maiorMes = 12;
+                }
+            }
+        }catch(SQLException sqle) {
+            sqle.printStackTrace();
+            throw new RuntimeException("Erro ao tentar recuperar o maior mês válido para se realizar cálculos no ano " + ano + " para o contrato " + codigoContrato +
+                    ". Causado por: " + sqle.getMessage());
+        }
+
+        String sql3 = " SELECT num, mes from (SELECT 1 as num, 'Janeiro' as mes\n" +
+                "        UNION ALL SELECT 2, 'Fevereiro'\n" +
+                "        UNION ALL SELECT 3, 'Março'\n" +
+                "        UNION ALL SELECT 4, 'Abril'\n" +
+                "        UNION ALL SELECT 5, 'Maio'\n" +
+                "        UNION ALL SELECT 6, 'Junho'\n" +
+                "        UNION ALL SELECT 7, 'Julho'\n" +
+                "        UNION ALL SELECT 8, 'Agosto'\n" +
+                "        UNION ALL SELECT 9, 'Setembro'\n" +
+                "        UNION ALL SELECT 10, 'Outubro'\n" +
+                "        UNION ALL SELECT 11, 'Novembro'\n" +
+                "        UNION ALL SELECT 12, 'Dezembro') meses\n" +
+                "        where num BETWEEN ? AND ?" +
+                "        EXCEPT SELECT month(data_referencia), datename(month, data_referencia) " +
+                "        FROM tb_total_mensal_a_reter tmr " +
+                "        JOIN tb_terceirizado_contrato tc on tc.COD=tmr.cod_terceirizado_contrato" +
+                "        WHERE YEAR(data_referencia) = ?" +
+                "        AND (autorizado = 'S')" +
+                "        AND (retido = 'N' OR retido is not null)" +
+                "        AND tc.cod_contrato = ?" +
+                "        ORDER BY 1 asc";
+        try(PreparedStatement preparedStatement = connection.prepareStatement(sql3)) {
+            preparedStatement.setInt(1, menorMes);
+            preparedStatement.setInt(2, maiorMes);
+            preparedStatement.setInt(3, ano);
+            preparedStatement.setInt(4, codigoContrato);
             try(ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
                     Mes mes = new Mes(resultSet.getInt(1), resultSet.getString(2));
