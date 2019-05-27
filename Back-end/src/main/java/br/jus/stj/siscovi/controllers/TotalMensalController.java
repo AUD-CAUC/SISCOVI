@@ -275,4 +275,24 @@ public class TotalMensalController {
         }
         return Response.ok(json, MediaType.APPLICATION_JSON).build();
     }
+
+    @PUT
+    @Path("/confirmarTotalMensalReter/{mesSelecionado}/{anoSelecionado}/{codigoContrato}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response salvarFeriasAvaliadas(@PathParam("mesSelecionado") int mesCalculo, @PathParam("anoSelecionado") int anoCalculo, @PathParam("codigoContrato") int codigoContrato) {
+        Gson gson = new Gson();
+        ConnectSQLServer connectSQLServer = new ConnectSQLServer();
+        TotalMensalDAO totalMensalDAO = new TotalMensalDAO(connectSQLServer.dbConnect());
+        String json = "";
+        try {
+            totalMensalDAO.confirmaCalculo(mesCalculo, anoCalculo, codigoContrato);
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("success", true);
+            json = gson.toJson(jsonObject);
+        } catch (Exception ex) {
+            json = gson.toJson(ErrorMessage.handleError(ex));
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(json).build();
+        }
+        return Response.ok(json, MediaType.APPLICATION_JSON).build();
+    }
 }

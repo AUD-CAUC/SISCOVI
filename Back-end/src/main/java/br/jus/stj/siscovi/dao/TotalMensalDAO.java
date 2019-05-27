@@ -241,7 +241,8 @@ public class TotalMensalDAO {
                     " ROUND(SUM(tmr.ferias) + SUM(tmr.terco_constitucional) + SUM(tmr.decimo_terceiro) + SUM(tmr.incidencia_submodulo_4_1) + SUM(tmr.multa_fgts), 2) AS \"Total retido\"," +
                     " COUNT(ft.COD_TERCEIRIZADO_CONTRATO) AS TERCEIRIZADOS," +
                     " tmr.AUTORIZADO," +
-                    " tmr.OBSERVACAO" +
+                    " tmr.OBSERVACAO," +
+                    " tmr.PEDIDO" +
                     " FROM tb_funcao_contrato fc" +
                     " JOIN tb_contrato c ON c.cod = fc.cod_contrato" +
                     " JOIN tb_funcao f ON f.cod = fc.cod_funcao" +
@@ -251,6 +252,7 @@ public class TotalMensalDAO {
                     " JOIN tb_historico_gestao_contrato hgc ON hgc.cod_contrato = c.cod" +
                     " JOIN tb_usuario u ON u.cod = hgc.cod_usuario" +
                     " WHERE c.cod = ?" +
+                    " AND tmr.PEDIDO = 'S'" +
                     " AND MONTH(tmr.data_referencia) = ?" +
                     " AND YEAR(tmr.data_referencia) = ?" +
                     " AND hgc.cod_usuario = ?" +
@@ -262,7 +264,8 @@ public class TotalMensalDAO {
                     " 'Contrato Nº: ' + c.numero_contrato," +
                     " f.nome," +
                     " tmr.data_referencia," +
-                    " tmr.observacao" +
+                    " tmr.observacao," +
+                    " tmr.PEDIDO" +
                     " ORDER BY 1,2,3,4";
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -488,6 +491,27 @@ public class TotalMensalDAO {
             throw new RuntimeException("Erro ao tentar recuperar o número dos terceirizados do contrato " + codContrato);
         }
         return 0;
+    }
+
+    public void confirmaCalculo(int mesCalculo, int anoCalculo, int codigoContrato) {
+        String sql = "UPDATE tb_total_mensal_a_reter\n" +
+                "    SET PEDIDO = 'S' FROM tb_total_mensal_a_reter " +
+                " JOIN tb_terceirizado_contrato ttc on tb_total_mensal_a_reter.COD_TERCEIRIZADO_CONTRATO = ttc.cod " +
+                " where PEDIDO = 'N' " +
+                " AND COD_CONTRATO = ?" +
+                " AND MONTH(data_referencia) = ?" +
+                " AND YEAR(data_referencia) = ?";
+
+        try(PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, codigoContrato);
+            preparedStatement.setInt(2, mesCalculo);
+            preparedStatement.setInt(3, anoCalculo);
+            preparedStatement.executeUpdate();
+
+        }catch(SQLException sqle) {
+            System.err.println(sqle.getStackTrace());
+            throw new RuntimeException("Erro ao tentar confirmar as retenções do contrato" + codigoContrato);
+        }
     }
 
 }
