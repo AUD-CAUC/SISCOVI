@@ -86,6 +86,7 @@ public class TotalMensalAReter {
         Date vDataInicio = null;
         Date vDataFim = null;
         Date vDataUltimaRetencao = null;
+        Date vDataInicioContrato = null;
 
 
         /*Variável de checagem da existência do contrato.*/
@@ -123,17 +124,25 @@ public class TotalMensalAReter {
 
         try {
 
-            preparedStatement = connection.prepareStatement("SELECT MAX(DATA_REFERENCIA)\n" +
-                    "        FROM tb_total_mensal_a_reter tmr\n" +
-                    "        JOIN tb_terceirizado_contrato tc on tc.COD=tmr.cod_terceirizado_contrato\n" +
-                    "        WHERE COD_CONTRATO = ?\n" +
-                    "        AND RETIDO = 'S'");
+            preparedStatement = connection.prepareStatement("SELECT\n" +
+                    "               DATA_REFERENCIA = MAX(CASE RETIDO\n" +
+                    "                   WHEN 'S' THEN DATA_REFERENCIA\n" +
+                    "                   ELSE NULL\n" +
+                    "                END),\n" +
+                    "               MIN(DATA_INICIO_VIGENCIA)\n" +
+                    "        FROM tb_evento_contratual ec\n" +
+                    "        JOIN tb_terceirizado_contrato tc on tc.COD_CONTRATO=ec.COD_CONTRATO\n" +
+                    "        LEFT OUTER JOIN tb_total_mensal_a_reter ttmar on tc.COD_TERCEIRIZADO = ttmar.COD_TERCEIRIZADO_CONTRATO\n" +
+                    "        WHERE ec.COD_CONTRATO = ?\n" +
+                    "        GROUP BY RETIDO, DATA_REFERENCIA, DATA_INICIO_VIGENCIA" +
+                    "        ORDER BY DATA_REFERENCIA DESC");
             preparedStatement.setInt(1, pCodContrato);
             resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
 
                 vDataUltimaRetencao = resultSet.getDate(1);
+                vDataInicioContrato = resultSet.getDate(2);
 
             }
 
@@ -143,13 +152,15 @@ public class TotalMensalAReter {
 
         }
 
-        if (vDataUltimaRetencao != null) {
-            if (vDataReferencia.after(Date.valueOf(vDataUltimaRetencao.toLocalDate().plusMonths(1)))) {
-                String mes = vDataUltimaRetencao.toLocalDate().plusMonths(1).getMonth().getDisplayName(TextStyle.FULL, new Locale("pt"));
-                int ano = vDataUltimaRetencao.toLocalDate().plusMonths(1).getYear();
-                throw new NullPointerException("Deve ser realizado a retenção referente ao mês de " + mes + " de " + ano + " antes de reter esta");
+        if (vDataUltimaRetencao == null) {
+            vDataUltimaRetencao = Date.valueOf(vDataInicioContrato.toLocalDate().withDayOfMonth(1).minusMonths(1));
+        }
 
-            }
+        if (vDataReferencia.after(Date.valueOf(vDataUltimaRetencao.toLocalDate().plusMonths(1)))) {
+            String mes = vDataUltimaRetencao.toLocalDate().plusMonths(1).getMonth().getDisplayName(TextStyle.FULL, new Locale("pt"));
+            int ano = vDataUltimaRetencao.toLocalDate().plusMonths(1).getYear();
+            throw new NullPointerException("Deve ser realizado a retenção referente ao mês de " + mes + " de " + ano + " antes de reter esta");
+
         }
 
 
