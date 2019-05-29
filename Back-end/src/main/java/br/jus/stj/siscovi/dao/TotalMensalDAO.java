@@ -428,7 +428,7 @@ public class TotalMensalDAO {
         String sql2 = "select MAX(month(DATA_FIM_VIGENCIA)) from tb_evento_contratual " +
                 "where YEAR(DATA_FIM_VIGENCIA) = ? " +
                 "AND COD_CONTRATO = ? " +
-                "AND COD_TIPO_EVENTO = 2";
+                "AND (COD_TIPO_EVENTO = 2 OR PRORROGACAO = 'S')";
 
         try(PreparedStatement preparedStatement = connection.prepareStatement(sql2)) {
             preparedStatement.setInt(1, ano);
@@ -437,7 +437,10 @@ public class TotalMensalDAO {
                 if (resultSet.next()) {
                     maiorMes = resultSet.getInt(1);
                 }
-                if (maiorMes == 0) {
+                if (maiorMes == 0 || maiorMes == menorMes) {
+                    // Quando é retornado 0 para o maior mês significa que não há nenhuma data fim do contrato para aquele ano,
+                    // podendo se considerar que os restantes dos meses serão considerados.
+                    // Quando o maior mês é igual ao menor daquele ano significa que houve uma prorrogação
                     maiorMes = 12;
                 }
             }
