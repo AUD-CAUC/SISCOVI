@@ -160,7 +160,6 @@ public class TotalMensalAReter {
             String mes = vDataUltimaRetencao.toLocalDate().plusMonths(1).getMonth().getDisplayName(TextStyle.FULL, new Locale("pt"));
             int ano = vDataUltimaRetencao.toLocalDate().plusMonths(1).getYear();
             throw new NullPointerException("Deve ser realizado a retenção referente ao mês de " + mes + " de " + ano + " antes de reter esta");
-
         }
 
 
