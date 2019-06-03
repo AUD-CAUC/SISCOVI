@@ -521,12 +521,16 @@ public class TotalMensalDAO {
         int numFunc;
         String data = Integer.toString(anoCalculo) + '-' + Integer.toString(mesCalculo) + '-' + "01";
 
-        String sql = "SELECT COUNT(COD) FROM tb_terceirizado_contrato WHERE COD_CONTRATO = ? AND (DATA_DESLIGAMENTO IS NULL OR DATA_DESLIGAMENTO > ?) AND DATA_DISPONIBILIZACAO <= ?";
+        String sql = "SELECT COUNT(COD) FROM tb_terceirizado_contrato " +
+                "WHERE COD_CONTRATO = ? " +
+                "AND (DATA_DESLIGAMENTO IS NULL OR DATA_DESLIGAMENTO > ?) " +
+                "AND (YEAR(DATA_DISPONIBILIZACAO) <= year(?) AND MONTH(DATA_DISPONIBILIZACAO) <= MONTH(?))";
 
         try(PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, codContrato);
             preparedStatement.setString(2, data);
             preparedStatement.setString(3, data);
+            preparedStatement.setString(4, data);
 
             try(ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
