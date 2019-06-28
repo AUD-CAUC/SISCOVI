@@ -32,7 +32,19 @@ public class FeriasDAO {
                 " FROM tb_terceirizado_contrato TC " +
                 " JOIN " +
                 " tb_terceirizado T ON T.COD=TC.COD_TERCEIRIZADO " +
-                " WHERE COD_CONTRATO=? AND T.ATIVO='S'";
+                " JOIN tb_restituicao_rescisao trr on TC.COD_TERCEIRIZADO = trr.COD_TERCEIRIZADO_CONTRATO" +
+                " JOIN tb_restituicao_ferias trf on TC.COD_TERCEIRIZADO = trf.COD_TERCEIRIZADO_CONTRATO" +
+                " WHERE COD_CONTRATO=? AND T.ATIVO='S'" +
+                " AND (trr.DATA_DESLIGAMENTO < DATA_FIM_PERIODO_AQUISITIVO AND DATA_INICIO_FERIAS IS NULL)";
+        
+        String sqlTeste = "SELECT TC.COD, T.NOME, MAX(DATA_INICIO_FERIAS) as A, MAX(DATA_FIM_FERIAS) AS B, MAX(DATA_INICIO_PERIODO_AQUISITIVO) as C, MAX(DATA_FIM_PERIODO_AQUISITIVO) as D" +
+                "                 FROM tb_terceirizado_contrato TC " +
+                "                 JOIN tb_terceirizado T ON T.COD=TC.COD_TERCEIRIZADO" +
+                "                 FULL JOIN tb_restituicao_rescisao trr on TC.COD_TERCEIRIZADO = trr.COD_TERCEIRIZADO_CONTRATO" +
+                "                 FULL JOIN tb_restituicao_ferias trf on TC.COD_TERCEIRIZADO = trf.COD_TERCEIRIZADO_CONTRATO" +
+                "                 WHERE COD_CONTRATO=? AND T.ATIVO='S'" +
+                "                GROUP BY TC.COD, T.NOME" +
+                "                HAVING MAX(DATA_INICIO_FERIAS) > DATEADD(DAY, 1, MAX(DATA_FIM_PERIODO_AQUISITIVO)) OR MAX(DATA_INICIO_FERIAS) IS NULL";
 
         try(PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, codigoContrato);
