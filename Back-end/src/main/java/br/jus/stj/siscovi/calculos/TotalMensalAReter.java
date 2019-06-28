@@ -212,7 +212,7 @@ public class TotalMensalAReter {
 
         }
 
-        /**Caso não hajam mudaças de percentual no mês designado carregam-se os valores.*/
+        /**Caso não hajam mudanças de percentual no mês designado carregam-se os valores.*/
 
         if (!percentual.ExisteMudancaPercentual(pCodContrato, pMes, pAno, 1)) {
 

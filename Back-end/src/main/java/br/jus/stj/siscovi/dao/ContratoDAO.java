@@ -355,6 +355,8 @@ public class ContratoDAO {
                     contrato.setHistoricoGestao(new HistoricoDAO(connection).getHistoricoGestor(codContrato));
                     contrato.setPercentuais(new PercentualDAO(connection).getPercentuaisDoContrato(codContrato));
                     contrato.setFuncoes(new CargoDAO(connection).getFuncoesContrato(codContrato, user));
+                    contrato.setDataInicio(new ConsultaTSQL(connection).RetornaPeriodoContrato(resultSet.getInt("COD"),1));
+                    contrato.setDataFim(new ConsultaTSQL(connection).RetornaPeriodoContrato(resultSet.getInt("COD"),2));
                 }
             }
             return contrato;
@@ -388,7 +390,8 @@ public class ContratoDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new RuntimeException("Erro ao tentar verificar período de vigência no contrato para a função de verificação de meses em Total Mensal a Reter. Causado por: "
+            throw new RuntimeException("Erro ao tentar verificar período de vigência no contrato para a função de " +
+                    "verificação de meses em Total Mensal a Reter. Causado por: "
                     + e.getMessage());
         }
         return false;

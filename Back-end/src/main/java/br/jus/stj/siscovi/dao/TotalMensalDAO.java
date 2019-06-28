@@ -32,7 +32,8 @@ public class TotalMensalDAO {
                     " ROUND(SUM(tmr.decimo_terceiro), 2) AS \"Décimo terceiro retido\"," +
                     " ROUND(SUM(tmr.incidencia_submodulo_4_1), 2) AS \"Incidência retido\"," +
                     " ROUND(SUM(tmr.multa_fgts), 2) AS \"MULTA do FGTS retido\"," +
-                    " ROUND(SUM(tmr.ferias) + SUM(tmr.terco_constitucional) + SUM(tmr.decimo_terceiro) + SUM(tmr.incidencia_submodulo_4_1) + SUM(tmr.multa_fgts), 2) AS \"Total retido\"," +
+                    " ROUND(SUM(tmr.ferias) + SUM(tmr.terco_constitucional) + SUM(tmr.decimo_terceiro) + " +
+                    "SUM(tmr.incidencia_submodulo_4_1) + SUM(tmr.multa_fgts), 2) AS \"Total retido\"," +
                     "COUNT(ft.COD_TERCEIRIZADO_CONTRATO) AS TERCEIRIZADOS" +
                     " FROM tb_funcao_contrato fc" +
                     " JOIN tb_contrato c ON c.cod = fc.cod_contrato" +
