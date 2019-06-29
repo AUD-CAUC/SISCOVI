@@ -1,5 +1,6 @@
 package br.jus.stj.siscovi.dao;
 
+import br.jus.stj.siscovi.model.CadastroConvencaoModel;
 import br.jus.stj.siscovi.model.ConvencaoColetivaModel;
 import br.jus.stj.siscovi.model.ListaConvencoesModel;
 
@@ -60,6 +61,54 @@ public class ConvencoesDAO {
         throw new RuntimeException("Erro ao tentar recuperar as convenções coletivas desta função no contrato !");
         }
         return convencaoColetivaModel;
+    }
+
+    public boolean InsertConvencao(ConvencaoColetivaModel cadastroConvencaoModel, String currentUser) throws RuntimeException{
+        PreparedStatement preparedStatement;
+        try {
+            preparedStatement = connection.prepareStatement("INSERT INTO TB_CONVENCAO_COLETIVA (NOME, SIGLA, DATA_BASE, DESCRICAO, LOGIN_ATUALIZACAO, DATA_ATUALIZACAO) " +
+                    "VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)");
+            preparedStatement.setString(1, cadastroConvencaoModel.getNome());
+            preparedStatement.setString(2, cadastroConvencaoModel.getSigla());
+            preparedStatement.setDate(3, cadastroConvencaoModel.getDataBase());
+            preparedStatement.setString(4, cadastroConvencaoModel.getDescricao());
+            preparedStatement.setString(5, currentUser.toUpperCase());
+            preparedStatement.executeUpdate();
+            return true;
+        }catch(SQLException sqle) {
+            sqle.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean AlterarConvencao(ConvencaoColetivaModel convencaoColetiva, String currentUser) {
+        PreparedStatement preparedStatement;
+        try {
+            preparedStatement = connection.prepareStatement("UPDATE TB_CONVENCAO_COLETIVA SET NOME=?, SIGLA=?, DATA_BASE=?, DESCRICAO=?, LOGIN_ATUALIZACAO=?, DATA_ATUALIZACAO=CURRENT_TIMESTAMP WHERE COD=?");
+            preparedStatement.setString(1, convencaoColetiva.getNome());
+            preparedStatement.setString(2, convencaoColetiva.getSigla());
+            preparedStatement.setDate(3, convencaoColetiva.getDataBase());
+            preparedStatement.setString(4, convencaoColetiva.getDescricao());
+            preparedStatement.setString(5, currentUser);
+            preparedStatement.setInt(6, convencaoColetiva.getCodigo());
+            preparedStatement.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    public boolean DeleteConvencao(int codigo) {
+        PreparedStatement preparedStatement;
+        try{
+            preparedStatement = connection.prepareStatement("DELETE FROM TB_CONVENCAO_COLETIVA WHERE COD=?");
+            preparedStatement.setInt(1, codigo);
+            preparedStatement.executeUpdate();
+            return true;
+        }catch(SQLException sqle) {
+            sqle.printStackTrace();
+        }
+        return false;
     }
     /*public ArrayList getConvencoesContrato(int codigoContrato) {
         PreparedStatement preparedStatement = null;

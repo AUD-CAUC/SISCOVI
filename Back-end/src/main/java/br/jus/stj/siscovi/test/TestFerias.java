@@ -12,28 +12,42 @@ public class TestFerias {
 
         Date data = null;
         Ferias ferias = new Ferias(connectSQLServer.dbConnect());
-        int vCodTerceirizado = 1;
+        int vCodTerceirizado = 2;
+        Date deslligamento = Date.valueOf("2018-07-22");
+        Date inicioPeriodoAquisitivo;
+        Date fimPeriodoAquisitivo;
 
-        data = ferias.RetornaDatasPeriodoFeriasRescisao(vCodTerceirizado, Date.valueOf("2016-12-31"), 1);
-
-        System.out.print(data);
-        System.out.print("\n");
-
-        data = ferias.RetornaDatasPeriodoFeriasRescisao(vCodTerceirizado, Date.valueOf("2016-12-31"), 2);
+        data = ferias.RetornaDatasPeriodoFeriasRescisao(vCodTerceirizado, deslligamento, 1);
 
         System.out.print(data);
         System.out.print("\n");
 
-        data = ferias.RetornaDatasPeriodoFeriasRescisao(vCodTerceirizado, Date.valueOf("2016-12-31"), 3);
+        data = ferias.RetornaDatasPeriodoFeriasRescisao(vCodTerceirizado, deslligamento, 2);
 
         System.out.print(data);
         System.out.print("\n");
 
-        data = ferias.RetornaDatasPeriodoFeriasRescisao(vCodTerceirizado, Date.valueOf("2016-12-31"), 4);
+        data = ferias.RetornaDatasPeriodoFeriasRescisao(vCodTerceirizado, deslligamento, 3);
 
         System.out.print(data);
         System.out.print("\n");
 
+        data = ferias.RetornaDatasPeriodoFeriasRescisao(vCodTerceirizado, deslligamento, 4);
+
+        System.out.print(data);
+        System.out.print("\n");
+
+        inicioPeriodoAquisitivo = ferias.DataPeriodoAquisitivo(7, 1);
+        fimPeriodoAquisitivo = ferias.DataPeriodoAquisitivo(7, 2);
+
+        System.out.print(inicioPeriodoAquisitivo);
+        System.out.print("\n");
+        System.out.print(fimPeriodoAquisitivo);
+
+        int somaDiasVendidos = ferias.RetornaDiasVendidosPeriodo(1, Date.valueOf("2016-08-05"), Date.valueOf("2017-08-04"));
+        System.out.print("\n");
+        System.out.print(somaDiasVendidos);
+        System.out.print("\n");
     }
 
 }

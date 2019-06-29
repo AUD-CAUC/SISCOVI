@@ -22,6 +22,7 @@
 hs_err_pid*
 
 src/main/java/br/jus/stj/siscovi/dao/ConnectSQLServer.java
+out/
 
 .idea/
 

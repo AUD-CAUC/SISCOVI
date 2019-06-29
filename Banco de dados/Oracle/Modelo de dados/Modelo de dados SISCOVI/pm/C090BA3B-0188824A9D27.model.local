@@ -1,0 +1,7 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<ProcessModel class="oracle.dbtools.crest.model.design.process.ProcessModel" name="Process Model" id="C090BA3B-4D46-EDD7-8A53-0188824A9D27">
+<createdBy>vssousa</createdBy>
+<createdTime>2019-03-01 16:46:39 UTC</createdTime>
+<ownerDesignName>Modelo de dados SISCOVI</ownerDesignName>
+<shouldBeOpen>false</shouldBeOpen>
+</ProcessModel>

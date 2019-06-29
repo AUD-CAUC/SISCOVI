@@ -5,6 +5,9 @@ import br.jus.stj.siscovi.dao.sql.ConsultaTSQL;
 import br.jus.stj.siscovi.dao.sql.DeleteTSQL;
 import br.jus.stj.siscovi.model.*;
 
+import java.sql.Date;
+import java.util.List;
+
 public class TestConsultaTSQL {
 
     public static void main (String[] args) {
@@ -15,7 +18,7 @@ public class TestConsultaTSQL {
 
         int retorno;
 
-        retorno = consulta.RetornaCodSequenceTable("TB_RUBRICA");
+        retorno = consulta.RetornaCodSequenceTable("TB_PERCENTUAL_DINAMICO");
 
         System.out.print("RetornaCodSequenceTable: " + retorno + "\n\n");
 
@@ -240,6 +243,14 @@ public class TestConsultaTSQL {
         System.out.println(registroUsuario.getpPassword());
         System.out.println(registroTotalMensalAReter.getpLoginAtualizacao());
         System.out.println(registroTotalMensalAReter.getpDataAtualizacao());
+
+        List<Date> datas = consulta.RetornaSubperiodosMesPercentual(1,2, 2016, Date.valueOf("2019-02-01"));
+
+        for (Date data: datas) {
+
+            System.out.println(data + "\n");
+
+        }
 
 
 

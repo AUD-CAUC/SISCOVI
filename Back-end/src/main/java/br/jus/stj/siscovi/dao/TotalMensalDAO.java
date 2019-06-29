@@ -32,7 +32,8 @@ public class TotalMensalDAO {
                     " ROUND(SUM(tmr.decimo_terceiro), 2) AS \"Décimo terceiro retido\"," +
                     " ROUND(SUM(tmr.incidencia_submodulo_4_1), 2) AS \"Incidência retido\"," +
                     " ROUND(SUM(tmr.multa_fgts), 2) AS \"MULTA do FGTS retido\"," +
-                    " ROUND(SUM(tmr.ferias) + SUM(tmr.terco_constitucional) + SUM(tmr.decimo_terceiro) + SUM(tmr.incidencia_submodulo_4_1) + SUM(tmr.multa_fgts), 2) AS \"Total retido\"," +
+                    " ROUND(SUM(tmr.ferias) + SUM(tmr.terco_constitucional) + SUM(tmr.decimo_terceiro) + " +
+                    "SUM(tmr.incidencia_submodulo_4_1) + SUM(tmr.multa_fgts), 2) AS \"Total retido\"," +
                     "COUNT(ft.COD_TERCEIRIZADO_CONTRATO) AS TERCEIRIZADOS" +
                     " FROM tb_funcao_contrato fc" +
                     " JOIN tb_contrato c ON c.cod = fc.cod_contrato" +
@@ -241,7 +242,8 @@ public class TotalMensalDAO {
                     " ROUND(SUM(tmr.ferias) + SUM(tmr.terco_constitucional) + SUM(tmr.decimo_terceiro) + SUM(tmr.incidencia_submodulo_4_1) + SUM(tmr.multa_fgts), 2) AS \"Total retido\"," +
                     " COUNT(ft.COD_TERCEIRIZADO_CONTRATO) AS TERCEIRIZADOS," +
                     " tmr.AUTORIZADO," +
-                    " tmr.OBSERVACAO" +
+                    " tmr.OBSERVACAO," +
+                    " tmr.PEDIDO" +
                     " FROM tb_funcao_contrato fc" +
                     " JOIN tb_contrato c ON c.cod = fc.cod_contrato" +
                     " JOIN tb_funcao f ON f.cod = fc.cod_funcao" +
@@ -251,6 +253,7 @@ public class TotalMensalDAO {
                     " JOIN tb_historico_gestao_contrato hgc ON hgc.cod_contrato = c.cod" +
                     " JOIN tb_usuario u ON u.cod = hgc.cod_usuario" +
                     " WHERE c.cod = ?" +
+                    " AND tmr.PEDIDO = 'S'" +
                     " AND MONTH(tmr.data_referencia) = ?" +
                     " AND YEAR(tmr.data_referencia) = ?" +
                     " AND hgc.cod_usuario = ?" +
@@ -262,7 +265,8 @@ public class TotalMensalDAO {
                     " 'Contrato Nº: ' + c.numero_contrato," +
                     " f.nome," +
                     " tmr.data_referencia," +
-                    " tmr.observacao" +
+                    " tmr.observacao," +
+                    " tmr.PEDIDO" +
                     " ORDER BY 1,2,3,4";
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -401,32 +405,78 @@ public class TotalMensalDAO {
 
     public List<Mes> getMesesDeCalculoPermitidosPorAno(int codigoContrato, int ano) {
         List<Mes> meses = new ArrayList<>();
+        int menorMes = 0, maiorMes = 12;
         if(!new ContratoDAO(connection).anoDentroPeriodoVigencia(ano, codigoContrato)) {
             return null;
         }
-        String sql = " SELECT 1, 'Janeiro' \n" +
-                " UNION ALL SELECT 2, 'Fevereiro'" +
-                " UNION ALL SELECT 3, 'Março'" +
-                " UNION ALL SELECT 4, 'Abril'" +
-                " UNION ALL SELECT 5, 'Maio' " +
-                " UNION ALL SELECT 6, 'Junho'" +
-                " UNION ALL SELECT 7, 'Julho'" +
-                " UNION ALL SELECT 8, 'Agosto'" +
-                " UNION ALL SELECT 9, 'Setembro' " +
-                " UNION ALL SELECT 10, 'Outubro' " +
-                " UNION ALL SELECT 11, 'Novembro' " +
-                " UNION ALL SELECT 12, 'Dezembro' " +
-                " EXCEPT SELECT month(data_referencia), datename(month, data_referencia) " +
-                " FROM tb_total_mensal_a_reter tmr " +
-                " JOIN tb_terceirizado_contrato tc on tc.COD=tmr.cod_terceirizado_contrato" +
-                " WHERE YEAR(data_referencia) = ?" +
-                " AND (autorizado = 'S')" +
-                " AND (retido = 'N' OR retido is null)" +
-                " AND tc.cod_contrato = ?" +
-                " ORDER BY 1 asc";
-        try(PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        String sql1 = "select MIN(month(DATA_INICIO_VIGENCIA)) from tb_evento_contratual " +
+                "where YEAR(DATA_INICIO_VIGENCIA) = ? AND COD_CONTRATO = ?";
+
+        try(PreparedStatement preparedStatement = connection.prepareStatement(sql1)) {
             preparedStatement.setInt(1, ano);
             preparedStatement.setInt(2, codigoContrato);
+            try(ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    menorMes = resultSet.getInt(1);
+                }
+            }
+        }catch(SQLException sqle) {
+            sqle.printStackTrace();
+            throw new RuntimeException("Erro ao tentar recuperar o menor mês válido para se realizar cálculos no ano " + ano + " para o contrato " + codigoContrato +
+                    ". Causado por: " + sqle.getMessage());
+        }
+
+        String sql2 = "select MAX(month(DATA_FIM_VIGENCIA)) from tb_evento_contratual " +
+                "where YEAR(DATA_FIM_VIGENCIA) = ? " +
+                "AND COD_CONTRATO = ? " +
+                "AND (COD_TIPO_EVENTO = 2 OR PRORROGACAO = 'S')";
+
+        try(PreparedStatement preparedStatement = connection.prepareStatement(sql2)) {
+            preparedStatement.setInt(1, ano);
+            preparedStatement.setInt(2, codigoContrato);
+            try(ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    maiorMes = resultSet.getInt(1);
+                }
+                if (maiorMes == 0 || maiorMes == menorMes) {
+                    // Quando é retornado 0 para o maior mês significa que não há nenhuma data fim do contrato para aquele ano,
+                    // podendo se considerar que os restantes dos meses serão considerados.
+                    // Quando o maior mês é igual ao menor daquele ano significa que houve uma prorrogação
+                    maiorMes = 12;
+                }
+            }
+        }catch(SQLException sqle) {
+            sqle.printStackTrace();
+            throw new RuntimeException("Erro ao tentar recuperar o maior mês válido para se realizar cálculos no ano " + ano + " para o contrato " + codigoContrato +
+                    ". Causado por: " + sqle.getMessage());
+        }
+
+        String sql3 = " SELECT num, mes from (SELECT 1 as num, 'Janeiro' as mes\n" +
+                "        UNION ALL SELECT 2, 'Fevereiro'\n" +
+                "        UNION ALL SELECT 3, 'Março'\n" +
+                "        UNION ALL SELECT 4, 'Abril'\n" +
+                "        UNION ALL SELECT 5, 'Maio'\n" +
+                "        UNION ALL SELECT 6, 'Junho'\n" +
+                "        UNION ALL SELECT 7, 'Julho'\n" +
+                "        UNION ALL SELECT 8, 'Agosto'\n" +
+                "        UNION ALL SELECT 9, 'Setembro'\n" +
+                "        UNION ALL SELECT 10, 'Outubro'\n" +
+                "        UNION ALL SELECT 11, 'Novembro'\n" +
+                "        UNION ALL SELECT 12, 'Dezembro') meses\n" +
+                "        where num BETWEEN ? AND ?" +
+                "        EXCEPT SELECT month(data_referencia), datename(month, data_referencia) " +
+                "        FROM tb_total_mensal_a_reter tmr " +
+                "        JOIN tb_terceirizado_contrato tc on tc.COD=tmr.cod_terceirizado_contrato" +
+                "        WHERE YEAR(data_referencia) = ?" +
+                "        AND (autorizado = 'S')" +
+                "        AND (retido = 'N' OR retido is not null)" +
+                "        AND tc.cod_contrato = ?" +
+                "        ORDER BY 1 asc";
+        try(PreparedStatement preparedStatement = connection.prepareStatement(sql3)) {
+            preparedStatement.setInt(1, menorMes);
+            preparedStatement.setInt(2, maiorMes);
+            preparedStatement.setInt(3, ano);
+            preparedStatement.setInt(4, codigoContrato);
             try(ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
                     Mes mes = new Mes(resultSet.getInt(1), resultSet.getString(2));
@@ -439,6 +489,81 @@ public class TotalMensalDAO {
                     ". Causado por: " + sqle.getMessage());
         }
         return meses;
+    }
+
+    public List<Integer> getAnosValidosdoContrato(int codigoContrato) {
+        List<Integer> anos = new ArrayList<>();
+        int menorAno = 0, maiorAno =0;
+
+        String sql = "SELECT YEAR(MIN(DATA_INICIO_VIGENCIA)), YEAR(MAX(DATA_FIM_VIGENCIA)) FROM tb_evento_contratual where COD_CONTRATO = ?";
+
+        try(PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, codigoContrato);
+            try(ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                   menorAno = resultSet.getInt(1);
+                   maiorAno = resultSet.getInt(2);
+                }
+
+                for (int i = menorAno; i <= maiorAno; i++) {
+                    anos.add(i);
+                }
+            }
+        }catch(SQLException sqle) {
+            sqle.printStackTrace();
+            throw new RuntimeException("Erro ao tentar recuperar os anos válidos para o contrato" + codigoContrato +
+                    ". Causado por: " + sqle.getMessage());
+        }
+        return anos;
+    }
+
+    public int getNumFuncionariosAtivos(int mesCalculo, int anoCalculo, int codContrato) {
+
+        int numFunc;
+        String data = Integer.toString(anoCalculo) + '-' + Integer.toString(mesCalculo) + '-' + "01";
+
+        String sql = "SELECT COUNT(COD) FROM tb_terceirizado_contrato " +
+                "WHERE COD_CONTRATO = ? " +
+                "AND (DATA_DESLIGAMENTO IS NULL OR DATA_DESLIGAMENTO > ?) " +
+                "AND (YEAR(DATA_DISPONIBILIZACAO) <= year(?) AND MONTH(DATA_DISPONIBILIZACAO) <= MONTH(?))";
+
+        try(PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, codContrato);
+            preparedStatement.setString(2, data);
+            preparedStatement.setString(3, data);
+            preparedStatement.setString(4, data);
+
+            try(ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getInt(1);
+                }
+            }
+        }catch(SQLException sqle) {
+            System.err.println(sqle.getStackTrace());
+            throw new RuntimeException("Erro ao tentar recuperar o número dos terceirizados do contrato " + codContrato);
+        }
+        return 0;
+    }
+
+    public void confirmaCalculo(int mesCalculo, int anoCalculo, int codigoContrato) {
+        String sql = "UPDATE tb_total_mensal_a_reter\n" +
+                "    SET PEDIDO = 'S' FROM tb_total_mensal_a_reter " +
+                " JOIN tb_terceirizado_contrato ttc on tb_total_mensal_a_reter.COD_TERCEIRIZADO_CONTRATO = ttc.cod " +
+                " where PEDIDO = 'N' " +
+                " AND COD_CONTRATO = ?" +
+                " AND MONTH(data_referencia) = ?" +
+                " AND YEAR(data_referencia) = ?";
+
+        try(PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, codigoContrato);
+            preparedStatement.setInt(2, mesCalculo);
+            preparedStatement.setInt(3, anoCalculo);
+            preparedStatement.executeUpdate();
+
+        }catch(SQLException sqle) {
+            System.err.println(sqle.getStackTrace());
+            throw new RuntimeException("Erro ao tentar confirmar as retenções do contrato" + codigoContrato);
+        }
     }
 
 }

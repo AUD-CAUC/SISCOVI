@@ -10,6 +10,7 @@ import br.jus.stj.siscovi.model.EventoContratualModel;
 import br.jus.stj.siscovi.model.TipoEventoContratualModel;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import com.sun.org.apache.regexp.internal.RE;
 
 import javax.ws.rs.*;
@@ -21,6 +22,8 @@ import java.util.List;
 
 @Path("/contrato")
 public class ContratoController {
+
+
     @GET
     @Path("/getContrato/usuario={username}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -65,15 +68,18 @@ public class ContratoController {
         ConnectSQLServer connectSQLServer = new ConnectSQLServer();
         Connection connection = connectSQLServer.dbConnect();
         ContratoDAO contratoDAO = new ContratoDAO(connection);
+        String json = null;
         try {
-            if(contratoDAO.cadastrarContrato(contrato, username)) {
-                return Response.ok().build();
-            }
+            contratoDAO.cadastrarContrato(contrato, username);
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("success", "As alterações foram salvas com sucesso");
+            json = gson.toJson(jsonObject);
             connection.close();
-        }catch (SQLException sqle) {
-            sqle.printStackTrace();
+        }catch (Exception ex) {
+            json = gson.toJson(ErrorMessage.handleError(ex));
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(json).build();
         }
-        return Response.ok().build();
+        return Response.ok(json , MediaType.APPLICATION_JSON).build();
     }
 
     @GET
@@ -146,15 +152,19 @@ public class ContratoController {
         ContratoModel contrato = gson.fromJson(object, ContratoModel.class);
         String json = "";
         try {
-            if(new UsuarioDAO(connectSQLServer.dbConnect()).isAdmin(username) || new UsuarioDAO(connectSQLServer.dbConnect()).isGestor(username, contrato.getCodigo())) {
+            if (new UsuarioDAO(connectSQLServer.dbConnect()).isAdmin(username) || new UsuarioDAO(connectSQLServer.dbConnect()).isGestor(username, contrato.getCodigo())) {
                 ContratoDAO contratoDAO = new ContratoDAO(connectSQLServer.dbConnect());
-                contratoDAO.cadastrarAjusteContrato(contrato);
+                contratoDAO.cadastrarAjusteContrato(contrato, username);
+                connectSQLServer.dbConnect().close();
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty("success", "O ajuste foi cadastrado com sucesso");
+                json = gson.toJson(jsonObject);
             }
 
-        }catch (Exception ex){
+        } catch (Exception ex) {
             json = gson.toJson(ErrorMessage.handleError(ex));
             return Response.status(Response.Status.BAD_REQUEST).entity(json).build();
         }
-        return Response.ok().build();
+        return Response.ok(json, MediaType.APPLICATION_JSON).build();
     }
 }

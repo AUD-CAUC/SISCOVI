@@ -68,17 +68,17 @@ public class Saldo {
 
             try {
 
-                preparedStatement = connection.prepareStatement("SELECT SUM(tmr.ferias + CASE WHEN rtm.ferias IS NULL THEN 0 ELSE rtm.ferias END) AS \"Férias retido\",\n" +
-                        "           SUM(tmr.terco_constitucional + CASE WHEN rtm.terco_constitucional IS NULL THEN 0 ELSE rtm.terco_constitucional END)  AS \"Abono de férias retido\",\n" +
-                        "           SUM(tmr.decimo_terceiro + CASE WHEN rtm.decimo_terceiro IS NULL THEN 0 ELSE rtm.decimo_terceiro END) AS \"Décimo terceiro retido\",\n" +
-                        "           SUM(tmr.incidencia_submodulo_4_1 + CASE WHEN rtm.incidencia_submodulo_4_1 IS NULL THEN 0 ELSE rtm.incidencia_submodulo_4_1 END) AS \"Incid. do submód. 4.1 retido\",\n" +
-                        "           SUM(tmr.multa_fgts + CASE WHEN rtm.multa_fgts IS NULL THEN 0 ELSE rtm.multa_fgts END) AS \"Multa do FGTS retido\"," +
-                        "           SUM(tmr.total + CASE WHEN rtm.total IS NULL THEN 0 ELSE rtm.total END) AS \"Total retido\"\n" +
+                preparedStatement = connection.prepareStatement("SELECT ROUND(SUM(tmr.ferias + CASE WHEN rtm.ferias IS NULL THEN 0 ELSE rtm.ferias END),2) AS \"Férias retido\",\n" +
+                        "           ROUND(SUM(tmr.terco_constitucional + CASE WHEN rtm.terco_constitucional IS NULL THEN 0 ELSE rtm.terco_constitucional END),2)  AS \"Abono de férias retido\",\n" +
+                        "           ROUND(SUM(tmr.decimo_terceiro + CASE WHEN rtm.decimo_terceiro IS NULL THEN 0 ELSE rtm.decimo_terceiro END),2) AS \"Décimo terceiro retido\",\n" +
+                        "           ROUND(SUM(tmr.incidencia_submodulo_4_1 + CASE WHEN rtm.incidencia_submodulo_4_1 IS NULL THEN 0 ELSE rtm.incidencia_submodulo_4_1 END),2) AS \"Incid. do submód. 4.1 retido\",\n" +
+                        "           ROUND(SUM(tmr.multa_fgts + CASE WHEN rtm.multa_fgts IS NULL THEN 0 ELSE rtm.multa_fgts END),2) AS \"Multa do FGTS retido\"," +
+                        "           ROUND(SUM(tmr.total + CASE WHEN rtm.total IS NULL THEN 0 ELSE rtm.total END),2) AS \"Total retido\"\n" +
                         "      FROM tb_total_mensal_a_reter tmr\n" +
                         "        JOIN tb_terceirizado_contrato tc ON tc.cod = tmr.cod_terceirizado_contrato\n" +
                         "        LEFT JOIN tb_retroatividade_total_mensal rtm ON rtm.cod_total_mensal_a_reter = tmr.cod\n" +
                         "      WHERE YEAR(tmr.data_referencia) = ?\n" +
-                        "        AND tc.cod = ?");
+                        "        AND tc.cod = ? AND tmr.RETIDO = 'S'");
 
                 preparedStatement.setInt(1, pAno);
                 preparedStatement.setInt(2, pCodTerceirizadoContrato);
@@ -113,15 +113,16 @@ public class Saldo {
 
             try {
 
-                preparedStatement = connection.prepareStatement("SELECT SUM(rf.valor_ferias) AS \"Férias restituído\",\n" +
-                        "           SUM(rf.valor_terco_constitucional) AS \"1/3 constitucional restituído\",\n" +
-                        "           SUM(rf.incid_submod_4_1_ferias) AS \"Incid. de férias restituído\",\n" +
-                        "           SUM(rf.incid_submod_4_1_terco) AS \"Incod. de terço restituído\",\n" +
-                        "           SUM(rf.valor_ferias + rf.valor_terco_constitucional + rf.incid_submod_4_1_ferias + rf.incid_submod_4_1_terco) AS \"Total restituído\"\n" +
+                preparedStatement = connection.prepareStatement("SELECT ROUND(SUM(rf.valor_ferias),2) AS \"Férias restituído\",\n" +
+                        "           ROUND(SUM(rf.valor_terco_constitucional),2) AS \"1/3 constitucional restituído\",\n" +
+                        "           ROUND(SUM(rf.incid_submod_4_1_ferias),2) AS \"Incid. de férias restituído\",\n" +
+                        "           ROUND(SUM(rf.incid_submod_4_1_terco),2) AS \"Incod. de terço restituído\",\n" +
+                        "           ROUND(SUM(rf.valor_ferias + rf.valor_terco_constitucional + rf.incid_submod_4_1_ferias + rf.incid_submod_4_1_terco),2) AS \"Total restituído\"\n" +
                         "      FROM tb_restituicao_ferias rf\n" +
                         "        JOIN tb_terceirizado_contrato tc ON tc.cod = rf.cod_terceirizado_contrato\n" +
                         "      WHERE YEAR(rf.data_inicio_periodo_aquisitivo) = ?\n" +
-                        "        AND tc.cod = ?;");
+                        "        AND tc.cod = ?" +
+                        "        AND (rf.RESTITUIDO = 'S');");
 
                 preparedStatement.setInt(1, pAno);
                 preparedStatement.setInt(2, pCodTerceirizadoContrato);
@@ -137,11 +138,11 @@ public class Saldo {
 
                 }
 
-                preparedStatement = connection.prepareStatement("SELECT SUM(srf.valor_ferias) AS \"Férias restituído\",\n" +
-                        "       SUM(srf.valor_terco) AS \"1/3 constitucional restituído\",\n" +
-                        "       SUM(srf.incid_submod_4_1_ferias) AS \"Incid. de férias restituído\",\n" +
-                        "       SUM(srf.incid_submod_4_1_terco) AS \"Incod. de terço restituído\",\n" +
-                        "       SUM(srf.valor_ferias + srf.valor_terco + srf.incid_submod_4_1_ferias + srf.incid_submod_4_1_terco) AS \"Total restituído\"\n" +
+                preparedStatement = connection.prepareStatement("SELECT ROUND(SUM(srf.valor_ferias),2) AS \"Férias restituído\",\n" +
+                        "       ROUND(SUM(srf.valor_terco),2) AS \"1/3 constitucional restituído\",\n" +
+                        "       ROUND(SUM(srf.incid_submod_4_1_ferias),2) AS \"Incid. de férias restituído\",\n" +
+                        "       ROUND(SUM(srf.incid_submod_4_1_terco),2) AS \"Incod. de terço restituído\",\n" +
+                        "       ROUND(SUM(srf.valor_ferias + srf.valor_terco + srf.incid_submod_4_1_ferias + srf.incid_submod_4_1_terco),2) AS \"Total restituído\"\n" +
                         "  FROM tb_restituicao_ferias rf\n" +
                         "    JOIN tb_terceirizado_contrato tc ON tc.cod = rf.cod_terceirizado_contrato\n" +
                         "    JOIN tb_saldo_residual_ferias srf ON rf.cod = srf.cod_restituicao_ferias\n" +
@@ -179,13 +180,14 @@ public class Saldo {
 
             try {
 
-                preparedStatement = connection.prepareStatement("SELECT SUM(rdt.valor) AS \"Décimo terceiro restituído\",\n" +
-                        "           SUM(rdt.incidencia_submodulo_4_1) AS \"Incid. de 13° restituído\",\n" +
-                        "           SUM(rdt.valor + rdt.incidencia_submodulo_4_1) AS \"Total restituído\"\n" +
+                preparedStatement = connection.prepareStatement("SELECT ROUND(SUM(rdt.valor),2) AS \"Décimo terceiro restituído\",\n" +
+                        "           ROUND(SUM(rdt.incidencia_submodulo_4_1),2) AS \"Incid. de 13° restituído\",\n" +
+                        "           ROUND(SUM(rdt.valor + rdt.incidencia_submodulo_4_1),2) AS \"Total restituído\"\n" +
                         "      FROM tb_restituicao_decimo_terceiro rdt\n" +
                         "        JOIN tb_terceirizado_contrato tc ON tc.cod = rdt.cod_terceirizado_contrato\n" +
                         "      WHERE YEAR(rdt.data_inicio_contagem) = ?\n" +
-                        "        AND tc.cod = ?;");
+                        "        AND tc.cod = ?" +
+                        "        AND rdt.RESTITUIDO = 'S';");
 
                 preparedStatement.setInt(1, pAno);
                 preparedStatement.setInt(2, pCodTerceirizadoContrato);
@@ -199,9 +201,9 @@ public class Saldo {
 
                 }
 
-                preparedStatement = connection.prepareStatement("SELECT SUM(srdt.valor) AS \"Décimo terceiro restituído\",\n" +
-                        "           SUM(srdt.incidencia_submodulo_4_1) AS \"Incid. de 13° restituído\",\n" +
-                        "           SUM(srdt.valor + srdt.incidencia_submodulo_4_1) AS \"Total restituído\"\n" +
+                preparedStatement = connection.prepareStatement("SELECT ROUND(SUM(srdt.valor),2) AS \"Décimo terceiro restituído\",\n" +
+                        "           ROUND(SUM(srdt.incidencia_submodulo_4_1),2) AS \"Incid. de 13° restituído\",\n" +
+                        "           ROUND(SUM(srdt.valor + srdt.incidencia_submodulo_4_1),2) AS \"Total restituído\"\n" +
                         "      FROM tb_restituicao_decimo_terceiro rdt\n" +
                         "       JOIN tb_terceirizado_contrato tc ON tc.cod = rdt.cod_terceirizado_contrato\n" +
                         "        JOIN tb_saldo_residual_dec_ter srdt ON srdt.cod_restituicao_dec_terceiro = rdt.cod\n" +
@@ -401,16 +403,16 @@ public class Saldo {
 
             try {
 
-                preparedStatement = connection.prepareStatement("SELECT SUM(tmr.ferias + CASE WHEN rtm.ferias IS NULL THEN 0 ELSE rtm.ferias END) AS \"Férias retido\",\n" +
-                        "           SUM(tmr.terco_constitucional + CASE WHEN rtm.terco_constitucional IS NULL THEN 0 ELSE rtm.terco_constitucional END)  AS \"Abono de férias retido\",\n" +
-                        "           SUM(tmr.decimo_terceiro + CASE WHEN rtm.decimo_terceiro IS NULL THEN 0 ELSE rtm.decimo_terceiro END) AS \"Décimo terceiro retido\",\n" +
-                        "           SUM(tmr.incidencia_submodulo_4_1 + CASE WHEN rtm.incidencia_submodulo_4_1 IS NULL THEN 0 ELSE rtm.incidencia_submodulo_4_1 END) AS \"Incid. do submód. 4.1 retido\",\n" +
-                        "           SUM(tmr.multa_fgts + CASE WHEN rtm.multa_fgts IS NULL THEN 0 ELSE rtm.multa_fgts END) AS \"Multa do FGTS retido\"," +
-                        "           SUM(tmr.total + CASE WHEN rtm.total IS NULL THEN 0 ELSE rtm.total END) AS \"Total retido\"\n" +
+                preparedStatement = connection.prepareStatement("SELECT ROUND(SUM(tmr.ferias + CASE WHEN rtm.ferias IS NULL THEN 0 ELSE rtm.ferias END), 2) AS \"Férias retido\",\n" +
+                        "           ROUND(SUM(tmr.terco_constitucional + CASE WHEN rtm.terco_constitucional IS NULL THEN 0 ELSE rtm.terco_constitucional END), 2)  AS \"Abono de férias retido\",\n" +
+                        "           ROUND(SUM(tmr.decimo_terceiro + CASE WHEN rtm.decimo_terceiro IS NULL THEN 0 ELSE rtm.decimo_terceiro END), 2) AS \"Décimo terceiro retido\",\n" +
+                        "           ROUND(SUM(tmr.incidencia_submodulo_4_1 + CASE WHEN rtm.incidencia_submodulo_4_1 IS NULL THEN 0 ELSE rtm.incidencia_submodulo_4_1 END), 2) AS \"Incid. do submód. 4.1 retido\",\n" +
+                        "           ROUND(SUM(tmr.multa_fgts + CASE WHEN rtm.multa_fgts IS NULL THEN 0 ELSE rtm.multa_fgts END), 2) AS \"Multa do FGTS retido\"," +
+                        "           ROUND(SUM(tmr.total + CASE WHEN rtm.total IS NULL THEN 0 ELSE rtm.total END), 2) AS \"Total retido\"\n" +
                         "      FROM tb_total_mensal_a_reter tmr\n" +
                         "        JOIN tb_terceirizado_contrato tc ON tc.cod = tmr.cod_terceirizado_contrato\n" +
                         "        LEFT JOIN tb_retroatividade_total_mensal rtm ON rtm.cod_total_mensal_a_reter = tmr.cod\n" +
-                        "      WHERE tc.cod = ?");
+                        "      WHERE tc.cod = ? AND tmr.RETIDO = 'S'");
 
                 preparedStatement.setInt(1, pCodTerceirizadoContrato);
                 resultSet = preparedStatement.executeQuery();
@@ -690,19 +692,20 @@ public class Saldo {
 
             try {
 
-                preparedStatement = connection.prepareStatement("SELECT SUM(tmr.ferias + CASE WHEN rtm.ferias IS NULL THEN 0 ELSE rtm.ferias END)," +
-                                                                          " SUM(tmr.terco_constitucional + CASE WHEN rtm.terco_constitucional IS NULL THEN 0 ELSE rtm.terco_constitucional END)," +
-                                                                          " SUM(tmr.decimo_terceiro + CASE WHEN rtm.decimo_terceiro IS NULL THEN 0 ELSE rtm.decimo_terceiro END)," +
-                                                                          " SUM(tmr.incidencia_submodulo_4_1 + CASE WHEN rtm.incidencia_submodulo_4_1 IS NULL THEN 0 ELSE rtm.incidencia_submodulo_4_1 END)," +
-                                                                          " SUM(tmr.multa_fgts + CASE WHEN rtm.multa_fgts IS NULL THEN 0 ELSE rtm.multa_fgts END)," +
-                                                                          " SUM(tmr.total + CASE WHEN rtm.total IS NULL THEN 0 ELSE rtm.total END)" +
+                preparedStatement = connection.prepareStatement("SELECT ROUND(SUM(tmr.ferias + CASE WHEN rtm.ferias IS NULL THEN 0 ELSE rtm.ferias END),2 )," +
+                                                                          " ROUND(SUM(tmr.terco_constitucional + CASE WHEN rtm.terco_constitucional IS NULL THEN 0 ELSE rtm.terco_constitucional END),2 )," +
+                                                                          " ROUND(SUM(tmr.decimo_terceiro + CASE WHEN rtm.decimo_terceiro IS NULL THEN 0 ELSE rtm.decimo_terceiro END),2 )," +
+                                                                          " ROUND(SUM(tmr.incidencia_submodulo_4_1 + CASE WHEN rtm.incidencia_submodulo_4_1 IS NULL THEN 0 ELSE rtm.incidencia_submodulo_4_1 END),2 )," +
+                                                                          " ROUND(SUM(tmr.multa_fgts + CASE WHEN rtm.multa_fgts IS NULL THEN 0 ELSE rtm.multa_fgts END),2 )," +
+                                                                          " ROUND(SUM(tmr.total + CASE WHEN rtm.total IS NULL THEN 0 ELSE rtm.total END),2 )" +
                                                                      " FROM tb_total_mensal_a_reter tmr\n" +
                                                                        " JOIN tb_terceirizado_contrato tc ON tc.cod = tmr.cod_terceirizado_contrato\n" +
                                                                        " LEFT JOIN tb_retroatividade_total_mensal rtm ON rtm.cod_total_mensal_a_reter = tmr.cod\n" +
                                                                        " JOIN tb_funcao_terceirizado ft ON ft.cod_terceirizado_contrato = tc.cod\n" +
                                                                        " JOIN tb_funcao_contrato fc ON fc.cod = ft.cod_funcao_contrato\n" +
                                                                      " WHERE fc.cod_contrato = ?\n" +
-                                                                       " AND fc.cod = ?");
+                                                                       " AND fc.cod = ?\n" +
+                                                                        "AND tmr.RETIDO = 'S'");
 
                 preparedStatement.setInt(1, pCodContrato);
                 preparedStatement.setInt(2, pCodFuncaoContrato);

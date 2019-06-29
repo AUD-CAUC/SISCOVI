@@ -224,6 +224,25 @@ public class TotalMensalController {
         return Response.ok(json, MediaType.APPLICATION_JSON).build();
     }
 
+    @GET
+    @Path("/getAnosValidosContrato/{codigoContrato}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAnosValidosContrato(@PathParam("codigoContrato") int codigoContrato) {
+        Gson gson = new Gson();
+        ConnectSQLServer connectSQLServer = new ConnectSQLServer();
+        String json = "";
+        try{
+            TotalMensalDAO totalMensalDAO = new TotalMensalDAO(connectSQLServer.dbConnect());
+            List<Integer> anos = totalMensalDAO.getAnosValidosdoContrato(codigoContrato);
+            json = gson.toJson(anos);
+        }catch (Exception ex) {
+            System.err.println(ex.getStackTrace());
+            json = gson.toJson(ErrorMessage.handleError(ex));
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(json).build();
+        }
+        return Response.ok(json, MediaType.APPLICATION_JSON).build();
+    }
+
     @DELETE
     @Path("/apagarTotalMensalAReter/{codigoContrato}/{codigoUsuario}/{anoReferencia}/{mesReferencia}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -235,5 +254,45 @@ public class TotalMensalController {
 
 
         return Response.ok().build();
+    }
+
+    @GET
+    @Path("/getNumFuncAtivos/{mesSelecionado}/{anoSelecionado}/{codigoContrato}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getNumeroFuncionariosAtivos(@PathParam("mesSelecionado") int mesCalculo, @PathParam("anoSelecionado") int anoCalculo, @PathParam("codigoContrato") int codigoContrato) {
+        Gson gson = new Gson();
+        ConnectSQLServer connectSQLServer = new ConnectSQLServer();
+        String json = "";
+        int numFuncionariosAtivos;
+        try{
+            TotalMensalDAO totalMensalDAO = new TotalMensalDAO(connectSQLServer.dbConnect());
+            numFuncionariosAtivos = totalMensalDAO.getNumFuncionariosAtivos(mesCalculo, anoCalculo, codigoContrato);
+            json = gson.toJson(numFuncionariosAtivos);
+        }catch (Exception ex) {
+            System.err.println(ex.getStackTrace());
+            json = gson.toJson(ErrorMessage.handleError(ex));
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(json).build();
+        }
+        return Response.ok(json, MediaType.APPLICATION_JSON).build();
+    }
+
+    @PUT
+    @Path("/confirmarTotalMensalReter/{mesSelecionado}/{anoSelecionado}/{codigoContrato}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response salvarFeriasAvaliadas(@PathParam("mesSelecionado") int mesCalculo, @PathParam("anoSelecionado") int anoCalculo, @PathParam("codigoContrato") int codigoContrato) {
+        Gson gson = new Gson();
+        ConnectSQLServer connectSQLServer = new ConnectSQLServer();
+        TotalMensalDAO totalMensalDAO = new TotalMensalDAO(connectSQLServer.dbConnect());
+        String json = "";
+        try {
+            totalMensalDAO.confirmaCalculo(mesCalculo, anoCalculo, codigoContrato);
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("success", true);
+            json = gson.toJson(jsonObject);
+        } catch (Exception ex) {
+            json = gson.toJson(ErrorMessage.handleError(ex));
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(json).build();
+        }
+        return Response.ok(json, MediaType.APPLICATION_JSON).build();
     }
 }

@@ -224,10 +224,10 @@ public class Ferias {
                     " data_fim_periodo_aquisitivo," +
                     " SUM(DATEDIFF(day, data_inicio_usufruto, data_fim_usufruto) + dias_vendidos + 1)" +
                     " FROM tb_restituicao_ferias" +
-                    " WHERE cod_terceirizado_contrato = ?" +
+                    " WHERE cod_terceirizado_contrato = ? AND RESTITUIDO = 'S'" +
                     " AND data_inicio_periodo_aquisitivo = (SELECT MAX(data_inicio_periodo_aquisitivo)" +
                     " FROM tb_restituicao_ferias" +
-                    " WHERE cod_terceirizado_contrato = ?)" +
+                    " WHERE cod_terceirizado_contrato = ? AND RESTITUIDO = 'S')" +
                     " GROUP BY data_inicio_periodo_aquisitivo, data_fim_periodo_aquisitivo");
 
             preparedStatement.setInt(1, pCodTerceirizadoContrato);
@@ -427,6 +427,46 @@ public class Ferias {
     }
 
     /**
+     * Função que retorna o número de dias que um funcionários vendeu os dias de férias em um determinado período aquisitivo.
+     * @param pCodTerceirizadoContrato
+     * @param pDataInicio
+     * @param pDataFim
+     * @return int
+     */
+
+    public int RetornaDiasVendidosPeriodo (int pCodTerceirizadoContrato, Date pDataInicio, Date pDataFim) {
+        int vDiasVendidos = -1;
+
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+
+        try {
+            preparedStatement = connection.prepareStatement("SELECT SUM(DIAS_VENDIDOS) from tb_restituicao_ferias\n" +
+                    " WHERE COD_TERCEIRIZADO_CONTRATO = ? AND DATA_INICIO_PERIODO_AQUISITIVO = ? AND DATA_FIM_PERIODO_AQUISITIVO = ?;");
+
+            preparedStatement.setInt(1, pCodTerceirizadoContrato);
+            preparedStatement.setDate(2, pDataInicio);
+            preparedStatement.setDate(3, pDataFim);
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+
+                vDiasVendidos = resultSet.getInt(1);
+
+            }
+
+        } catch (SQLException sqle) {
+
+            sqle.printStackTrace();
+
+            throw new NullPointerException("Não foi possível recuperar os dias de férias vendidos no período.");
+
+        }
+
+        return vDiasVendidos;
+    }
+
+    /**
      * Função que retorna o número de dias que um funcionários usufruiu em um determinado período aquisitivo.
      * @param pCodTerceirizadoContrato
      * @param pDataInicio
@@ -481,7 +521,7 @@ public class Ferias {
     }
 
     /**
-     * Função que retorna se aparcela de 14 dias foi concedida em um determinado período aquisitivo.
+     * Função que retorna se a parcela de 14 dias foi concedida em um determinado período aquisitivo.
      * @param pCodTerceirizadoContrato
      * @param pDataInicio
      * @param pDataFim
@@ -533,6 +573,129 @@ public class Ferias {
         }
 
         return vParcela14Dias;
+
+    }
+
+    /**
+     * Função que retorna a maior parcela concedida em determinado período aquisitivo.
+     * @param pCodTerceirizadoContrato
+     * @param pDataInicio
+     * @param pDataFim
+     * @return float
+     */
+
+    public String RetornaMaiorParcelaConcedidaFeriasPeriodo (int pCodTerceirizadoContrato, Date pDataInicio, Date pDataFim) {
+
+        String vParcela = null;
+
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+
+        try {
+
+            preparedStatement = connection.prepareStatement("SELECT MAX(parcela)\n" +
+                    "    FROM tb_restituicao_ferias\n" +
+                    "    WHERE cod_terceirizado_contrato = ?\n" +
+                    "    AND data_inicio_periodo_aquisitivo = ?\n" +
+                    "    AND data_fim_periodo_aquisitivo = ?\n" +
+                    "    AND (autorizado IS null OR autorizado != 'N')\n" +
+                    "    AND (restituido IS null OR restituido != 'N');");
+
+            preparedStatement.setInt(1, pCodTerceirizadoContrato);
+            preparedStatement.setDate(2, pDataInicio);
+            preparedStatement.setDate(3, pDataFim);
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+
+                vParcela = resultSet.getString(1);
+
+            }
+
+        } catch (SQLException sqle) {
+
+            sqle.printStackTrace();
+
+            throw new NullPointerException("Não foi possível identificar se já houve registro da parcela de 14 dias.");
+
+        }
+
+        return vParcela;
+
+    }
+
+    public Date RetornaUltimaDataFimUsufruto (int pCodTerceirizadoContrato, Date pDataInicio, Date pDataFim) {
+
+        Date ultFimUsufruto = null;
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+
+        try {
+            preparedStatement = connection.prepareStatement("SELECT MAX(data_fim_usufruto)\n" +
+                    "    FROM tb_restituicao_ferias\n" +
+                    "    WHERE cod_terceirizado_contrato = ?\n" +
+                    "    AND data_inicio_periodo_aquisitivo = ?\n" +
+                    "    AND data_fim_periodo_aquisitivo = ?\n" +
+                    "    AND (autorizado IS null OR autorizado != 'N')\n" +
+                    "    AND (restituido IS null OR restituido != 'N');");
+
+            preparedStatement.setInt(1, pCodTerceirizadoContrato);
+            preparedStatement.setDate(2, pDataInicio);
+            preparedStatement.setDate(3, pDataFim);
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+
+                ultFimUsufruto = resultSet.getDate(1);
+
+            }
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+            throw new NullPointerException("Não foi possível recuperar a última data do fim do usufruto.");
+        }
+
+        return ultFimUsufruto;
+    }
+
+    public boolean RetornaStatusAnalise (int pCodTerceirizadoContrato) {
+
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+
+        int vNumeroRestituicoes = 0;
+
+        String query = "SELECT COUNT(cod)\n" +
+                "FROM tb_restituicao_ferias\n" +
+                "WHERE cod_terceirizado_contrato = ?\n" +
+                "AND ((AUTORIZADO IS NULL AND RESTITUIDO IS NULL) OR (AUTORIZADO = 'S' AND RESTITUIDO IS NULL) OR (AUTORIZADO = 'S' AND RESTITUIDO = 'N'));";
+
+        try {
+
+            preparedStatement = connection.prepareStatement(query);
+
+            preparedStatement.setInt(1, pCodTerceirizadoContrato);
+
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+
+                vNumeroRestituicoes = resultSet.getInt(1);
+
+            }
+
+        } catch (SQLException sqle) {
+
+            throw new NullPointerException("Não foi possível recuperar restituições de férias anteriores.");
+
+        }
+
+        if (vNumeroRestituicoes == 0) {
+
+            return false;
+
+        }
+
+        return true;
 
     }
 

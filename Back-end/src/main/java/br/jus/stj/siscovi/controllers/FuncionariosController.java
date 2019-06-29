@@ -244,4 +244,24 @@ public class FuncionariosController {
         }
         return Response.ok(json, MediaType.APPLICATION_JSON).build();
     }
+    @DELETE
+    @Path("/deleteTerceirizado/{codigo}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response apagaTerceirizado(@PathParam("codigo") int codigo) {
+        ConnectSQLServer connectSQLServer = new ConnectSQLServer();
+        FuncionariosDAO funcionariosDAO = new FuncionariosDAO(connectSQLServer.dbConnect());
+        Gson gson = new Gson();
+        String json;
+        if (funcionariosDAO.DeleteTerceirizado(codigo)) {
+            json = gson.toJson("Terceirizado Apagado Com sucesso !");
+        }else {
+            json = gson.toJson("Houve uma falha ao tentar apagar o Terceirizado !");
+        }
+        try {
+            connectSQLServer.dbConnect().close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Response.ok(json, MediaType.APPLICATION_JSON).build();
+    }
  }

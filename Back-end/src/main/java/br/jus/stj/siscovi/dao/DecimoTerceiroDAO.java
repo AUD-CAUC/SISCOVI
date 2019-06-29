@@ -25,25 +25,35 @@ public class DecimoTerceiroDAO {
     public ArrayList<TerceirizadoDecimoTerceiro> getListaTerceirizadoParaCalculoDeDecimoTerceiro(int codigoContrato, int pAnoContagem) {
         ArrayList<TerceirizadoDecimoTerceiro> terceirizados = new ArrayList<>();
         String sql = "SELECT TC.COD, " +
-                " T.NOME" +
+                " T.NOME," +
+                " year(TC.DATA_DISPONIBILIZACAO) AS \"ANO DISPONIBILIZACAO\" " +
                 " FROM tb_terceirizado_contrato TC " +
                 " JOIN tb_terceirizado T ON T.COD = TC.COD_TERCEIRIZADO " +
-                " WHERE COD_CONTRATO = ? AND T.ATIVO = 'S'";
+                " WHERE COD_CONTRATO = ? AND T.ATIVO = 'S' AND (DATA_DESLIGAMENTO IS NULL OR year(DATA_DESLIGAMENTO) >= ?)";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, codigoContrato);
+            preparedStatement.setInt(2, pAnoContagem);
             DecimoTerceiro decimoTerceiro = new DecimoTerceiro(connection);
             Saldo saldoDecimoTerceiro = new Saldo(connection);
             float vSaldoDecimoTericeiro = 0; //Este saldo é correspondente ao ano da data de início da contagem.
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
-                    Date inicioContagem = decimoTerceiro.RetornaDataInicioContagem(resultSet.getInt("COD"), pAnoContagem);
-                    vSaldoDecimoTericeiro = saldoDecimoTerceiro.getSaldoContaVinculada(resultSet.getInt("COD"), inicioContagem.toLocalDate().getYear(), 1, 3);
-                    TerceirizadoDecimoTerceiro terceirizadoDecimoTerceiro = new TerceirizadoDecimoTerceiro(resultSet.getInt("COD"),
-                            resultSet.getString("NOME"),
-                            inicioContagem,
-                            vSaldoDecimoTericeiro,
-                            0);
-                    terceirizados.add(terceirizadoDecimoTerceiro);
+                    if (!decimoTerceiro.RetornaRestituido(resultSet.getInt("COD"), pAnoContagem)) {
+                        Date inicioContagem = decimoTerceiro.RetornaDataInicioContagem(resultSet.getInt("COD"), pAnoContagem);
+                        vSaldoDecimoTericeiro = saldoDecimoTerceiro.getSaldoContaVinculada(resultSet.getInt("COD"), inicioContagem.toLocalDate().getYear(), 1, 3);
+                        boolean emAnalise = decimoTerceiro.RetornaStatusAnalise(resultSet.getInt("COD"));
+                        boolean restituidoAnoPassado = decimoTerceiro.RetornaRestituidoAnoPassado(resultSet.getInt("COD"), pAnoContagem, resultSet.getInt("ANO DISPONIBILIZACAO"));
+                        String parcelaAnterior = decimoTerceiro.RetornaMaiorParcelaConcedidaDecimoTerceiroPeriodo(resultSet.getInt("COD"), inicioContagem);
+                        TerceirizadoDecimoTerceiro terceirizadoDecimoTerceiro = new TerceirizadoDecimoTerceiro(resultSet.getInt("COD"),
+                                resultSet.getString("NOME"),
+                                inicioContagem,
+                                vSaldoDecimoTericeiro,
+                                0);
+                        terceirizadoDecimoTerceiro.setEmAnalise(emAnalise);
+                        terceirizadoDecimoTerceiro.setRestituidoAnoPassado(restituidoAnoPassado);
+                        terceirizadoDecimoTerceiro.setParcelaAnterior(parcelaAnterior);
+                        terceirizados.add(terceirizadoDecimoTerceiro);
+                    }
                 }
             }
         } catch (SQLException e) {
@@ -72,12 +82,12 @@ public class DecimoTerceiroDAO {
                     " RDT.OBSERVACAO" +
                     " FROM tb_terceirizado_contrato TC" +
                     " JOIN tb_terceirizado T ON T.COD = TC.COD_TERCEIRIZADO " +
-                    " JOIN tb_restituicao_decimo_terceiro RDT ON RDT.COD_TERCEIRIZADO_CONTRATO =TC.COD_TERCEIRIZADO" +
+                    " JOIN tb_restituicao_decimo_terceiro RDT ON RDT.COD_TERCEIRIZADO_CONTRATO =TC.COD" +
                     " JOIN tb_tipo_restituicao TR ON TR.COD=RDT.COD_TIPO_RESTITUICAO " +
                     " JOIN tb_funcao_terceirizado FT ON FT.COD_TERCEIRIZADO_CONTRATO= TC.cod" +
                     " JOIN tb_funcao_contrato FC ON FC.COD=FT.COD_FUNCAO_CONTRATO" +
                     " JOIN tb_funcao TF  ON TF.COD=FC.COD_FUNCAO" +
-                    " WHERE TC.COD_CONTRATO = ? AND T.ATIVO = 'S' AND (AUTORIZADO IS NULL)";
+                    " WHERE TC.COD_CONTRATO = ? AND ((AUTORIZADO IS NULL) OR (RESTITUIDO = 'N' AND AUTORIZADO = 'S'))";
             try(PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 preparedStatement.setInt(1, codigoContrato);
                 try(ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -129,9 +139,16 @@ public class DecimoTerceiroDAO {
         int codigo = new UsuarioDAO(connection).verifyPermission(avaliacaoDecimoTerceiro.getUser().getId(), avaliacaoDecimoTerceiro.getCodigoContrato());
         int codGestor = new ContratoDAO(connection).codigoGestorContrato(avaliacaoDecimoTerceiro.getUser().getId(), avaliacaoDecimoTerceiro.getCodigoContrato());
         if(codGestor == codigo) {
-            String sql = "UPDATE TB_RESTITUICAO_DECIMO_TERCEIRO SET AUTORIZADO=?, OBSERVACAO=? WHERE COD_TERCEIRIZADO_CONTRATO=? AND COD=?";
+            String sql = "UPDATE TB_RESTITUICAO_DECIMO_TERCEIRO " +
+                    "SET " +
+                    "AUTORIZADO=?, " +
+                    "RESTITUIDO=NULL," +
+                    "OBSERVACAO=?, " +
+                    "LOGIN_ATUALIZACAO=?, " +
+                    "DATA_ATUALIZACAO=CURRENT_TIMESTAMP " +
+                    "WHERE COD_TERCEIRIZADO_CONTRATO=? AND COD=?";
             List<DecimoTerceiroPendenteModel> lista = avaliacaoDecimoTerceiro.getDecimosTerceirosPendentes();
-            return atualizaCalculos(sql, lista);
+            return atualizaCalculos(sql, lista, avaliacaoDecimoTerceiro.getUser().getUsername());
         }
         return false;
     }
@@ -156,7 +173,7 @@ public class DecimoTerceiroDAO {
                     " RDT.OBSERVACAO" +
                     " FROM tb_terceirizado_contrato TC" +
                     " JOIN tb_terceirizado T ON T.COD = TC.COD_TERCEIRIZADO " +
-                    " JOIN tb_restituicao_decimo_terceiro RDT ON RDT.COD_TERCEIRIZADO_CONTRATO =TC.COD_TERCEIRIZADO" +
+                    " JOIN tb_restituicao_decimo_terceiro RDT ON RDT.COD_TERCEIRIZADO_CONTRATO =TC.COD" +
                     " JOIN tb_tipo_restituicao TR ON TR.COD=RDT.COD_TIPO_RESTITUICAO " +
                     " JOIN tb_funcao_terceirizado FT ON FT.COD_TERCEIRIZADO_CONTRATO= TC.cod" +
                     " JOIN tb_funcao_contrato FC ON FC.COD=FT.COD_FUNCAO_CONTRATO" +
@@ -208,7 +225,7 @@ public class DecimoTerceiroDAO {
                     " RDT.OBSERVACAO" +
                     " FROM tb_terceirizado_contrato TC" +
                     " JOIN tb_terceirizado T ON T.COD = TC.COD_TERCEIRIZADO " +
-                    " JOIN tb_restituicao_decimo_terceiro RDT ON RDT.COD_TERCEIRIZADO_CONTRATO =TC.COD_TERCEIRIZADO" +
+                    " JOIN tb_restituicao_decimo_terceiro RDT ON RDT.COD_TERCEIRIZADO_CONTRATO =TC.COD" +
                     " JOIN tb_tipo_restituicao TR ON TR.COD=RDT.COD_TIPO_RESTITUICAO " +
                     " JOIN tb_funcao_terceirizado FT ON FT.COD_TERCEIRIZADO_CONTRATO= TC.cod" +
                     " JOIN tb_funcao_contrato FC ON FC.COD=FT.COD_FUNCAO_CONTRATO" +
@@ -260,7 +277,7 @@ public class DecimoTerceiroDAO {
                     " RDT.OBSERVACAO" +
                     " FROM tb_terceirizado_contrato TC" +
                     " JOIN tb_terceirizado T ON T.COD = TC.COD_TERCEIRIZADO " +
-                    " JOIN tb_restituicao_decimo_terceiro RDT ON RDT.COD_TERCEIRIZADO_CONTRATO =TC.COD_TERCEIRIZADO" +
+                    " JOIN tb_restituicao_decimo_terceiro RDT ON RDT.COD_TERCEIRIZADO_CONTRATO =TC.COD" +
                     " JOIN tb_tipo_restituicao TR ON TR.COD=RDT.COD_TIPO_RESTITUICAO " +
                     " JOIN tb_funcao_terceirizado FT ON FT.COD_TERCEIRIZADO_CONTRATO= TC.cod" +
                     " JOIN tb_funcao_contrato FC ON FC.COD=FT.COD_FUNCAO_CONTRATO" +
@@ -295,20 +312,22 @@ public class DecimoTerceiroDAO {
         int codigo = new UsuarioDAO(connection).verifyPermission(avaliacaoDecimoTerceiro.getUser().getId(), avaliacaoDecimoTerceiro.getCodigoContrato());
         int codGestor = new ContratoDAO(connection).codigoGestorContrato(avaliacaoDecimoTerceiro.getUser().getId(), avaliacaoDecimoTerceiro.getCodigoContrato());
         if(codGestor == codigo) {
-            String sql = "UPDATE TB_RESTITUICAO_DECIMO_TERCEIRO SET RESTITUIDO=?, OBSERVACAO=? WHERE COD_TERCEIRIZADO_CONTRATO=? AND COD=?";
+            String sql = "UPDATE TB_RESTITUICAO_DECIMO_TERCEIRO SET RESTITUIDO=?, OBSERVACAO=?, LOGIN_ATUALIZACAO=?," +
+                    " DATA_ATUALIZACAO=CURRENT_TIMESTAMP WHERE COD_TERCEIRIZADO_CONTRATO=? AND COD=?";
             List<DecimoTerceiroPendenteModel> lista = avaliacaoDecimoTerceiro.getDecimosTerceirosPendentes();
-            return atualizaCalculos(sql, lista);
+            return atualizaCalculos(sql, lista, avaliacaoDecimoTerceiro.getUser().getUsername());
         }
         return false;
     }
 
-    private boolean atualizaCalculos(String sql, List<DecimoTerceiroPendenteModel> lista) {
+    private boolean atualizaCalculos(String sql, List<DecimoTerceiroPendenteModel> lista, String username) {
         for (DecimoTerceiroPendenteModel decimoTerceiroPendenteModel : lista){
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 preparedStatement.setString(1, decimoTerceiroPendenteModel.getStatus());
                 preparedStatement.setString(2, decimoTerceiroPendenteModel.getObservacoes());
-                preparedStatement.setInt(3, decimoTerceiroPendenteModel.getTerceirizadoDecTer().getCodigoTerceirizadoContrato());
-                preparedStatement.setInt(4, decimoTerceiroPendenteModel.getCod());
+                preparedStatement.setString(3, username);
+                preparedStatement.setInt(4, decimoTerceiroPendenteModel.getTerceirizadoDecTer().getCodigoTerceirizadoContrato());
+                preparedStatement.setInt(5, decimoTerceiroPendenteModel.getCod());
                 preparedStatement.executeUpdate();
             } catch (SQLException sqle) {
                 sqle.printStackTrace();
@@ -364,5 +383,25 @@ public class DecimoTerceiroDAO {
             }
         }
         return lista;
+    }
+
+    public List<Integer> getAnosDecimoTerceiro(int codigoContrato) throws NullPointerException {
+        List<Integer> anos = new ArrayList<>();
+        String sql = "SELECT DISTINCT YEAR(date.DATE) FROM (SELECT DISTINCT TE.DATA_INICIO_VIGENCIA AS DATE FROM tb_evento_contratual TE WHERE TE.COD_CONTRATO=?" +
+                " UNION SELECT TE.DATA_FIM_VIGENCIA AS DATE FROM tb_evento_contratual TE WHERE TE.COD_CONTRATO=?) date; ";
+        try(PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, codigoContrato);
+            preparedStatement.setInt(2, codigoContrato);
+            try(ResultSet resultSet = preparedStatement.executeQuery()){
+                while(resultSet.next()) {
+                    anos.add(resultSet.getInt(1));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new NullPointerException("Nenhum período válido para cálculo de décimo terceiro.");
+        }
+
+        return anos;
     }
 }

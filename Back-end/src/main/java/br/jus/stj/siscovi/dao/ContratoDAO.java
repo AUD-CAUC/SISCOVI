@@ -109,7 +109,7 @@ public class ContratoDAO {
         ResultSet resultSet;
         try {
             preparedStatement = connection.prepareStatement("SELECT U.NOME FROM TB_USUARIO U JOIN tb_historico_gestao_contrato HGC ON HGC.COD_USUARIO=U.cod " +
-                    "JOIN TB_CONTRATO C ON  C.cod=HGC.COD_CONTRATO WHERE C.COD = ?");
+                    "JOIN TB_CONTRATO C ON  C.cod=HGC.COD_CONTRATO WHERE C.COD = ? AND DATA_FIM IS NULL ");
             preparedStatement.setInt(1, codigo);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
@@ -139,7 +139,7 @@ public class ContratoDAO {
                     if (resultSet.getInt("COD_USUARIO") == codigoUsuario) {
                         codigoGestor = codigoUsuario;
                     } else if (resultSet.getString("USUARIO").equals("USUÁRIO") || resultSet.getString(1).equals("GESTOR") || resultSet.getString(1).equals("1° SUBSTITUTO") ||
-                            resultSet.getString(1).equals("2° SUBSTITUTO")) {
+                            resultSet.getString(1).equals("2° SUBSTITUTO") || resultSet.getString(1).equals("3° SUBSTITUTO") || resultSet.getString(1).equals("4° SUBSTITUTO")) {
                         codigoGestor = resultSet.getInt("COD_USUARIO");
                     }
                     if (resultSet.getString(1).equals("ADMINISTRADOR")) {
@@ -153,6 +153,18 @@ public class ContratoDAO {
         return codigoGestor;
     }
 
+    /**
+     * Função que insere um contrato no sistema, isto é, insere o nome da empresa, o CNPJ, o número do contrato no STJ,
+     * o número do processo no STJ, a descrição do objeto deste contrato, os gestores (O gestor em si, e até quatro
+     * substitutos), os percentuais, as funções com suas respectivas remunerações e convenções coletivas e a vigência do
+     * contrato
+     *
+     * @param contrato
+     * @param username
+     * @return
+     * @throws RuntimeException
+     * @throws SQLException
+     */
     public boolean cadastrarContrato(ContratoModel contrato, String username) throws RuntimeException, SQLException {
         this.connection.setAutoCommit(false);
         Savepoint savepoint = this.connection.setSavepoint("Savepoint1");
@@ -181,10 +193,10 @@ public class ContratoDAO {
                     } catch (SQLException e) {
                         throw new RuntimeException("Erro. Usuário indicado para gestor do contrato não existe no sistema !");
                     }
-                    insertTSQL.InsertHistoricoGestaoContrato(vCodContrato, vCodUsuarioGestor, hgc.getCodigoPerfilGestao(), hgc.getInicio(), hgc.getFim(), username);
+                    insertTSQL.InsertHistoricoGestaoContrato(vCodContrato, vCodUsuarioGestor, hgc.getCodigoPerfilGestao(), hgc.getInicio(), null, username);
                 }
                 for (PercentualModel pm : contrato.getPercentuais()) {
-                    insertTSQL.InsertPercentualContrato(vCodContrato, pm.getRubrica().getCodigo(), pm.getPercentual(), pm.getDataInicio(), pm.getDataFim(), pm.getDataAditamento(), username);
+                    insertTSQL.InsertPercentualContrato(vCodContrato, pm.getRubrica().getCodigo(), pm.getPercentual(), pm.getDataInicio(), null, pm.getDataAditamento(), username);
                     if (pm.getRubrica().getNome().contains("Férias")) {
                         vPercentualTercoConstitucional = pm.getPercentual() / 3;
                         vDataInicioPercentualTercoConstitucional = pm.getDataInicio();
@@ -228,6 +240,13 @@ public class ContratoDAO {
         }
     }
 
+    /**
+     * Retorna o código de um evento contratual pelo tipo de evento.
+     *
+     * @param tipoEventoContratual
+     * @return
+     * @throws RuntimeException
+     */
     public int retornaCodEventoContratual(String tipoEventoContratual) {
         String sql = "SELECT COD FROM TB_TIPO_EVENTO_CONTRATUAL WHERE TIPO = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -243,6 +262,12 @@ public class ContratoDAO {
         return 0;
     }
 
+    /**
+     * @param username
+     * @param codigoContrato
+     * @return
+     * @throws RuntimeException
+     */
     public List<EventoContratualModel> retornaEventosContratuais(String username, int codigoContrato) throws RuntimeException {
         int vCodUsuario = 0;
         List<EventoContratualModel> lista = new ArrayList<>();
@@ -291,6 +316,14 @@ public class ContratoDAO {
         return null;
     }
 
+    /**
+     * Retorna todas as informações atuais do contrato.
+     *
+     * @param username
+     * @param codContrato
+     * @return
+     * @throws RuntimeException
+     */
     public ContratoModel getContratoCompleto(String username, int codContrato) throws RuntimeException {
         String sql = "SELECT COD FROM TB_USUARIO WHERE LOGIN=?";
         User user = new User();
@@ -322,6 +355,8 @@ public class ContratoDAO {
                     contrato.setHistoricoGestao(new HistoricoDAO(connection).getHistoricoGestor(codContrato));
                     contrato.setPercentuais(new PercentualDAO(connection).getPercentuaisDoContrato(codContrato));
                     contrato.setFuncoes(new CargoDAO(connection).getFuncoesContrato(codContrato, user));
+                    contrato.setDataInicio(new ConsultaTSQL(connection).RetornaPeriodoContrato(resultSet.getInt("COD"),1));
+                    contrato.setDataFim(new ConsultaTSQL(connection).RetornaPeriodoContrato(resultSet.getInt("COD"),2));
                 }
             }
             return contrato;
@@ -331,6 +366,15 @@ public class ContratoDAO {
         }
     }
 
+    /**
+     * Retorna verdadeiro se o ano passado como argumento da função está dentro do período de vigência do contrato que
+     * está se requisitando através do código do contrato, e retorna falso caso contrário.
+     *
+     * @param ano
+     * @param codigoContrato
+     * @return
+     * @throws RuntimeException
+     */
     public boolean anoDentroPeriodoVigencia(int ano, int codigoContrato) throws RuntimeException {
         String sql = "SELECT MIN(YEAR(EC.DATA_INICIO_VIGENCIA)), MAX(YEAR(EC.DATA_FIM_VIGENCIA)) FROM TB_CONTRATO C JOIN TB_EVENTO_CONTRATUAL EC ON EC.COD_CONTRATO = C.COD WHERE C.COD= ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -346,18 +390,20 @@ public class ContratoDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new RuntimeException("Erro ao tentar verificar período de vigência no contrato para a função de verificação de meses em Total Mensal a Reter. Causado por: "
+            throw new RuntimeException("Erro ao tentar verificar período de vigência no contrato para a função de " +
+                    "verificação de meses em Total Mensal a Reter. Causado por: "
                     + e.getMessage());
         }
         return false;
     }
 
+
     public List<TipoEventoContratualModel> getTiposEventosContratuais() throws RuntimeException {
         List<TipoEventoContratualModel> tiposEventosContratuais = new ArrayList<>();
         String sql = "SELECT * FROM TB_TIPO_EVENTO_CONTRATUAL TEC  WHERE TEC.TIPO !='CONTRATO'; ";
-        try(PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            try(ResultSet resultSet = preparedStatement.executeQuery()){
-                while(resultSet.next()) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
                     TipoEventoContratualModel tipoEventoContratualModel = new TipoEventoContratualModel(resultSet.getInt("COD"), resultSet.getString("TIPO"),
                             resultSet.getString("LOGIN_ATUALIZACAO"), resultSet.getDate("DATA_ATUALIZACAO"));
                     tiposEventosContratuais.add(tipoEventoContratualModel);
@@ -370,17 +416,414 @@ public class ContratoDAO {
         return tiposEventosContratuais;
     }
 
-    public void cadastrarAjusteContrato(ContratoModel contrato) throws RuntimeException, SQLException {
+    /**
+     * Função para cadastrar ajuste. Esta função criar o registro de evento contratual com informações inseridas pelo
+     * usuário e atualizar as informações das outras tabelas como por exemplo definir a data fim para os percentuais
+     * vigentes e acrescentar o novo registro para os novos percentuais
+     *
+     * @param contrato objeto que contém as informações do contrato a serem atualizadas
+     * @param username nome do usuário que está alterando as informações
+     * @throws RuntimeException
+     * @throws SQLException
+     */
+    public void cadastrarAjusteContrato(ContratoModel contrato, String username) throws RuntimeException, SQLException {
         this.connection.setAutoCommit(false);
         Savepoint savepoint = this.connection.setSavepoint("Savepoint1");
+
         InsertTSQL insertTSQL = new InsertTSQL(connection);
         ConsultaTSQL consultaTSQL = new ConsultaTSQL(connection);
         UpdateTSQL updateTSQL = new UpdateTSQL(connection);
-        String sql = "";
-        try(PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            
-        }catch (SQLException sqle) {
 
+        int vCodHistoricoGestaoVigente;
+        int vCodPercentualVigente;
+        int vCodFuncaoContrato;
+        int vCodRubrica;
+
+        CargoModel vFuncaoComRemuneracaoVigente = null;
+
+        String sql = "";
+
+        try {
+            int vCodEventoContratual = insertTSQL.InsertEventoContratual(contrato.getCodigo(),
+                    contrato.getEventoContratual().getTipo().getCod(),
+                    String.valueOf(contrato.getEventoContratual().getProrrogacao()),
+                    contrato.getEventoContratual().getAssunto(),
+                    contrato.getEventoContratual().getDataInicioVigencia(),
+                    contrato.getEventoContratual().getDataFimVigencia(),
+                    contrato.getEventoContratual().getDataAssinatura(),
+                    username);
+            for (HistoricoGestorModel hgc : contrato.getHistoricoGestao()) {
+
+                vCodHistoricoGestaoVigente = consultaTSQL.RetornaRegistroHistoricoGestaoVigente(contrato.getCodigo(),
+                        hgc.getCodigoPerfilGestao());
+                if (vCodHistoricoGestaoVigente != 0) {
+                    updateTSQL.UpdateDataFimHistoricoGestaoContrato(vCodHistoricoGestaoVigente, hgc.getInicio(), username);
+//                    insereHistoricoGestaoContrato(contrato.getCodigo(), hgc.getGestor(),
+//                            hgc.getCodigoPerfilGestao(), hgc.getInicio(), username);
+                } else {
+                    // throw new SQLException("Nenhum historico encontrado para ser atualizado");
+                }
+                insereHistoricoGestaoContrato(contrato.getCodigo(), hgc.getGestor(),
+                        hgc.getCodigoPerfilGestao(), hgc.getInicio(), username);
+            }
+
+            for (PercentualModel pcm : contrato.getPercentuais()) {
+                vCodPercentualVigente = consultaTSQL.RetornaPercentualContratoVigente(contrato.getCodigo(),
+                        pcm.getRubrica().getCodigo());
+                if (vCodPercentualVigente != 0) {
+                    updateTSQL.UpdateDataFimPercentualContrato(vCodPercentualVigente, pcm.getDataInicio(), username);
+                    insertTSQL.InsertPercentualContrato(contrato.getCodigo(), pcm.getRubrica().getCodigo(),
+                            pcm.getPercentual(), pcm.getDataInicio(), null, pcm.getDataAditamento(), username);
+
+                } else {
+                    throw new SQLException("Nenhum percentual no contrato com esta rubrica para ser atualizado !");
+                }
+            }
+
+            for (CargoModel cm : contrato.getFuncoes()) {
+                vCodFuncaoContrato = consultaTSQL.RetornaCodFuncaoContrato(contrato.getCodigo(), cm.getCodigo());
+                if (vCodFuncaoContrato != 0) {
+                    vFuncaoComRemuneracaoVigente = consultaTSQL.RetornaFuncaoRemuneracaoVigente(vCodFuncaoContrato);
+                    if (vFuncaoComRemuneracaoVigente.getRemuneracao() != cm.getRemuneracao() ||
+                            vFuncaoComRemuneracaoVigente.getTrienios() != cm.getTrienios() ||
+                            vFuncaoComRemuneracaoVigente.getAdicionais() != cm.getAdicionais() ||
+                            vFuncaoComRemuneracaoVigente.getConvencao().getCodigo() != cm.getConvencao().getCodigo()) {
+                        updateTSQL.UpdateFimRemuneracaoFuncao(vCodFuncaoContrato,
+                                contrato.getEventoContratual().getDataInicioVigencia(), username);
+                        insertTSQL.InsertRemuneracaoFunCon(vCodFuncaoContrato, cm.getConvencao().getCodigo(),
+                                contrato.getEventoContratual().getDataInicioVigencia(), null,
+                                contrato.getEventoContratual().getDataAssinatura(), cm.getRemuneracao(),
+                                cm.getAdicionais(), cm.getTrienios(), username);
+                    }
+                } else {
+                    throw new SQLException("A função não foi encontrada neste contrato !");
+                }
+            }
+            connection.commit();
+            connection.setAutoCommit(true);
+        } catch (Exception ex) {
+            connection.rollback(savepoint);
+            ex.printStackTrace();
+            throw new RuntimeException("Erro ao tentar cadastrar ajuste, contrato: " + contrato.getNomeDaEmpresa() + " . Causa :" + ex.getMessage());
         }
+    }
+
+    private void insereHistoricoGestaoContrato(int pCodContrato, String nomeGestor, int pCodPerfilGestao, Date pDataInicio, String pUsername) {
+        InsertTSQL insertTSQL = new InsertTSQL(connection);
+        int vCodUsuarioGestor = 0;
+        String sql = "SELECT COD FROM TB_USUARIO WHERE NOME=?";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setString(1, nomeGestor);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    vCodUsuarioGestor = resultSet.getInt("COD");
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro. Usuário indicado para gestor do contrato não existe no sistema !");
+        }
+        insertTSQL.InsertHistoricoGestaoContrato(pCodContrato, vCodUsuarioGestor, pCodPerfilGestao, pDataInicio, null, pUsername);
+    }
+
+    public List<ContratoModel> getCodigosContratosCalculosPendentes(int codigoUsuario, int vCalculo) throws NullPointerException {
+        /*
+            vCalculo: 1 - Férias
+                      2 - Décimo Terceiro
+                      3 - Rescisão
+         */
+        List<ContratoModel> contratos = new ArrayList<>();
+        String sql = "";
+        boolean isAdmin = new UsuarioDAO(connection).isAdmin(codigoUsuario);
+        if(isAdmin) {
+
+            if(vCalculo == 1) {
+                sql = "SELECT DISTINCT C.COD, C.CNPJ, C.NOME_EMPRESA, C.NUMERO_CONTRATO, C.NUMERO_PROCESSO_STJ FROM tb_restituicao_ferias RF" +
+                        " JOIN TB_TERCEIRIZADO_CONTRATO TC ON TC.COD=RF.COD_TERCEIRIZADO_CONTRATO" +
+                        " JOIN TB_CONTRATO C ON C.COD=TC.COD_CONTRATO" +
+                        " WHERE RF.AUTORIZADO IS NULL OR (RF.RESTITUIDO = 'N' AND RF.AUTORIZADO = 'S')";
+            }
+            if(vCalculo == 2) {
+                sql = "SELECT DISTINCT C.COD, C.CNPJ, C.NOME_EMPRESA, C.NUMERO_CONTRATO, C.NUMERO_PROCESSO_STJ FROM tb_restituicao_decimo_terceiro RDT" +
+                        " JOIN TB_TERCEIRIZADO_CONTRATO TC ON TC.COD=RDT.COD_TERCEIRIZADO_CONTRATO" +
+                        " JOIN TB_CONTRATO C ON C.COD=TC.COD_CONTRATO" +
+                        " WHERE RDT.AUTORIZADO IS NULL OR (RDT.RESTITUIDO = 'N' AND RDT.AUTORIZADO = 'S')";
+            }
+            if(vCalculo == 3) {
+                sql = "SELECT DISTINCT C.COD, C.CNPJ, C.NOME_EMPRESA, C.NUMERO_CONTRATO, C.NUMERO_PROCESSO_STJ FROM tb_restituicao_rescisao RR" +
+                        " JOIN TB_TERCEIRIZADO_CONTRATO TC ON TC.COD=RR.COD_TERCEIRIZADO_CONTRATO" +
+                        " JOIN TB_CONTRATO C ON C.COD=TC.COD_CONTRATO" +
+                        " WHERE RR.AUTORIZADO IS NULL OR (RR.RESTITUIDO = 'N' AND RR.AUTORIZADO = 'S')";
+            }
+        }else {
+            if(vCalculo == 1) {
+                sql = "SELECT DISTINCT C.COD, C.CNPJ, C.NOME_EMPRESA, C.NUMERO_CONTRATO, C.NUMERO_PROCESSO_STJ FROM tb_restituicao_ferias RF" +
+                        " JOIN TB_TERCEIRIZADO_CONTRATO TC ON TC.COD=RF.COD_TERCEIRIZADO_CONTRATO" +
+                        " JOIN TB_CONTRATO C ON C.COD=TC.COD_CONTRATO" +
+                        " JOIN tb_historico_gestao_contrato HGC ON HGC.COD_CONTRATO=C.COD" +
+                        " WHERE RF.AUTORIZADO IS NULL AND HGC.COD_CONTRATO=?";
+            }
+
+            if(vCalculo == 2) {
+                sql = "SELECT DISTINCT C.COD, C.CNPJ, C.NOME_EMPRESA, C.NUMERO_CONTRATO, C.NUMERO_PROCESSO_STJ FROM tb_restituicao_decimo_terceiro RDT" +
+                        " JOIN TB_TERCEIRIZADO_CONTRATO TC ON TC.COD=RDT.COD_TERCEIRIZADO_CONTRATO" +
+                        " JOIN TB_CONTRATO C ON C.COD=TC.COD_CONTRATO" +
+                        " JOIN tb_historico_gestao_contrato HGC ON HGC.COD_CONTRATO=C.COD" +
+                        " WHERE RDT.AUTORIZADO IS NULL AND HGC.COD_CONTRATO=?";
+            }
+
+            if(vCalculo == 3) {
+                sql = "SELECT DISTINCT C.COD, C.CNPJ, C.NOME_EMPRESA, C.NUMERO_CONTRATO, C.NUMERO_PROCESSO_STJ FROM tb_restituicao_rescisao RR" +
+                        " JOIN TB_TERCEIRIZADO_CONTRATO TC ON TC.COD=RR.COD_TERCEIRIZADO_CONTRATO" +
+                        " JOIN TB_CONTRATO C ON C.COD=TC.COD_CONTRATO" +
+                        " JOIN tb_historico_gestao_contrato HGC ON HGC.COD_CONTRATO=C.COD" +
+                        " WHERE RR.AUTORIZADO IS NULL AND HGC.COD_CONTRATO=?";
+            }
+        }
+
+        try(PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+            if(!isAdmin){
+                preparedStatement.setInt(1, codigoUsuario);
+            }
+            try(ResultSet resultSet = preparedStatement.executeQuery()){
+                while(resultSet.next()) {
+                    ContratoModel contrato = new ContratoModel(resultSet.getInt("COD"),
+                            resultSet.getString("NOME_EMPRESA"), resultSet.getString("CNPJ"));
+                    contrato.setNumeroProcessoSTJ(resultSet.getString("NUMERO_PROCESSO_STJ"));
+                    contrato.setNumeroDoContrato(resultSet.getString("NUMERO_CONTRATO"));
+                    contratos.add(contrato);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new NullPointerException("Nenhum cálculo pendente encontrado !");
+        }
+
+        return contratos;
+    }
+
+    public List<ContratoModel> getContratosCalculosPendentesExecucao(int codigoUsuario, int vCalculo) throws NullPointerException {
+
+        /*
+            vCalculo: 1 - Férias
+                      2 - Décimo Terceiro
+                      3 - Rescisão
+         */
+        List<ContratoModel> contratos = new ArrayList<>();
+        String sql = "";
+        boolean isAdmin = new UsuarioDAO(connection).isAdmin(codigoUsuario);
+        if(isAdmin) {
+
+            if(vCalculo == 1) {
+                sql = "SELECT DISTINCT C.COD, C.CNPJ, C.NOME_EMPRESA, C.NUMERO_CONTRATO, C.NUMERO_PROCESSO_STJ FROM tb_restituicao_ferias RF" +
+                        " JOIN TB_TERCEIRIZADO_CONTRATO TC ON TC.COD=RF.COD_TERCEIRIZADO_CONTRATO" +
+                        " JOIN TB_CONTRATO C ON C.COD=TC.COD_CONTRATO" +
+                        " WHERE ((AUTORIZADO ='S' OR AUTORIZADO ='s') AND (RESTITUIDO IS NULL))";
+            }
+
+            if(vCalculo == 2) {
+                sql = "SELECT DISTINCT C.COD, C.CNPJ, C.NOME_EMPRESA, C.NUMERO_CONTRATO, C.NUMERO_PROCESSO_STJ FROM tb_restituicao_decimo_terceiro RDT" +
+                        " JOIN TB_TERCEIRIZADO_CONTRATO TC ON TC.COD=RDT.COD_TERCEIRIZADO_CONTRATO" +
+                        " JOIN TB_CONTRATO C ON C.COD=TC.COD_CONTRATO" +
+                        " WHERE ((AUTORIZADO ='S' OR AUTORIZADO ='s') AND (RESTITUIDO IS NULL))";
+            }
+
+            if(vCalculo == 3) {
+                sql = "SELECT DISTINCT C.COD, C.CNPJ, C.NOME_EMPRESA, C.NUMERO_CONTRATO, C.NUMERO_PROCESSO_STJ FROM tb_restituicao_rescisao RR" +
+                        " JOIN TB_TERCEIRIZADO_CONTRATO TC ON TC.COD=RR.COD_TERCEIRIZADO_CONTRATO" +
+                        " JOIN TB_CONTRATO C ON C.COD=TC.COD_CONTRATO" +
+                        " WHERE ((AUTORIZADO ='S' OR AUTORIZADO ='s') AND (RESTITUIDO IS NULL))";
+            }
+        }else {
+            if(vCalculo == 1) {
+                sql = "SELECT DISTINCT C.COD, C.CNPJ, C.NOME_EMPRESA, C.NUMERO_CONTRATO, C.NUMERO_PROCESSO_STJ FROM tb_restituicao_ferias RF" +
+                        " JOIN TB_TERCEIRIZADO_CONTRATO TC ON TC.COD=RF.COD_TERCEIRIZADO_CONTRATO" +
+                        " JOIN TB_CONTRATO C ON C.COD=TC.COD_CONTRATO" +
+                        " JOIN tb_historico_gestao_contrato HGC ON HGC.COD_CONTRATO=C.COD" +
+                        " WHERE ((AUTORIZADO ='S' OR AUTORIZADO ='s') AND (RESTITUIDO IS NULL)) AND HGC.COD_USUARIO = ?";
+            }
+
+            if(vCalculo == 2) {
+                sql = "SELECT DISTINCT C.COD, C.CNPJ, C.NOME_EMPRESA, C.NUMERO_CONTRATO, C.NUMERO_PROCESSO_STJ FROM tb_restituicao_decimo_terceiro RDT" +
+                        " JOIN TB_TERCEIRIZADO_CONTRATO TC ON TC.COD=RDT.COD_TERCEIRIZADO_CONTRATO" +
+                        " JOIN TB_CONTRATO C ON C.COD=TC.COD_CONTRATO" +
+                        " JOIN tb_historico_gestao_contrato HGC ON HGC.COD_CONTRATO=C.COD" +
+                        " WHERE ((AUTORIZADO ='S' OR AUTORIZADO ='s') AND (RESTITUIDO IS NULL)) AND HGC.COD_USUARIO = ?";
+            }
+
+            if(vCalculo == 3) {
+                sql = "SELECT DISTINCT C.COD, C.CNPJ, C.NOME_EMPRESA, C.NUMERO_CONTRATO, C.NUMERO_PROCESSO_STJ FROM tb_restituicao_rescisao RR" +
+                        " JOIN TB_TERCEIRIZADO_CONTRATO TC ON TC.COD=RR.COD_TERCEIRIZADO_CONTRATO" +
+                        " JOIN TB_CONTRATO C ON C.COD=TC.COD_CONTRATO" +
+                        " JOIN tb_historico_gestao_contrato HGC ON HGC.COD_CONTRATO=C.COD" +
+                        " WHERE ((AUTORIZADO ='S' OR AUTORIZADO ='s') AND (RESTITUIDO IS NULL)) AND HGC.COD_USUARIO = ?";
+            }
+        }
+        try(PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+            if(!isAdmin){
+                preparedStatement.setInt(1, codigoUsuario);
+            }
+            try(ResultSet resultSet = preparedStatement.executeQuery()){
+                while(resultSet.next()){
+                    ContratoModel contrato = new ContratoModel(resultSet.getInt("COD"),
+                            resultSet.getString("NOME_EMPRESA"), resultSet.getString("CNPJ"));
+                    contrato.setNumeroDoContrato(resultSet.getString("NUMERO_CONTRATO"));
+                    contrato.setNumeroProcessoSTJ(resultSet.getString("NUMERO_PROCESSO_STJ"));
+                    contratos.add(contrato);
+                }
+            }
+        }catch (SQLException sqle) {
+            sqle.printStackTrace();
+            throw new NullPointerException("Nenhum cálculo pendente encontrado");
+        }
+        return contratos;
+    }
+
+    public List<ContratoModel> getCodigosContratosCalculosPendentesNegados(int codigoUsuario, int vCalculo) {
+        /*
+            vCalcuo: 1 - Ferias
+                     2 - Décimo Terceiro
+                     3 - Rescisão
+         */
+        List<ContratoModel> contratos = new ArrayList<>();
+        String sql = "";
+        boolean isAdmin = new UsuarioDAO(connection).isAdmin(codigoUsuario);
+        if(isAdmin) {
+            if(vCalculo == 1) {
+                sql = "SELECT DISTINCT C.COD, C.CNPJ, C.NOME_EMPRESA, C.NUMERO_CONTRATO, C.NUMERO_PROCESSO_STJ FROM tb_restituicao_ferias RF" +
+                        " JOIN TB_TERCEIRIZADO_CONTRATO TC ON TC.COD=RF.COD_TERCEIRIZADO_CONTRATO" +
+                        " JOIN TB_CONTRATO C ON C.COD=TC.COD_CONTRATO" +
+                        " WHERE (AUTORIZADO='N' OR AUTORIZADO='n')";
+            }
+            if(vCalculo == 2) {
+                sql = "SELECT DISTINCT C.COD, C.CNPJ, C.NOME_EMPRESA, C.NUMERO_CONTRATO, C.NUMERO_PROCESSO_STJ FROM tb_restituicao_decimo_terceiro RDT" +
+                        " JOIN TB_TERCEIRIZADO_CONTRATO TC ON TC.COD=RDT.COD_TERCEIRIZADO_CONTRATO" +
+                        " JOIN TB_CONTRATO C ON C.COD=TC.COD_CONTRATO" +
+                        " WHERE (AUTORIZADO='N' OR AUTORIZADO='n')";
+            }
+            if(vCalculo == 3) {
+                sql = "SELECT DISTINCT C.COD, C.CNPJ, C.NOME_EMPRESA, C.NUMERO_CONTRATO, C.NUMERO_PROCESSO_STJ FROM tb_restituicao_rescisao RR" +
+                        " JOIN TB_TERCEIRIZADO_CONTRATO TC ON TC.COD=RR.COD_TERCEIRIZADO_CONTRATO" +
+                        " JOIN TB_CONTRATO C ON C.COD=TC.COD_CONTRATO" +
+                        " WHERE (AUTORIZADO='N' OR AUTORIZADO='n')";
+            }
+        }else {
+            if(vCalculo == 1) {
+                sql = "SELECT DISTINCT C.COD, C.CNPJ, C.NOME_EMPRESA, C.NUMERO_CONTRATO, C.NUMERO_PROCESSO_STJ FROM tb_restituicao_ferias RF" +
+                        " JOIN TB_TERCEIRIZADO_CONTRATO TC ON TC.COD=RF.COD_TERCEIRIZADO_CONTRATO" +
+                        " JOIN TB_CONTRATO C ON C.COD=TC.COD_CONTRATO" +
+                        " JOIN tb_historico_gestao_contrato HGC ON HGC.COD_CONTRATO=C.COD" +
+                        " WHERE (AUTORIZADO='N' OR AUTORIZADO='n') AND HGC.COD_USUARIO = ?";
+            }
+            if(vCalculo == 2){
+                sql = "SELECT DISTINCT C.COD, C.CNPJ, C.NOME_EMPRESA, C.NUMERO_CONTRATO, C.NUMERO_PROCESSO_STJ FROM tb_restituicao_decimo_terceiro RDT" +
+                        " JOIN TB_TERCEIRIZADO_CONTRATO TC ON TC.COD=RDT.COD_TERCEIRIZADO_CONTRATO" +
+                        " JOIN TB_CONTRATO C ON C.COD=TC.COD_CONTRATO" +
+                        " JOIN tb_historico_gestao_contrato HGC ON HGC.COD_CONTRATO=C.COD" +
+                        " WHERE (AUTORIZADO='N' OR AUTORIZADO='n') AND HGC.COD_USUARIO = ?";
+            }
+            if(vCalculo == 3){
+                sql = "SELECT DISTINCT C.COD, C.CNPJ, C.NOME_EMPRESA, C.NUMERO_CONTRATO, C.NUMERO_PROCESSO_STJ FROM tb_restituicao_rescisao RR" +
+                        " JOIN TB_TERCEIRIZADO_CONTRATO TC ON TC.COD=RR.COD_TERCEIRIZADO_CONTRATO" +
+                        " JOIN TB_CONTRATO C ON C.COD=TC.COD_CONTRATO" +
+                        " JOIN tb_historico_gestao_contrato HGC ON HGC.COD_CONTRATO=C.COD" +
+                        " WHERE (AUTORIZADO='N' OR AUTORIZADO='n') AND HGC.COD_USUARIO = ?";
+            }
+        }
+        try(PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+            if(!isAdmin){
+                preparedStatement.setInt(1, codigoUsuario);
+            }
+            try(ResultSet resultSet = preparedStatement.executeQuery()){
+                while(resultSet.next()){
+                    contratos.add(insereInformacoesContrato(resultSet));
+                }
+            }
+        }catch (SQLException sqle) {
+            sqle.printStackTrace();
+            throw new NullPointerException("Nenhum cálculo pendente encontrado !");
+        }
+        return contratos;
+    }
+
+    private ContratoModel insereInformacoesContrato(ResultSet resultSet) throws SQLException {
+        ContratoModel contrato = new ContratoModel(resultSet.getInt("COD"),
+                resultSet.getString("NOME_EMPRESA"), resultSet.getString("CNPJ"));
+        contrato.setNumeroDoContrato(resultSet.getString("NUMERO_CONTRATO"));
+        contrato.setNumeroProcessoSTJ(resultSet.getString("NUMERO_PROCESSO_STJ"));
+        return contrato;
+    }
+
+    public List<ContratoModel> getCodigosContratosCalculosNaoPendentesNegados(int codigoUsuario, int vCalculo) throws NullPointerException{
+        /*
+            vCalculo: 1 - Ferias
+                      2 - Décimo Terceiro
+                      3 - Rescisão
+         */
+        List<ContratoModel> contratos = new ArrayList<>();
+        String sql = "";
+        boolean isAdmin = new UsuarioDAO(connection).isAdmin(codigoUsuario);
+        if(isAdmin) {
+            if(vCalculo == 1) {
+                sql = "SELECT DISTINCT C.COD, C.CNPJ, C.NOME_EMPRESA, C.NUMERO_CONTRATO, C.NUMERO_PROCESSO_STJ FROM tb_restituicao_ferias RF" +
+                        " JOIN TB_TERCEIRIZADO_CONTRATO TC ON TC.COD=RF.COD_TERCEIRIZADO_CONTRATO" +
+                        " JOIN TB_CONTRATO C ON C.COD=TC.COD_CONTRATO" +
+                        " WHERE ((AUTORIZADO ='S' OR AUTORIZADO ='s') AND (RESTITUIDO = 'N' OR RESTITUIDO='n'))";
+            }
+
+            if(vCalculo == 2) {
+                sql = "SELECT DISTINCT C.COD, C.CNPJ, C.NOME_EMPRESA, C.NUMERO_CONTRATO, C.NUMERO_PROCESSO_STJ FROM tb_restituicao_decimo_terceiro RDT" +
+                        " JOIN TB_TERCEIRIZADO_CONTRATO TC ON TC.COD=RDT.COD_TERCEIRIZADO_CONTRATO" +
+                        " JOIN TB_CONTRATO C ON C.COD=TC.COD_CONTRATO" +
+                        " WHERE ((AUTORIZADO ='S' OR AUTORIZADO ='s') AND (RESTITUIDO = 'N' OR RESTITUIDO='n'))";
+            }
+
+            if(vCalculo == 3) {
+                sql = "SELECT DISTINCT C.COD, C.CNPJ, C.NOME_EMPRESA, C.NUMERO_CONTRATO, C.NUMERO_PROCESSO_STJ FROM tb_restituicao_rescisao RR" +
+                        " JOIN TB_TERCEIRIZADO_CONTRATO TC ON TC.COD=RR.COD_TERCEIRIZADO_CONTRATO" +
+                        " JOIN TB_CONTRATO C ON C.COD=TC.COD_CONTRATO" +
+                        " WHERE ((AUTORIZADO ='S' OR AUTORIZADO ='s') AND (RESTITUIDO = 'N' OR RESTITUIDO='n'))";
+            }
+        }else {
+
+            if(vCalculo == 1) {
+                sql = "SELECT DISTINCT C.COD, C.CNPJ, C.NOME_EMPRESA, C.NUMERO_CONTRATO, C.NUMERO_PROCESSO_STJ FROM tb_restituicao_ferias RF" +
+                        " JOIN TB_TERCEIRIZADO_CONTRATO TC ON TC.COD=RF.COD_TERCEIRIZADO_CONTRATO" +
+                        " JOIN TB_CONTRATO C ON C.COD=TC.COD_CONTRATO" +
+                        " JOIN tb_historico_gestao_contrato HGC ON HGC.COD_CONTRATO=C.COD" +
+                        " WHERE ((AUTORIZADO ='S' OR AUTORIZADO ='s') AND (RESTITUIDO = 'N' OR RESTITUIDO='n')) AND HGC.COD_USUARIO = ?";
+            }
+
+            if(vCalculo == 2) {
+
+                sql = "SELECT DISTINCT C.COD, C.CNPJ, C.NOME_EMPRESA, C.NUMERO_CONTRATO, C.NUMERO_PROCESSO_STJ FROM tb_restituicao_decimo_terceiro RDT" +
+                        " JOIN TB_TERCEIRIZADO_CONTRATO TC ON TC.COD=RDT.COD_TERCEIRIZADO_CONTRATO" +
+                        " JOIN TB_CONTRATO C ON C.COD=TC.COD_CONTRATO" +
+                        " JOIN tb_historico_gestao_contrato HGC ON HGC.COD_CONTRATO=C.COD" +
+                        " WHERE ((AUTORIZADO ='S' OR AUTORIZADO ='s') AND (RESTITUIDO = 'N' OR RESTITUIDO='n')) AND HGC.COD_USUARIO = ?";
+            }
+
+            if(vCalculo == 3) {
+
+                sql = "SELECT DISTINCT C.COD, C.CNPJ, C.NOME_EMPRESA, C.NUMERO_CONTRATO, C.NUMERO_PROCESSO_STJ FROM tb_restituicao_rescisao RR" +
+                        " JOIN TB_TERCEIRIZADO_CONTRATO TC ON TC.COD=RR.COD_TERCEIRIZADO_CONTRATO" +
+                        " JOIN TB_CONTRATO C ON C.COD=TC.COD_CONTRATO" +
+                        " JOIN tb_historico_gestao_contrato HGC ON HGC.COD_CONTRATO=C.COD" +
+                        " WHERE ((AUTORIZADO ='S' OR AUTORIZADO ='s') AND (RESTITUIDO = 'N' OR RESTITUIDO='n')) AND HGC.COD_USUARIO = ?";
+            }
+        }
+        try(PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+            if(!isAdmin){
+                preparedStatement.setInt(1, codigoUsuario);
+            }
+            try(ResultSet resultSet = preparedStatement.executeQuery()){
+                while(resultSet.next()){
+                    contratos.add(insereInformacoesContrato(resultSet));
+                }
+            }
+        }catch (SQLException sqle) {
+            sqle.printStackTrace();
+            throw new NullPointerException("Nenhum cálculo pendente encontrado");
+        }
+        return contratos;
     }
 }
