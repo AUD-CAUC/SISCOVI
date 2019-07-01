@@ -32,21 +32,26 @@ public class FeriasDAO {
                 " FROM tb_terceirizado_contrato TC " +
                 " JOIN " +
                 " tb_terceirizado T ON T.COD=TC.COD_TERCEIRIZADO " +
-                " JOIN tb_restituicao_rescisao trr on TC.COD_TERCEIRIZADO = trr.COD_TERCEIRIZADO_CONTRATO" +
-                " JOIN tb_restituicao_ferias trf on TC.COD_TERCEIRIZADO = trf.COD_TERCEIRIZADO_CONTRATO" +
-                " WHERE COD_CONTRATO=? AND T.ATIVO='S'" +
-                " AND (trr.DATA_DESLIGAMENTO < DATA_FIM_PERIODO_AQUISITIVO AND DATA_INICIO_FERIAS IS NULL)";
-        
-        String sqlTeste = "SELECT TC.COD, T.NOME, MAX(DATA_INICIO_FERIAS) as A, MAX(DATA_FIM_FERIAS) AS B, MAX(DATA_INICIO_PERIODO_AQUISITIVO) as C, MAX(DATA_FIM_PERIODO_AQUISITIVO) as D" +
-                "                 FROM tb_terceirizado_contrato TC " +
-                "                 JOIN tb_terceirizado T ON T.COD=TC.COD_TERCEIRIZADO" +
-                "                 FULL JOIN tb_restituicao_rescisao trr on TC.COD_TERCEIRIZADO = trr.COD_TERCEIRIZADO_CONTRATO" +
-                "                 FULL JOIN tb_restituicao_ferias trf on TC.COD_TERCEIRIZADO = trf.COD_TERCEIRIZADO_CONTRATO" +
-                "                 WHERE COD_CONTRATO=? AND T.ATIVO='S'" +
-                "                GROUP BY TC.COD, T.NOME" +
-                "                HAVING MAX(DATA_INICIO_FERIAS) > DATEADD(DAY, 1, MAX(DATA_FIM_PERIODO_AQUISITIVO)) OR MAX(DATA_INICIO_FERIAS) IS NULL";
+                " WHERE COD_CONTRATO=? AND T.ATIVO='S'";
 
-        try(PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        // Nesta query é verificado se já houve a rescisão do terceirizado.
+        // Retornando apenas aqueles que ainda faltam tirar férias de um período aquisitivo anterior ao periódo de férias vencidas da rescisão ou
+        // Igual aonde a rescisão ainda não foi restituida ou
+        // Quando não houver rescisão
+        // Quando não tiver tirado nenhuma férias ainda a "DATA_FIM_PERIODO_AQUISITIVO" é nula e o primeiro fim do período aquisitivo é um ano depois da data de disponibilização
+        String sqlTeste = "SELECT TC.COD," +
+                "T.NOME " +
+                "FROM tb_terceirizado_contrato TC " +
+                "JOIN tb_terceirizado T ON T.COD=TC.COD_TERCEIRIZADO " +
+                "FULL JOIN tb_restituicao_rescisao trr on TC.COD_TERCEIRIZADO = trr.COD_TERCEIRIZADO_CONTRATO " +
+                "FULL JOIN tb_restituicao_ferias trf on TC.COD_TERCEIRIZADO = trf.COD_TERCEIRIZADO_CONTRATO " +
+                "WHERE COD_CONTRATO=? AND T.ATIVO='S' " +
+                "HAVING (MAX(DATA_FIM_FERIAS) > MAX(CASE WHEN DATA_FIM_PERIODO_AQUISITIVO IS NULL THEN DATEADD(DAY, 364, DATA_DISPONIBILIZACAO) ELSE DATEADD(DAY, 365, DATA_FIM_PERIODO_AQUISITIVO) END))" +
+                "   OR (MAX(DATA_FIM_FERIAS) = MAX(CASE WHEN DATA_FIM_PERIODO_AQUISITIVO IS NULL THEN DATEADD(DAY, 364, DATA_DISPONIBILIZACAO) ELSE DATEADD(DAY, 365, DATA_FIM_PERIODO_AQUISITIVO) END)" +
+                "       AND trr.RESTITUIDO != 'S')" +
+                "   OR MAX(DATA_FIM_FERIAS) IS NULL;";
+
+        try(PreparedStatement preparedStatement = connection.prepareStatement(sqlTeste)) {
             preparedStatement.setInt(1, codigoContrato);
             Ferias ferias = new Ferias(connection);
             ConsultaTSQL consulta = new ConsultaTSQL(connection);
