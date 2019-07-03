@@ -438,10 +438,14 @@ public class TotalMensalDAO {
                 if (resultSet.next()) {
                     maiorMes = resultSet.getInt(1);
                 }
-                if (maiorMes == 0 || maiorMes == menorMes) {
+                if (maiorMes == 0) {
                     // Quando é retornado 0 para o maior mês significa que não há nenhuma data fim do contrato para aquele ano,
                     // podendo se considerar que os restantes dos meses serão considerados.
+                    maiorMes = 12;
+                } else if ( maiorMes == menorMes) {
                     // Quando o maior mês é igual ao menor daquele ano significa que houve uma prorrogação
+                    // onde será um ano completo
+                    menorMes = 0;
                     maiorMes = 12;
                 }
             }
