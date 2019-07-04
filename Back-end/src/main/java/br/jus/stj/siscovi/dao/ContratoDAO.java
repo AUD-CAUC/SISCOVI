@@ -27,7 +27,9 @@ public class ContratoDAO {
     public ArrayList<ContratoModel> retornaContratoDoUsuario(String username) throws NullPointerException, SQLException {
         ArrayList<ContratoModel> contratos = new ArrayList<ContratoModel>();
         PreparedStatement preparedStatement = null;
+        PreparedStatement preparedStatement2 = null;
         ResultSet resultSet = null;
+        ResultSet resultSetDataFim = null;
         try {
             preparedStatement = connection.prepareStatement("SELECT SIGLA FROM TB_PERFIL_USUARIO P JOIN tb_usuario U ON U.COD_PERFIL=P.cod WHERE U.LOGIN=?");
             preparedStatement.setString(1, username);
@@ -52,11 +54,19 @@ public class ContratoDAO {
                     } else {
                         contrato.setSeAtivo("Não");
                     }
-                    if (resultSet.getDate("DATA_FIM") != null) {
-                        contrato.setDataFim(resultSet.getDate("DATA_FIM"));
-                    } else {
-                        contrato.setDataFim(null);
+
+                    preparedStatement2 = connection.prepareStatement("SELECT MAX(DATA_FIM_VIGENCIA) as DATA_FIM FROM tb_evento_contratual WHERE COD_CONTRATO = ?");
+                    preparedStatement2.setInt(1, resultSet.getInt("COD"));
+                    resultSetDataFim = preparedStatement2.executeQuery();
+
+                    if (resultSetDataFim.next()) {
+                        if (resultSetDataFim.getDate("DATA_FIM") != null) {
+                            contrato.setDataFim(resultSetDataFim.getDate("DATA_FIM"));
+                        } else {
+                            contrato.setDataFim(null);
+                        }
                     }
+
                     if (resultSet.getString("OBJETO") == null) {
                         contrato.setObjeto("-");
                     } else {
