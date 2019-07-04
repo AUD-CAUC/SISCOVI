@@ -35,20 +35,22 @@ public class DecimoTerceiroDAO {
             preparedStatement.setInt(2, pAnoContagem);
             DecimoTerceiro decimoTerceiro = new DecimoTerceiro(connection);
             Saldo saldoDecimoTerceiro = new Saldo(connection);
-            float vSaldoDecimoTericeiro = 0; //Este saldo é correspondente ao ano da data de início da contagem.
+            float vSaldoDecimoTerceiro = 0; //Este saldo é correspondente ao ano da data de início da contagem.
+            float valorMovimentado = 0; // Este valor é correspondente ao valor movimentado na data de início de contagem.
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
                     if (!decimoTerceiro.RetornaRestituido(resultSet.getInt("COD"), pAnoContagem)) {
                         Date inicioContagem = decimoTerceiro.RetornaDataInicioContagem(resultSet.getInt("COD"), pAnoContagem);
-                        vSaldoDecimoTericeiro = saldoDecimoTerceiro.getSaldoContaVinculada(resultSet.getInt("COD"), inicioContagem.toLocalDate().getYear(), 1, 3);
+                        vSaldoDecimoTerceiro = saldoDecimoTerceiro.getSaldoContaVinculada(resultSet.getInt("COD"), inicioContagem.toLocalDate().getYear(), 1, 3);
+                        valorMovimentado = saldoDecimoTerceiro.getSaldoContaVinculada(resultSet.getInt("COD"), inicioContagem.toLocalDate().getYear(), 3, 3);
                         boolean emAnalise = decimoTerceiro.RetornaStatusAnalise(resultSet.getInt("COD"));
                         boolean restituidoAnoPassado = decimoTerceiro.RetornaRestituidoAnoPassado(resultSet.getInt("COD"), pAnoContagem, resultSet.getInt("ANO DISPONIBILIZACAO"));
                         String parcelaAnterior = decimoTerceiro.RetornaMaiorParcelaConcedidaDecimoTerceiroPeriodo(resultSet.getInt("COD"), inicioContagem);
                         TerceirizadoDecimoTerceiro terceirizadoDecimoTerceiro = new TerceirizadoDecimoTerceiro(resultSet.getInt("COD"),
                                 resultSet.getString("NOME"),
                                 inicioContagem,
-                                vSaldoDecimoTericeiro,
-                                0);
+                                vSaldoDecimoTerceiro,
+                                valorMovimentado);
                         terceirizadoDecimoTerceiro.setEmAnalise(emAnalise);
                         terceirizadoDecimoTerceiro.setRestituidoAnoPassado(restituidoAnoPassado);
                         terceirizadoDecimoTerceiro.setParcelaAnterior(parcelaAnterior);
