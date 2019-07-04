@@ -102,7 +102,7 @@ public class CargoDAO {
                 " FROM tb_funcao_contrato CC" +
                 " JOIN tb_FUNCAO CA ON CA.cod=CC.COD_FUNCAO" +
                 " JOIN tb_remuneracao_fun_con RFC ON CC.COD = RFC.COD_FUNCAO_CONTRATO" +
-                " WHERE CC.COD_CONTRATO=?" +
+                " WHERE CC.COD_CONTRATO=? AND DATA_FIM IS NULL" +
                 " ORDER BY CA.NOME;";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, codigo);
