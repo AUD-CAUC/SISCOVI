@@ -1951,7 +1951,7 @@ public class UpdateTSQL {
     }
 
     public void UpdateFimRemuneracaoFuncao(int pCodFuncaoContrato, Date pDataInicio, String pUsername) throws RuntimeException {
-        String sql = "UPDATE TB_REMUNERACAO_FUN_CON SET DATA_FIM=?, LOGIN_ATUALIZACAO=? WHERE COD_FUNCAO_CONTRATO=? ";
+        String sql = "UPDATE TB_REMUNERACAO_FUN_CON SET DATA_FIM=?, LOGIN_ATUALIZACAO=? WHERE COD_FUNCAO_CONTRATO=? AND DATA_FIM IS NULL";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setDate(1, subraiDias(pDataInicio, 1));
             preparedStatement.setString(2, pUsername);
