@@ -7,6 +7,7 @@ import br.jus.stj.siscovi.model.*;
 import com.sun.org.apache.regexp.internal.RESyntaxException;
 import com.sun.scenario.effect.impl.prism.ps.PPSBlend_REDPeer;
 
+import javax.validation.constraints.Null;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,22 +32,23 @@ public class ContratoDAO {
         ResultSet resultSet = null;
         ResultSet resultSetDataFim = null;
         try {
-            preparedStatement = connection.prepareStatement("SELECT SIGLA FROM TB_PERFIL_USUARIO P JOIN tb_usuario U ON U.COD_PERFIL=P.cod WHERE U.LOGIN=?");
+            preparedStatement = connection.prepareStatement("SELECT SIGLA FROM TB_PERFIL_USUARIO P JOIN tb_usuario U" +
+                    " ON U.COD_PERFIL=P.cod WHERE U.LOGIN=?");
             preparedStatement.setString(1, username);
             resultSet = preparedStatement.executeQuery();
             resultSet.next();
             if (resultSet.getString("SIGLA").equals("ADMINISTRADOR")) {
-                preparedStatement = connection.prepareStatement("SELECT DISTINCT C.COD, NOME_EMPRESA, CNPJ, NUMERO_CONTRATO, SE_ATIVO, " +
-                        " EC.DATA_INICIO_VIGENCIA as DATA_INICIO, EC.DATA_FIM_VIGENCIA AS DATA_FIM, OBJETO" +
-                        " FROM TB_CONTRATO C" +
-                        " JOIN tb_evento_contratual EC ON EC.COD_CONTRATO=C.COD\n" +
+                preparedStatement = connection.prepareStatement("SELECT DISTINCT C.COD, NOME_EMPRESA, CNPJ, NUMERO_CONTRATO," +
+                        " SE_ATIVO, EC.DATA_INICIO_VIGENCIA as DATA_INICIO, EC.DATA_FIM_VIGENCIA AS DATA_FIM, OBJETO" +
+                        " FROM TB_CONTRATO C JOIN tb_evento_contratual EC ON EC.COD_CONTRATO=C.COD\n" +
                         " JOIN TB_TIPO_EVENTO_CONTRATUAL TEC ON TEC.COD=EC.COD_TIPO_EVENTO\n" +
                         " WHERE TEC.TIPO='CONTRATO';");
                 resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()) {
-                    ContratoModel contrato = new ContratoModel(resultSet.getInt("COD"), resultSet.getString("NOME_EMPRESA"), resultSet.getString("CNPJ"));
+                    ContratoModel contrato = new ContratoModel(resultSet.getInt("COD"), resultSet.getString
+                            ("NOME_EMPRESA"), resultSet.getString("CNPJ"));
                     contrato.setNumeroDoContrato(resultSet.getString("NUMERO_CONTRATO"));
-                    contrato.setAnoDoContrato(resultSet.getDate("DATA_INICIO").toLocalDate().getYear()); // RECUPERA O ANO DA DATA INÍCIO DO CONTRATO
+                    contrato.setAnoDoContrato(resultSet.getDate("DATA_INICIO").toLocalDate().getYear());
                     contrato.setDataInicio(resultSet.getDate("DATA_INICIO"));
                     contrato.setNomeDaEmpresa(contrato.getNomeDaEmpresa());
                     if (resultSet.getString("SE_ATIVO").equals("S")) {
@@ -55,7 +57,8 @@ public class ContratoDAO {
                         contrato.setSeAtivo("Não");
                     }
 
-                    preparedStatement2 = connection.prepareStatement("SELECT MAX(DATA_FIM_VIGENCIA) as DATA_FIM FROM tb_evento_contratual WHERE COD_CONTRATO = ?");
+                    preparedStatement2 = connection.prepareStatement("SELECT MAX(DATA_FIM_VIGENCIA) as DATA_FIM " +
+                            "FROM tb_evento_contratual WHERE COD_CONTRATO = ?");
                     preparedStatement2.setInt(1, resultSet.getInt("COD"));
                     resultSetDataFim = preparedStatement2.executeQuery();
 
@@ -75,17 +78,18 @@ public class ContratoDAO {
                     contratos.add(contrato);
                 }
             } else {
-                preparedStatement = connection.prepareStatement("SELECT DISTINCT C.COD , NOME_EMPRESA,CNPJ, NUMERO_CONTRATO,hgc.data_inicio, hgc.data_fim, SE_ATIVO, OBJETO  FROM TB_CONTRATO C" +
+                preparedStatement = connection.prepareStatement("SELECT DISTINCT C.COD , NOME_EMPRESA,CNPJ, " +
+                        "NUMERO_CONTRATO,hgc.data_inicio, hgc.data_fim, SE_ATIVO, OBJETO  FROM TB_CONTRATO C" +
                         " JOIN tb_historico_gestao_contrato hgc ON hgc.cod_contrato = c.cod" +
                         " JOIN tb_usuario u ON u.cod = hgc.cod_usuario" +
-                        " JOIN tb_perfil_usuario p ON p.cod = u.cod_perfil" +
-                        " WHERE u.login = ?");
+                        " JOIN tb_perfil_usuario p ON p.cod = u.cod_perfil WHERE u.login = ?");
                 preparedStatement.setString(1, username);
                 resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()) {
-                    ContratoModel contrato = new ContratoModel(resultSet.getInt("COD"), resultSet.getString("NOME_EMPRESA"), resultSet.getString("CNPJ"));
+                    ContratoModel contrato = new ContratoModel(resultSet.getInt("COD"), resultSet.getString
+                            ("NOME_EMPRESA"), resultSet.getString("CNPJ"));
                     contrato.setNumeroDoContrato(resultSet.getString("NUMERO_CONTRATO"));
-                    contrato.setAnoDoContrato(resultSet.getDate("DATA_INICIO").toLocalDate().getYear()); // RECUPERA O ANO DA DATA INÍCIO DO CONTRATO
+                    contrato.setAnoDoContrato(resultSet.getDate("DATA_INICIO").toLocalDate().getYear());
                     contrato.setDataInicio(resultSet.getDate("DATA_INICIO"));
                     contrato.setSeAtivo(resultSet.getString("SE_ATIVO"));
                     if (resultSet.getDate("DATA_FIM") != null) {
@@ -118,8 +122,8 @@ public class ContratoDAO {
         PreparedStatement preparedStatement;
         ResultSet resultSet;
         try {
-            preparedStatement = connection.prepareStatement("SELECT U.NOME FROM TB_USUARIO U JOIN tb_historico_gestao_contrato HGC ON HGC.COD_USUARIO=U.cod " +
-                    "JOIN TB_CONTRATO C ON  C.cod=HGC.COD_CONTRATO WHERE C.COD = ? AND DATA_FIM IS NULL ");
+            preparedStatement = connection.prepareStatement("SELECT U.NOME FROM TB_USUARIO U JOIN tb_historico_gestao_contrato" +
+                    " HGC ON HGC.COD_USUARIO=U.cod JOIN TB_CONTRATO C ON  C.cod=HGC.COD_CONTRATO WHERE C.COD = ? AND DATA_FIM IS NULL ");
             preparedStatement.setInt(1, codigo);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
@@ -138,8 +142,8 @@ public class ContratoDAO {
      */
     public int codigoGestorContrato(int codigoUsuario, int codigoContrato) {
         int codigoGestor = 0;
-        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT PU.SIGLA AS \"USUARIO\", COD_USUARIO FROM TB_USUARIO U" +
-                " JOIN TB_PERFIL_USUARIO PU ON PU.COD=U.COD_PERFIL" +
+        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT PU.SIGLA AS \"USUARIO\", COD_USUARIO" +
+                " FROM TB_USUARIO U JOIN TB_PERFIL_USUARIO PU ON PU.COD=U.COD_PERFIL" +
                 " JOIN tb_historico_gestao_contrato HGC ON HGC.COD_CONTRATO=?" +
                 " JOIN TB_PERFIL_GESTAO PG ON PG.COD=HGC.COD_PERFIL_GESTAO WHERE U.COD=?")) {
             preparedStatement.setInt(1, codigoContrato);
@@ -148,9 +152,13 @@ public class ContratoDAO {
                 if (resultSet.next()) {
                     if (resultSet.getInt("COD_USUARIO") == codigoUsuario) {
                         codigoGestor = codigoUsuario;
-                    } else if (resultSet.getString("USUARIO").equals("USUÁRIO") || resultSet.getString(1).equals("GESTOR") || resultSet.getString(1).equals("1° SUBSTITUTO") ||
-                            resultSet.getString(1).equals("2° SUBSTITUTO") || resultSet.getString(1).equals("3° SUBSTITUTO") || resultSet.getString(1).equals("4° SUBSTITUTO")) {
-                        codigoGestor = resultSet.getInt("COD_USUARIO");
+                    } else if (resultSet.getString("USUARIO").equals("USUÁRIO") ||
+                            resultSet.getString(1).equals("GESTOR") ||
+                            resultSet.getString(1).equals("1° SUBSTITUTO") ||
+                            resultSet.getString(1).equals("2° SUBSTITUTO") ||
+                            resultSet.getString(1).equals("3° SUBSTITUTO") ||
+                            resultSet.getString(1).equals("4° SUBSTITUTO")) {
+                                codigoGestor = resultSet.getInt("COD_USUARIO");
                     }
                     if (resultSet.getString(1).equals("ADMINISTRADOR")) {
                         codigoGestor = resultSet.getInt("COD_USUARIO");
@@ -158,7 +166,8 @@ public class ContratoDAO {
                 }
             }
         } catch (SQLException e) {
-            throw new NullPointerException("Erro ao tentar recuperar cálculos anteriores. Erro na função: 'codigoGestorContrato em ContratoDao.class'");
+            throw new NullPointerException("Erro ao tentar recuperar cálculos anteriores. Erro na função: 'codigoGestorContrato" +
+                    " em ContratoDao.class'");
         }
         return codigoGestor;
     }
@@ -187,8 +196,8 @@ public class ContratoDAO {
         Date vDataFimPercentualTercoConstitucional = null;
         Date vDataAditamentoPercentualTercoConstitucional = null;
         try {
-            vCodContrato = insertTSQL.InsertContrato(contrato.getNomeDaEmpresa(), contrato.getCnpj(), contrato.getNumeroDoContrato(), contrato.getNumeroProcessoSTJ(), contrato.getSeAtivo(),
-                    contrato.getObjeto(), username);
+            vCodContrato = insertTSQL.InsertContrato(contrato.getNomeDaEmpresa(), contrato.getCnpj(), contrato.getNumeroDoContrato(),
+                    contrato.getNumeroProcessoSTJ(), contrato.getSeAtivo(), contrato.getObjeto(), username);
             if (vCodContrato != 0) {
                 for (HistoricoGestorModel hgc : contrato.getHistoricoGestao()) {
                     String sql = "SELECT COD FROM TB_USUARIO WHERE NOME=?";
@@ -326,6 +335,76 @@ public class ContratoDAO {
         return null;
     }
 
+    public ContratoModel getEventoContratualCompleto(String username, int codigoContrato, int codigoAjuste) throws RuntimeException {
+        String sql = "SELECT COD FROM TB_USUARIO WHERE LOGIN=?";
+        User user = new User();
+        ContratoModel contrato = null;
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setString(1, username);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    user.setId(resultSet.getInt("COD"));
+                    user.setUsername(username);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Usuário não encontrado.");
+        }
+        int codigo = new UsuarioDAO(connection).verifyPermission(user.getId(), codigoContrato);
+        int codGestor = new ContratoDAO(connection).codigoGestorContrato(user.getId(), codigoContrato);
+        if (codigo == codGestor) {
+            sql = "SELECT COD, NOME_EMPRESA, CNPJ, NUMERO_CONTRATO, NUMERO_PROCESSO_STJ, SE_ATIVO, OBJETO, LOGIN_ATUALIZACAO, DATA_ATUALIZACAO FROM TB_CONTRATO WHERE COD=?";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                preparedStatement.setInt(1, codigoContrato);
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        contrato = new ContratoModel(codigoContrato, resultSet.getString("NOME_EMPRESA"), resultSet.getString("CNPJ"));
+                        contrato.setNumeroDoContrato(resultSet.getString("NUMERO_CONTRATO"));
+                        contrato.setNumeroProcessoSTJ(resultSet.getString("NUMERO_PROCESSO_STJ"));
+                        contrato.setObjeto(resultSet.getString("OBJETO"));
+                        contrato.setLoginAtualizacao(resultSet.getString("LOGIN_ATUALIZACAO"));
+                        contrato.setDataAtualizacao(resultSet.getDate("DATA_ATUALIZACAO"));
+                        contrato.setHistoricoGestao(new HistoricoDAO(connection).getHistoricoGestor(codigoContrato));
+                        contrato.setPercentuais(new PercentualDAO(connection).getPercentuaisDoContrato(codigoContrato));
+                        contrato.setFuncoes(new CargoDAO(connection).getFuncoesAjuste(codigoContrato, codigoAjuste, user));
+                        contrato.setDataInicio(new ConsultaTSQL(connection).RetornaPeriodoAjuste(codigoContrato, codigoAjuste,1));
+                        contrato.setDataFim(new ConsultaTSQL(connection).RetornaPeriodoAjuste(codigoContrato, codigoAjuste,2));
+                    }
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                throw new RuntimeException("Erro ao tentar recuperar informações do contrato: " + codigoContrato + ". Para o usuário " + username + ". " + e.getMessage());
+            }
+            sql = "SELECT EC.COD, EC.PRORROGACAO, EC.ASSUNTO, EC.DATA_INICIO_VIGENCIA, EC.DATA_FIM_VIGENCIA, EC.DATA_ASSINATURA, EC.LOGIN_ATUALIZACAO, EC.DATA_ATUALIZACAO," +
+                    " TEC.TIPO, TEC.COD AS 'CODIGO', TEC.DATA_ATUALIZACAO AS 'DA', TEC.LOGIN_ATUALIZACAO AS 'LA'" +
+                    " FROM TB_EVENTO_CONTRATUAL EC " +
+                    " JOIN TB_TIPO_EVENTO_CONTRATUAL TEC ON EC.COD_TIPO_EVENTO=TEC.COD WHERE TEC.TIPO != 'CONTRATO' AND COD_CONTRATO = ? AND EC.COD = ?";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                preparedStatement.setInt(1, codigoContrato);
+                preparedStatement.setInt(2, codigoAjuste);
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        TipoEventoContratualModel tipoEventoContratualModel = new TipoEventoContratualModel(resultSet.getInt("CODIGO"),
+                                resultSet.getString("TIPO"), resultSet.getString("LA"), resultSet.getDate("DA"));
+                        EventoContratualModel eventoContratualModel = new EventoContratualModel(resultSet.getInt("COD"),
+                                tipoEventoContratualModel,
+                                resultSet.getString("PRORROGACAO").charAt(0),
+                                resultSet.getString("ASSUNTO"),
+                                resultSet.getDate("DATA_INICIO_VIGENCIA"),
+                                resultSet.getDate("DATA_FIM_VIGENCIA"),
+                                resultSet.getDate("DATA_ASSINATURA"),
+                                resultSet.getString("LOGIN_ATUALIZACAO"),
+                                resultSet.getDate("DATA_ATUALIZACAO"));
+                        contrato.setEventoContratual(eventoContratualModel);
+
+                    }
+                }
+            } catch (SQLException sqle) {
+                throw new RuntimeException("");
+            }
+        }
+        return contrato;
+    }
     /**
      * Retorna todas as informações atuais do contrato.
      *
@@ -836,4 +915,5 @@ public class ContratoDAO {
         }
         return contratos;
     }
+
 }

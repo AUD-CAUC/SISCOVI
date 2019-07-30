@@ -127,6 +127,45 @@ public class CargoDAO {
         }
     }
 
+    public List<CargoModel> getFuncoesAjuste(int codigoContrato, int codigoAjuste, User user) throws RuntimeException {
+        List<CargoModel> cargos = new ArrayList<>();
+        UsuarioDAO usuarioDAO = new UsuarioDAO(connection);
+        int cod = usuarioDAO.verifyPermission(user.getId(), codigoContrato);
+        String sql = "SELECT EC.cod, CC.COD_FUNCAO, CA.NOME, CA.DESCRICAO, RFC.REMUNERACAO, RFC.TRIENIOS, RFC.ADICIONAIS, CC.LOGIN_ATUALIZACAO, CC.DATA_ATUALIZACAO, RFC.COD_CONVENCAO_COLETIVA, DATA_INICIO, DATA_FIM" +
+                " FROM tb_funcao_contrato CC " +
+                " JOIN tb_FUNCAO CA ON CA.cod=CC.COD_FUNCAO " +
+                " JOIN tb_remuneracao_fun_con RFC ON CC.COD = RFC.COD_FUNCAO_CONTRATO" +
+                "  JOIN tb_evento_contratual EC ON EC.COD_CONTRATO = CC.COD_CONTRATO" +
+                "  JOIN TB_TIPO_EVENTO_CONTRATUAL TEC ON EC.COD_TIPO_EVENTO=TEC.COD" +
+                " WHERE TEC.TIPO != 'CONTRATO' AND CC.COD_CONTRATO=? AND EC.cod=?" +
+                "       AND ((EC.DATA_INICIO_VIGENCIA BETWEEN RFC.DATA_INICIO AND (CASE WHEN RFC.DATA_FIM IS NULL THEN (SELECT MAX(DATA_FIM_VIGENCIA) FROM tb_evento_contratual WHERE COD_CONTRATO = ?) ELSE DATA_FIM END))" +
+                "       OR EC.DATA_INICIO_VIGENCIA = RFC.DATA_INICIO)" +
+                " ORDER BY CA.NOME;";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, codigoContrato);
+            preparedStatement.setInt(2, codigoAjuste);
+            preparedStatement.setInt(3, codigoContrato);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    CargoModel cargo = new CargoModel(resultSet.getInt("COD_FUNCAO"),
+                            resultSet.getString("NOME"),
+                            resultSet.getString("LOGIN_ATUALIZACAO"),
+                            resultSet.getDate("DATA_ATUALIZACAO"));
+                    cargo.setDescricao(resultSet.getString("DESCRICAO"));
+                    cargo.setRemuneracao(resultSet.getFloat("REMUNERACAO"));
+                    cargo.setTrienios(resultSet.getFloat("TRIENIOS"));
+                    cargo.setAdicionais(resultSet.getFloat("ADICIONAIS"));
+                    cargo.setConvencao(new ConvencoesDAO(connection).getConvencaoColetiva(resultSet.getInt("COD_CONVENCAO_COLETIVA")));
+                    cargos.add(cargo);
+                }
+            }
+            return cargos;
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+            throw new RuntimeException(sqle.getMessage());
+        }
+    }
+
     public List<CargosFuncionariosModel> getTerceirizadosFuncao(int codigo, User user) {
         int codigoGestor = new UsuarioDAO(this.connection).verifyPermission(user.getId(), codigo);
         int codGestor = new ContratoDAO(this.connection).codigoGestorContrato(user.getId(), codigo);

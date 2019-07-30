@@ -3242,4 +3242,39 @@ public class ConsultaTSQL {
         }
     }
 
+    public Date RetornaPeriodoAjuste (int pCodContrato, int pCodAjuste, int op) {
+        Date vDataInicioAjuste = null;
+        Date vDataFimAjuste = null;
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+
+        try {
+
+            preparedStatement = connection.prepareStatement("SELECT DATA_INICIO_VIGENCIA, DATA_FIM_VIGENCIA FROM tb_evento_contratual WHERE COD_CONTRATO = ? AND COD = ?");
+            preparedStatement.setInt(1, pCodContrato);
+            preparedStatement.setInt(2, pCodAjuste);
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+
+                vDataInicioAjuste = resultSet.getDate(1);
+                vDataFimAjuste = resultSet.getDate(2);
+
+            }
+
+        } catch (SQLException sqle) {
+
+            throw new NullPointerException("Erro ao recuperar período de um Ajuste.");
+
+        }
+
+        if (op == 1) {
+            return vDataInicioAjuste;
+        } else if (op == 2) {
+            return vDataFimAjuste;
+        } else {
+            throw new NullPointerException("Passagem errada de parâmetro.");
+        }
+    }
+
 }
