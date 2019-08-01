@@ -522,6 +522,7 @@ public class ContratoDAO {
         InsertTSQL insertTSQL = new InsertTSQL(connection);
         ConsultaTSQL consultaTSQL = new ConsultaTSQL(connection);
         UpdateTSQL updateTSQL = new UpdateTSQL(connection);
+        HistoricoDAO historicoDAO = new HistoricoDAO(connection);
 
         int vCodHistoricoGestaoVigente;
         int vCodPercentualVigente;
@@ -547,12 +548,8 @@ public class ContratoDAO {
                         hgc.getCodigoPerfilGestao());
                 if (vCodHistoricoGestaoVigente != 0) {
                     updateTSQL.UpdateDataFimHistoricoGestaoContrato(vCodHistoricoGestaoVigente, hgc.getInicio(), username);
-//                    insereHistoricoGestaoContrato(contrato.getCodigo(), hgc.getGestor(),
-//                            hgc.getCodigoPerfilGestao(), hgc.getInicio(), username);
-                } else {
-                    // throw new SQLException("Nenhum historico encontrado para ser atualizado");
                 }
-                insereHistoricoGestaoContrato(contrato.getCodigo(), hgc.getGestor(),
+                historicoDAO.insereHistoricoGestaoContrato(contrato.getCodigo(), hgc.getGestor(),
                         hgc.getCodigoPerfilGestao(), hgc.getInicio(), username);
             }
 
@@ -595,23 +592,6 @@ public class ContratoDAO {
             ex.printStackTrace();
             throw new RuntimeException("Erro ao tentar cadastrar ajuste, contrato: " + contrato.getNomeDaEmpresa() + " . Causa :" + ex.getMessage());
         }
-    }
-
-    private void insereHistoricoGestaoContrato(int pCodContrato, String nomeGestor, int pCodPerfilGestao, Date pDataInicio, String pUsername) {
-        InsertTSQL insertTSQL = new InsertTSQL(connection);
-        int vCodUsuarioGestor = 0;
-        String sql = "SELECT COD FROM TB_USUARIO WHERE NOME=?";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setString(1, nomeGestor);
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                if (resultSet.next()) {
-                    vCodUsuarioGestor = resultSet.getInt("COD");
-                }
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Erro. Usuário indicado para gestor do contrato não existe no sistema !");
-        }
-        insertTSQL.InsertHistoricoGestaoContrato(pCodContrato, vCodUsuarioGestor, pCodPerfilGestao, pDataInicio, null, pUsername);
     }
 
     public List<ContratoModel> getCodigosContratosCalculosPendentes(int codigoUsuario, int vCalculo) throws NullPointerException {

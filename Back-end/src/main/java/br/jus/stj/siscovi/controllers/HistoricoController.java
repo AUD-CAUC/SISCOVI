@@ -4,6 +4,7 @@ import br.jus.stj.siscovi.dao.ConnectSQLServer;
 import br.jus.stj.siscovi.dao.HistoricoDAO;
 import br.jus.stj.siscovi.dao.PerfilDAO;
 import br.jus.stj.siscovi.dao.sql.ConsultaTSQL;
+import br.jus.stj.siscovi.dao.sql.UpdateTSQL;
 import br.jus.stj.siscovi.helpers.ErrorMessage;
 import br.jus.stj.siscovi.model.HistoricoGestorModel;
 import br.jus.stj.siscovi.model.PerfilModel;
@@ -65,13 +66,22 @@ public class HistoricoController {
         HistoricoGestorModel historicoGestorModel = gson.fromJson(object, HistoricoGestorModel.class);
         ConnectSQLServer connectSQLServer = new ConnectSQLServer();
         HistoricoDAO historicoDAO = new HistoricoDAO(connectSQLServer.dbConnect());
+        ConsultaTSQL consultaTSQL = new ConsultaTSQL(connectSQLServer.dbConnect());
+        UpdateTSQL updateTSQL = new UpdateTSQL(connectSQLServer.dbConnect());
         String json = null;
         try{
-            if(historicoDAO.createHistoricoGestor(historicoGestorModel)){ connectSQLServer.dbConnect().close();
-                JsonObject jsonObject = new JsonObject();
-                jsonObject.addProperty("success", "As alterações foram salvas com sucesso");
-                json = gson.toJson(jsonObject);
+            int vCodHistoricoGestaoVigente;
+
+            vCodHistoricoGestaoVigente = consultaTSQL.RetornaRegistroHistoricoGestaoVigente(historicoGestorModel.getCodigoContrato(),
+                    historicoGestorModel.getCodigoPerfilGestao());
+            if (vCodHistoricoGestaoVigente != 0) {
+                updateTSQL.UpdateDataFimHistoricoGestaoContrato(vCodHistoricoGestaoVigente, historicoGestorModel.getInicio(), historicoGestorModel.getLoginAtualizacao());
             }
+            historicoDAO.insereHistoricoGestaoContrato(historicoGestorModel.getCodigoContrato(), historicoGestorModel.getGestor(), historicoGestorModel.getCodigoPerfilGestao(),
+                    historicoGestorModel.getInicio(), historicoGestorModel.getLoginAtualizacao());
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("success", "As alterações foram salvas com sucesso");
+            json = gson.toJson(jsonObject);
             connectSQLServer.dbConnect().close();
         }catch (SQLException sqle) {
             ErrorMessage errorMessage = ErrorMessage.handleError(sqle);

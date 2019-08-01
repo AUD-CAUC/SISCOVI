@@ -2,11 +2,11 @@ package br.jus.stj.siscovi.dao;
 
 import br.jus.stj.siscovi.dao.sql.InsertTSQL;
 import br.jus.stj.siscovi.model.HistoricoGestorModel;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Date;
 import java.util.ArrayList;
 
 public class HistoricoDAO {
@@ -23,7 +23,7 @@ public class HistoricoDAO {
                 "CASE WHEN DATA_FIM IS NULL THEN (SELECT MAX(DATA_FIM_VIGENCIA) FROM tb_evento_contratual WHERE COD_CONTRATO = HGC.COD_CONTRATO) ELSE DATA_FIM END AS DATA_FIM " +
                 "FROM TB_PERFIL_GESTAO PG " +
                 "JOIN tb_historico_gestao_contrato HGC ON HGC.COD_PERFIL_GESTAO=PG.cod JOIN tb_usuario U ON U.cod=HGC.COD_USUARIO " +
-                "WHERE HGC.COD_CONTRATO=? AND DATA_FIM IS NULL ORDER BY PG.COD";
+                "WHERE HGC.COD_CONTRATO=? ORDER BY PG.COD";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, codigo);
@@ -41,25 +41,20 @@ public class HistoricoDAO {
         return null;
     }
 
-    public boolean createHistoricoGestor(HistoricoGestorModel historicoGestorModel) throws NullPointerException {
-        int codigoUsuario = 0;
+    public void insereHistoricoGestaoContrato(int pCodContrato, String nomeGestor, int pCodPerfilGestao, Date pDataInicio, String pUsername) throws NullPointerException {
+        InsertTSQL insertTSQL = new InsertTSQL(connection);
+        int vCodUsuarioGestor = 0;
         String sql = "SELECT COD FROM TB_USUARIO WHERE NOME=?";
-        try(PreparedStatement preparedStatement = connection.prepareStatement(sql)){
-            preparedStatement.setString(1, historicoGestorModel.getGestor());
-            try(ResultSet resultSet = preparedStatement.executeQuery()) {
-                if(resultSet.next()) {
-                    codigoUsuario = resultSet.getInt("COD");
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setString(1, nomeGestor);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    vCodUsuarioGestor = resultSet.getInt("COD");
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Erro. Usuário indicado para gestor do contrato não existe no sistema !");
         }
-        if(codigoUsuario != 0) {
-            InsertTSQL insertTSQL = new InsertTSQL(connection);
-                insertTSQL.InsertHistoricoGestaoContrato(historicoGestorModel.getCodigoContrato(), codigoUsuario, historicoGestorModel.getCodigoPerfilGestao(), historicoGestorModel.getInicio(),
-                        null, historicoGestorModel.getLoginAtualizacao());
-            return true;
-        }
-        return false;
+        insertTSQL.InsertHistoricoGestaoContrato(pCodContrato, vCodUsuarioGestor, pCodPerfilGestao, pDataInicio, null, pUsername);
     }
 }
