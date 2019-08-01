@@ -18,9 +18,14 @@ public class HistoricoDAO {
 
     public ArrayList<HistoricoGestorModel> getHistoricoGestor(int codigo) {
         ArrayList<HistoricoGestorModel> listaHistorico = new ArrayList<>();
+        String sql = "SELECT HGC.COD, HGC.COD_CONTRATO, HGC.COD_PERFIL_GESTAO, " +
+                "U.NOME AS GESTOR, DATA_INICIO, HGC.LOGIN_ATUALIZACAO, HGC.DATA_ATUALIZACAO, " +
+                "CASE WHEN DATA_FIM IS NULL THEN (SELECT MAX(DATA_FIM_VIGENCIA) FROM tb_evento_contratual WHERE COD_CONTRATO = HGC.COD_CONTRATO) ELSE DATA_FIM END AS DATA_FIM " +
+                "FROM TB_PERFIL_GESTAO PG " +
+                "JOIN tb_historico_gestao_contrato HGC ON HGC.COD_PERFIL_GESTAO=PG.cod JOIN tb_usuario U ON U.cod=HGC.COD_USUARIO " +
+                "WHERE HGC.COD_CONTRATO=? AND DATA_FIM IS NULL ORDER BY PG.COD";
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT HGC.COD, HGC.COD_CONTRATO, HGC.COD_PERFIL_GESTAO, U.NOME AS GESTOR, DATA_INICIO, DATA_FIM, HGC.LOGIN_ATUALIZACAO, HGC.DATA_ATUALIZACAO FROM TB_PERFIL_GESTAO PG " +
-                    " JOIN tb_historico_gestao_contrato HGC ON HGC.COD_PERFIL_GESTAO=PG.cod JOIN tb_usuario U ON U.cod=HGC.COD_USUARIO WHERE HGC.COD_CONTRATO=? AND DATA_FIM IS NULL ORDER BY PG.COD");
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, codigo);
             ResultSet resultSet = preparedStatement.executeQuery();
             while(resultSet.next()) {
