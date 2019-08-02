@@ -545,7 +545,7 @@ public class ContratoDAO {
             for (HistoricoGestorModel hgc : contrato.getHistoricoGestao()) {
 
                 vCodHistoricoGestaoVigente = consultaTSQL.RetornaRegistroHistoricoGestaoVigente(contrato.getCodigo(),
-                        hgc.getCodigoPerfilGestao());
+                        hgc.getCodigoPerfilGestao(), hgc.getGestor());
                 if (vCodHistoricoGestaoVigente != 0) {
                     updateTSQL.UpdateDataFimHistoricoGestaoContrato(vCodHistoricoGestaoVigente, hgc.getInicio(), username);
                 }

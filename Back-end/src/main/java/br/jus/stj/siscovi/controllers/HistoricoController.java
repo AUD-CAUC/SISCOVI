@@ -71,16 +71,19 @@ public class HistoricoController {
         String json = null;
         try{
             int vCodHistoricoGestaoVigente;
-
-            vCodHistoricoGestaoVigente = consultaTSQL.RetornaRegistroHistoricoGestaoVigente(historicoGestorModel.getCodigoContrato(),
-                    historicoGestorModel.getCodigoPerfilGestao());
-            if (vCodHistoricoGestaoVigente != 0) {
-                updateTSQL.UpdateDataFimHistoricoGestaoContrato(vCodHistoricoGestaoVigente, historicoGestorModel.getInicio(), historicoGestorModel.getLoginAtualizacao());
-            }
-            historicoDAO.insereHistoricoGestaoContrato(historicoGestorModel.getCodigoContrato(), historicoGestorModel.getGestor(), historicoGestorModel.getCodigoPerfilGestao(),
-                    historicoGestorModel.getInicio(), historicoGestorModel.getLoginAtualizacao());
             JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("success", "As alterações foram salvas com sucesso");
+            vCodHistoricoGestaoVigente = consultaTSQL.RetornaRegistroHistoricoGestaoVigente(historicoGestorModel.getCodigoContrato(),
+                    historicoGestorModel.getCodigoPerfilGestao(), historicoGestorModel.getGestor());
+            if (vCodHistoricoGestaoVigente >= 0) {
+                if (vCodHistoricoGestaoVigente != 0) {
+                    updateTSQL.UpdateDataFimHistoricoGestaoContrato(vCodHistoricoGestaoVigente, historicoGestorModel.getInicio(), historicoGestorModel.getLoginAtualizacao());
+                }
+                historicoDAO.insereHistoricoGestaoContrato(historicoGestorModel.getCodigoContrato(), historicoGestorModel.getGestor(), historicoGestorModel.getCodigoPerfilGestao(),
+                        historicoGestorModel.getInicio(), historicoGestorModel.getLoginAtualizacao());
+                jsonObject.addProperty("success", "As alterações foram salvas com sucesso");
+            } else {
+                jsonObject.addProperty("error", "Não é possível cadastrar gestores ativos no contrato");
+            }
             json = gson.toJson(jsonObject);
             connectSQLServer.dbConnect().close();
         }catch (SQLException sqle) {

@@ -3087,14 +3087,46 @@ public class ConsultaTSQL {
 
     }
 
-    public int RetornaRegistroHistoricoGestaoVigente(int pCodContrato, int pCodPerfilGestao) {
-        String sql = "SELECT COD FROM TB_HISTORICO_GESTAO_CONTRATO WHERE COD_CONTRATO=? AND COD_PERFIL_GESTAO=? AND DATA_FIM IS NULL";
+    private boolean VerificaGestorEstaNoContrato(int pCodContrato, String nomeGestor) {
+        int codGestor;
+        String sql = "SELECT HGC.COD FROM TB_HISTORICO_GESTAO_CONTRATO HGC " +
+                "JOIN TB_USUARIO U ON HGC.COD_USUARIO = U.cod " +
+                "WHERE COD_CONTRATO=? AND U.NOME=? AND DATA_FIM IS NULL";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, pCodContrato);
+            preparedStatement.setString(2, nomeGestor);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    codGestor = resultSet.getInt("COD");
+                    if (codGestor > 0) {
+                        // Caso o gestor já estiver ativo, ele não pode ser cadastrado novamente
+                        return true;
+                    }
+                }
+            }
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+            throw new RuntimeException("Não foi possível encontrar um gestor com esses dados para esse contrato. Causa: " + sqle.getMessage());
+        }
+        return false;
+    }
+
+    public int RetornaRegistroHistoricoGestaoVigente(int pCodContrato, int pCodPerfilGestao, String nomeGestor) {
+        int ultimoCodGestor;
+        String sql = "SELECT COD FROM TB_HISTORICO_GESTAO_CONTRATO " +
+                "WHERE COD_CONTRATO=? AND COD_PERFIL_GESTAO=? AND DATA_FIM IS NULL";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, pCodContrato);
             preparedStatement.setInt(2, pCodPerfilGestao);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                if (resultSet.next()) {
-                    return resultSet.getInt("COD");
+                if (VerificaGestorEstaNoContrato(pCodContrato, nomeGestor)) {
+                    // Caso o gestor já estiver ativo, ele não pode ser cadastrado novamente
+                    return -1;
+                } else {
+                    if (resultSet.next()) {
+                        ultimoCodGestor = resultSet.getInt("COD");
+                        return ultimoCodGestor;
+                    }
                 }
             }
         } catch (SQLException sqle) {
