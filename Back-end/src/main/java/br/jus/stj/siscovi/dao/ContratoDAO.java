@@ -365,7 +365,7 @@ public class ContratoDAO {
                         contrato.setLoginAtualizacao(resultSet.getString("LOGIN_ATUALIZACAO"));
                         contrato.setDataAtualizacao(resultSet.getDate("DATA_ATUALIZACAO"));
                         contrato.setHistoricoGestao(new HistoricoDAO(connection).getHistoricoGestorAjuste(codigoContrato, codigoAjuste));
-                        contrato.setPercentuais(new PercentualDAO(connection).getPercentuaisDoContrato(codigoContrato));
+                        contrato.setPercentuais(new PercentualDAO(connection).getPercentuaisDoAjuste(codigoContrato, codigoAjuste));
                         contrato.setFuncoes(new CargoDAO(connection).getFuncoesAjuste(codigoContrato, codigoAjuste, user));
                         contrato.setDataInicio(new ConsultaTSQL(connection).RetornaPeriodoAjuste(codigoContrato, codigoAjuste,1));
                         contrato.setDataFim(new ConsultaTSQL(connection).RetornaPeriodoAjuste(codigoContrato, codigoAjuste,2));
