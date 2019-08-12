@@ -446,6 +446,7 @@ public class ContratoDAO {
                     contrato.setFuncoes(new CargoDAO(connection).getFuncoesContrato(codContrato, user));
                     contrato.setDataInicio(new ConsultaTSQL(connection).RetornaPeriodoContrato(resultSet.getInt("COD"),1));
                     contrato.setDataFim(new ConsultaTSQL(connection).RetornaPeriodoContrato(resultSet.getInt("COD"),2));
+                    contrato.setDataAssinatura(new ConsultaTSQL(connection).RetornaPeriodoContrato(resultSet.getInt("COD"),3));
                 }
             }
             return contrato;

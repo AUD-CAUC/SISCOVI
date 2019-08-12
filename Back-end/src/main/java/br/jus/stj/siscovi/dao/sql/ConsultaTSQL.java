@@ -3243,19 +3243,25 @@ public class ConsultaTSQL {
     public Date RetornaPeriodoContrato (int pCodContrato, int op) {
         Date vDataInicioContrato = null;
         Date vDataFimContrato = null;
+        Date vDataAssinaturaContrato = null;
         PreparedStatement preparedStatement;
         ResultSet resultSet;
 
         try {
 
-            preparedStatement = connection.prepareStatement("SELECT MIN(DATA_INICIO_VIGENCIA), MAX(DATA_FIM_VIGENCIA) FROM tb_evento_contratual WHERE COD_CONTRATO = ?");
+            preparedStatement = connection.prepareStatement("SELECT MIN(DATA_INICIO_VIGENCIA), MAX(DATA_FIM_VIGENCIA)," +
+                    "(SELECT DATA_ASSINATURA FROM tb_evento_contratual EC JOIN tb_tipo_evento_contratual ttec on EC.COD_TIPO_EVENTO = ttec.cod WHERE TIPO = 'CONTRATO' AND EC.COD_CONTRATO = ? ) " +
+                    "FROM tb_evento_contratual " +
+                    "WHERE COD_CONTRATO = ?");
             preparedStatement.setInt(1, pCodContrato);
+            preparedStatement.setInt(2, pCodContrato);
             resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
 
                 vDataInicioContrato = resultSet.getDate(1);
                 vDataFimContrato = resultSet.getDate(2);
+                vDataAssinaturaContrato = resultSet.getDate(3);
 
             }
 
@@ -3269,6 +3275,8 @@ public class ConsultaTSQL {
             return vDataInicioContrato;
         } else if (op == 2) {
             return vDataFimContrato;
+        } else if (op == 3) {
+            return vDataAssinaturaContrato;
         } else {
             throw new NullPointerException("Passagem errada de parâmetro.");
         }
