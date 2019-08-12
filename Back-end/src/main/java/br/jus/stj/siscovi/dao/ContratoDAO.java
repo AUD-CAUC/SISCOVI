@@ -39,7 +39,7 @@ public class ContratoDAO {
             resultSet.next();
             if (resultSet.getString("SIGLA").equals("ADMINISTRADOR")) {
                 preparedStatement = connection.prepareStatement("SELECT DISTINCT C.COD, NOME_EMPRESA, CNPJ, NUMERO_CONTRATO," +
-                        " SE_ATIVO, EC.DATA_INICIO_VIGENCIA as DATA_INICIO, EC.DATA_FIM_VIGENCIA AS DATA_FIM, OBJETO" +
+                        " SE_ATIVO, EC.DATA_INICIO_VIGENCIA as DATA_INICIO, EC.DATA_FIM_VIGENCIA AS DATA_FIM, DATA_ASSINATURA, OBJETO" +
                         " FROM TB_CONTRATO C JOIN tb_evento_contratual EC ON EC.COD_CONTRATO=C.COD\n" +
                         " JOIN TB_TIPO_EVENTO_CONTRATUAL TEC ON TEC.COD=EC.COD_TIPO_EVENTO\n" +
                         " WHERE TEC.TIPO='CONTRATO';");
@@ -51,6 +51,7 @@ public class ContratoDAO {
                     contrato.setAnoDoContrato(resultSet.getDate("DATA_INICIO").toLocalDate().getYear());
                     contrato.setDataInicio(resultSet.getDate("DATA_INICIO"));
                     contrato.setNomeDaEmpresa(contrato.getNomeDaEmpresa());
+                    contrato.setDataAssinatura(resultSet.getDate("DATA_ASSINATURA"));
                     if (resultSet.getString("SE_ATIVO").equals("S")) {
                         contrato.setSeAtivo("Sim");
                     } else {
@@ -79,7 +80,9 @@ public class ContratoDAO {
                 }
             } else {
                 preparedStatement = connection.prepareStatement("SELECT DISTINCT C.COD , NOME_EMPRESA,CNPJ, " +
-                        "NUMERO_CONTRATO,hgc.data_inicio, hgc.data_fim, SE_ATIVO, OBJETO  FROM TB_CONTRATO C" +
+                        "NUMERO_CONTRATO,hgc.data_inicio, hgc.data_fim, SE_ATIVO, DATA_ASSINATURA, OBJETO  " +
+                        "FROM TB_CONTRATO C " +
+                        "JOIN tb_evento_contratual EC ON EC.COD_CONTRATO=C.COD\n" +
                         " JOIN tb_historico_gestao_contrato hgc ON hgc.cod_contrato = c.cod" +
                         " JOIN tb_usuario u ON u.cod = hgc.cod_usuario" +
                         " JOIN tb_perfil_usuario p ON p.cod = u.cod_perfil WHERE u.login = ?");
@@ -92,6 +95,7 @@ public class ContratoDAO {
                     contrato.setAnoDoContrato(resultSet.getDate("DATA_INICIO").toLocalDate().getYear());
                     contrato.setDataInicio(resultSet.getDate("DATA_INICIO"));
                     contrato.setSeAtivo(resultSet.getString("SE_ATIVO"));
+                    contrato.setDataAssinatura(resultSet.getDate("DATA_ASSINATURA"));
                     if (resultSet.getDate("DATA_FIM") != null) {
                         contrato.setDataFim(resultSet.getDate("DATA_FIM"));
                     } else {
