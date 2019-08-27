@@ -426,10 +426,11 @@ public class TotalMensalDAO {
                     ". Causado por: " + sqle.getMessage());
         }
 
-        String sql2 = "select MAX(month(DATA_FIM_VIGENCIA)) from tb_evento_contratual " +
-                "where YEAR(DATA_FIM_VIGENCIA) = ? " +
-                "AND COD_CONTRATO = ? " +
-                "AND (COD_TIPO_EVENTO = 2 OR PRORROGACAO = 'S')";
+        String sql2 = "select MAX(MONTH(DATA_FIM_VIGENCIA)) from tb_evento_contratual  \n" +
+                "                JOIN tb_tipo_evento_contratual ttec on tb_evento_contratual.COD_TIPO_EVENTO = ttec.cod  \n" +
+                "                where YEAR(DATA_FIM_VIGENCIA) = ?  \n" +
+                "                AND COD_CONTRATO = ?  \n" +
+                "                AND (TIPO = 'CONTRATO' OR PRORROGACAO = 'S')";
 
         try(PreparedStatement preparedStatement = connection.prepareStatement(sql2)) {
             preparedStatement.setInt(1, ano);
