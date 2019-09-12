@@ -82,10 +82,12 @@ public class ContratoDAO {
                 preparedStatement = connection.prepareStatement("SELECT DISTINCT C.COD , NOME_EMPRESA,CNPJ, " +
                         "NUMERO_CONTRATO,hgc.data_inicio, hgc.data_fim, SE_ATIVO, DATA_ASSINATURA, OBJETO  " +
                         "FROM TB_CONTRATO C " +
-                        "JOIN tb_evento_contratual EC ON EC.COD_CONTRATO=C.COD\n" +
-                        " JOIN tb_historico_gestao_contrato hgc ON hgc.cod_contrato = c.cod" +
-                        " JOIN tb_usuario u ON u.cod = hgc.cod_usuario" +
-                        " JOIN tb_perfil_usuario p ON p.cod = u.cod_perfil WHERE u.login = ?");
+                        "JOIN tb_evento_contratual EC ON EC.COD_CONTRATO=C.COD " +
+                        "JOIN tb_tipo_evento_contratual TEC ON EC.COD_TIPO_EVENTO = TEC.cod " +
+                        "JOIN tb_historico_gestao_contrato hgc ON hgc.cod_contrato = c.cod " +
+                        "JOIN tb_usuario u ON u.cod = hgc.cod_usuario " +
+                        "JOIN tb_perfil_usuario p ON p.cod = u.cod_perfil " +
+                        "WHERE u.login = ? AND TEC.TIPO = 'CONTRATO'");
                 preparedStatement.setString(1, username);
                 resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()) {
