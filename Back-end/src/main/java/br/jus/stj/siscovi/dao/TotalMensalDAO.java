@@ -443,9 +443,9 @@ public class TotalMensalDAO {
                     // Quando é retornado 0 para o maior mês significa que não há nenhuma data fim do contrato para aquele ano,
                     // podendo se considerar que os restantes dos meses serão considerados.
                     maiorMes = 12;
-                } else if ( maiorMes == menorMes) {
-                    // Quando o maior mês é igual ao menor daquele ano significa que houve uma prorrogação
-                    // onde será um ano completo
+                } else if (maiorMes <= menorMes) {
+                    // Quando o maior mês é menor ou igual ao menor mês daquele ano significa que houve uma prorrogação
+                    // onde será considerado um ano completo
                     menorMes = 0;
                     maiorMes = 12;
                 }
