@@ -333,7 +333,15 @@ public class Ferias {
 
         }
 
-        // Loop que perpassa todos os períodos de férias possíveis em ordem.
+        // Caso o início de férias proporcionais supere a data de desligamento, não deve haver cálculo de férias
+        // proporcionais.
+
+        if (vDataInicioFeriasProporcionais.after(pDataDesligamento)) {
+            vDataInicioFeriasProporcionais = null;
+            vDataFimFeriasProporcionais = null;
+        }
+
+        // Loop que percorre todos os períodos de férias possíveis em ordem.
 
         while (vDataAuxiliar.before(pDataDesligamento)) {
 
@@ -364,7 +372,7 @@ public class Ferias {
 
                     if (pOperacao == 4) {
 
-                        vRetorno = pDataDesligamento;
+                        vRetorno = vDataFimFeriasProporcionais;
 
                     }
 
