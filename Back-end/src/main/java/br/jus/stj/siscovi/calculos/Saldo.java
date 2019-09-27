@@ -393,6 +393,9 @@ public class Saldo {
         float vDecimoTerceiroRestituido = 0;
         float vIncidencia13Restituido = 0;
         float vTotalRestituido = 0;
+        float vRescisaoDecimoTerceiroRestituido = 0;
+        float vRescisaoIncidencia13Restituido = 0;
+        float vRescisaoTotalRestituido = 0;
 
         PreparedStatement preparedStatement;
         ResultSet resultSet;
@@ -494,20 +497,16 @@ public class Saldo {
 
             try {
 
-                preparedStatement = connection.prepareStatement("SELECT ROUND(SUM(CASE WHEN rdt.valor IS NULL THEN 0 ELSE rdt.valor END + CASE WHEN srdt.valor IS NULL THEN 0 ELSE srdt.valor END + CASE WHEN r.valor_decimo_terceiro IS NULL THEN 0 ELSE r.valor_decimo_terceiro END + CASE WHEN srr.valor_decimo_terceiro IS NULL THEN 0 ELSE srr.valor_decimo_terceiro END), 2),\n" +
-                        "       ROUND(SUM(CASE WHEN rdt.incidencia_submodulo_4_1 IS NULL THEN 0 ELSE rdt.incidencia_submodulo_4_1 END + CASE WHEN srdt.incidencia_submodulo_4_1 IS NULL THEN 0 ELSE srdt.incidencia_submodulo_4_1 END + CASE WHEN r.incid_submod_4_1_dec_terceiro IS NULL THEN 0 ELSE r.incid_submod_4_1_dec_terceiro END + CASE WHEN srr.incid_submod_4_1_dec_terceiro IS NULL THEN 0 ELSE srr.incid_submod_4_1_dec_terceiro END), 2),\n" +
-                        "       ROUND(SUM(CASE WHEN rdt.valor IS NULL THEN 0 ELSE rdt.valor END + CASE WHEN srdt.valor IS NULL THEN 0 ELSE srdt.valor END + CASE WHEN r.valor_decimo_terceiro IS NULL THEN 0 ELSE r.valor_decimo_terceiro END + CASE WHEN srr.valor_decimo_terceiro IS NULL THEN 0 ELSE srr.valor_decimo_terceiro END +\n" +
-                        "                 CASE WHEN rdt.incidencia_submodulo_4_1 IS NULL THEN 0 ELSE rdt.incidencia_submodulo_4_1 END + CASE WHEN srdt.incidencia_submodulo_4_1 IS NULL THEN 0 ELSE srdt.incidencia_submodulo_4_1 END + CASE WHEN r.incid_submod_4_1_dec_terceiro IS NULL THEN 0 ELSE r.incid_submod_4_1_dec_terceiro END + CASE WHEN srr.incid_submod_4_1_dec_terceiro IS NULL THEN 0 ELSE srr.incid_submod_4_1_dec_terceiro END), 2)\n" +
+                preparedStatement = connection.prepareStatement("SELECT ROUND(SUM(CASE WHEN rdt.valor IS NULL THEN 0 ELSE rdt.valor END + CASE WHEN srdt.valor IS NULL THEN 0 ELSE srdt.valor END), 2),\n" +
+                        "       ROUND(SUM(CASE WHEN rdt.incidencia_submodulo_4_1 IS NULL THEN 0 ELSE rdt.incidencia_submodulo_4_1 END + CASE WHEN srdt.incidencia_submodulo_4_1 IS NULL THEN 0 ELSE srdt.incidencia_submodulo_4_1 END), 2),\n" +
+                        "       ROUND(SUM(CASE WHEN rdt.valor IS NULL THEN 0 ELSE rdt.valor END + CASE WHEN srdt.valor IS NULL THEN 0 ELSE srdt.valor END +\n" +
+                        "                 CASE WHEN rdt.incidencia_submodulo_4_1 IS NULL THEN 0 ELSE rdt.incidencia_submodulo_4_1 END + CASE WHEN srdt.incidencia_submodulo_4_1 IS NULL THEN 0 ELSE srdt.incidencia_submodulo_4_1 END), 2)\n" +
                         "  FROM tb_terceirizado_contrato tc\n" +
                         "    LEFT JOIN tb_restituicao_decimo_terceiro rdt ON tc.cod = rdt.cod_terceirizado_contrato\n" +
                         "    LEFT JOIN tb_saldo_residual_dec_ter srdt ON srdt.cod_restituicao_dec_terceiro = rdt.cod\n" +
-                        "    LEFT JOIN tb_restituicao_rescisao r ON r.cod_terceirizado_contrato = tc.cod\n" +
-                        "    LEFT JOIN tb_saldo_residual_rescisao srr ON srr.COD_RESTITUICAO_RESCISAO = r.cod\n" +
                         "  WHERE tc.cod = ?\n" +
                         "    AND (srdt.RESTITUIDO = 'S'\n" +
-                        "         OR r.restituido = 'S'\n" +
-                        "         OR rdt.RESTITUIDO = 'S'\n" +
-                        "         OR srr.RESTITUIDO = 'S');");
+                        "         OR rdt.RESTITUIDO = 'S');");
 
                 preparedStatement.setInt(1, pCodTerceirizadoContrato);
                 resultSet = preparedStatement.executeQuery();
@@ -517,6 +516,28 @@ public class Saldo {
                     vDecimoTerceiroRestituido = resultSet.getFloat(1);
                     vIncidencia13Restituido = resultSet.getFloat(2);
                     vTotalRestituido = resultSet.getFloat(3);
+
+                }
+
+                preparedStatement = connection.prepareStatement("SELECT ROUND(SUM(CASE WHEN r.valor_decimo_terceiro IS NULL THEN 0 ELSE r.valor_decimo_terceiro END + CASE WHEN srr.valor_decimo_terceiro IS NULL THEN 0 ELSE srr.valor_decimo_terceiro END), 2),\n" +
+                        "       ROUND(SUM(CASE WHEN r.incid_submod_4_1_dec_terceiro IS NULL THEN 0 ELSE r.incid_submod_4_1_dec_terceiro END + CASE WHEN srr.incid_submod_4_1_dec_terceiro IS NULL THEN 0 ELSE srr.incid_submod_4_1_dec_terceiro END), 2),\n" +
+                        "       ROUND(SUM(CASE WHEN r.valor_decimo_terceiro IS NULL THEN 0 ELSE r.valor_decimo_terceiro END + CASE WHEN srr.valor_decimo_terceiro IS NULL THEN 0 ELSE srr.valor_decimo_terceiro END +\n" +
+                        "                 CASE WHEN r.incid_submod_4_1_dec_terceiro IS NULL THEN 0 ELSE r.incid_submod_4_1_dec_terceiro END + CASE WHEN srr.incid_submod_4_1_dec_terceiro IS NULL THEN 0 ELSE srr.incid_submod_4_1_dec_terceiro END), 2)\n" +
+                        "  FROM tb_terceirizado_contrato tc\n" +
+                        "    LEFT JOIN tb_restituicao_rescisao r ON r.cod_terceirizado_contrato = tc.cod\n" +
+                        "    LEFT JOIN tb_saldo_residual_rescisao srr ON srr.COD_RESTITUICAO_RESCISAO = r.cod\n" +
+                        "  WHERE tc.cod = ?\n" +
+                        "    AND (r.restituido = 'S'\n" +
+                        "         OR srr.RESTITUIDO = 'S');");
+
+                preparedStatement.setInt(1, pCodTerceirizadoContrato);
+                resultSet = preparedStatement.executeQuery();
+
+                if (resultSet.next()) {
+
+                    vRescisaoDecimoTerceiroRestituido = resultSet.getFloat(1);
+                    vRescisaoIncidencia13Restituido = resultSet.getFloat(2);
+                    vRescisaoTotalRestituido = resultSet.getFloat(3);
 
                 }
 
@@ -622,7 +643,7 @@ public class Saldo {
 
         if (pOperacao == 3 && pCodRubrica == 3) {
 
-            return vDecimoTerceiroRestituido;
+            return vDecimoTerceiroRestituido + vRescisaoDecimoTerceiroRestituido;
 
         }
 
@@ -630,7 +651,7 @@ public class Saldo {
 
         if (pOperacao == 3 && pCodRubrica == 103) {
 
-            return vIncidencia13Restituido;
+            return vIncidencia13Restituido + vRescisaoIncidencia13Restituido;
 
         }
 
@@ -638,7 +659,7 @@ public class Saldo {
 
         if (pOperacao == 3 && pCodRubrica == 100) {
 
-            return vTotalRestituido;
+            return vTotalRestituido + vRescisaoTotalRestituido;
 
         }
 
