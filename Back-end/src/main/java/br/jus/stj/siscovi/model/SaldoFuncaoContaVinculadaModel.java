@@ -11,6 +11,7 @@ public class SaldoFuncaoContaVinculadaModel {
     private float valorDecimoTerceiroRetido;
     private float valorIncidenciaRetido;
     private float valorMultaFGTSRetido;
+    private float valorMultaFGTSRestituido;
     private float valorTotalRetido;
     private float valorFeriasRestituido;
     private float valorIncidenciaFeriasRestituido;
@@ -33,6 +34,7 @@ public class SaldoFuncaoContaVinculadaModel {
                                           float valorDecimoTerceiroRetido,
                                           float valorIncidenciaRetido,
                                           float valorMultaFGTSRetido,
+                                          float valorMultaFGTSRestituido,
                                           float valorTotalRetido,
                                           float valorFeriasRestituido,
                                           float valorTercoRestituido,
@@ -54,6 +56,7 @@ public class SaldoFuncaoContaVinculadaModel {
         this.valorDecimoTerceiroRetido = valorDecimoTerceiroRetido;
         this.valorIncidenciaRetido = valorIncidenciaRetido;
         this.valorMultaFGTSRetido = valorMultaFGTSRetido;
+        this.valorMultaFGTSRestituido = valorMultaFGTSRestituido;
         this.valorTotalRetido = valorTotalRetido;
         this.valorFeriasRestituido = valorFeriasRestituido;
         this.valorTercoRestituido = valorTercoRestituido;

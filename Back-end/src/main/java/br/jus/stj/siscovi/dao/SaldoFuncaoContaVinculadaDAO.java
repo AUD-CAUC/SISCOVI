@@ -62,6 +62,7 @@ public class SaldoFuncaoContaVinculadaDAO {
                                     saldoContaVinculada.getSaldoFuncaoContaVinculada(pCodContrato, resultSet.getInt(6), 1,3),
                                     saldoContaVinculada.getSaldoFuncaoContaVinculada(pCodContrato, resultSet.getInt(6), 1,7),
                                     saldoContaVinculada.getSaldoFuncaoContaVinculada(pCodContrato, resultSet.getInt(6), 1,5),
+                                    saldoContaVinculada.getSaldoFuncaoContaVinculada(pCodContrato, resultSet.getInt(6), 3,5),
                                     saldoContaVinculada.getSaldoFuncaoContaVinculada(pCodContrato, resultSet.getInt(6), 1,100),
                                     saldoContaVinculada.getSaldoFuncaoContaVinculada(pCodContrato, resultSet.getInt(6), 2,1),
                                     saldoContaVinculada.getSaldoFuncaoContaVinculada(pCodContrato, resultSet.getInt(6), 2,2),
