@@ -84,6 +84,8 @@ public class RestituicaoRescisao {
         vTotalDecimoTerceiro = CalcularValorRubricaRescisao(pCodTerceirizadoContrato, 3, vDataInicioContagemDecTer, pDataDesligamento);
         vTotalIncidenciaDecimoTerceiro = CalcularValorRubricaRescisao(pCodTerceirizadoContrato, 6, vDataInicioContagemDecTer, pDataDesligamento);
         vTotalMultaFGTSDecimoTerceiro = CalcularValorRubricaRescisao(pCodTerceirizadoContrato, 9, vDataInicioContagemDecTer, pDataDesligamento);
+        vTotalMultaFGTSRemuneracao = CalcularValorRubricaRescisao(pCodTerceirizadoContrato, 10, vDataDisponibilizacao, pDataDesligamento);
+
 
         if (pDataInicioFeriasIntegrais != null) {
 
@@ -104,8 +106,6 @@ public class RestituicaoRescisao {
             vTotalIncidenciaTercoProporcional = CalcularValorRubricaRescisao(pCodTerceirizadoContrato, 5, pDataInicioFeriasProporcionais, pDataFimFeriasProporcionais);
             vTotalMultaFGTSFeriasProporcional = CalcularValorRubricaRescisao(pCodTerceirizadoContrato, 7, pDataInicioFeriasProporcionais, pDataFimFeriasProporcionais);
             vTotalMultaFGTSTercoProporcional = CalcularValorRubricaRescisao(pCodTerceirizadoContrato, 8, pDataInicioFeriasProporcionais, pDataFimFeriasProporcionais);
-            vTotalMultaFGTSRemuneracao = CalcularValorRubricaRescisao(pCodTerceirizadoContrato, 10, vDataDisponibilizacao, pDataDesligamento);
-
         }
 
         return new ValorRestituicaoRescisaoModel(vDataInicioContagemDecTer,
