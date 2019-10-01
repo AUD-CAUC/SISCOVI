@@ -195,7 +195,7 @@ public class RescisaoDAO {
                     "        rt.VALOR_TERCO, \n" +
                     "        rt.INCID_SUBMOD_4_1_FERIAS, \n" +
                     "        rt.INCID_SUBMOD_4_1_TERCO,\n" +
-                    "        rt.INCID_SUBMOD_4_1_TERCO_PROP,\n" +
+                    "        rt.INCID_MULTA_FGTS_FERIAS,\n" +
                     "        rt.INCID_MULTA_FGTS_TERCO,\n" +
                     "        rt.VALOR_FERIAS_PROP,\n" +
                     "        rt.VALOR_TERCO_PROP,\n" +

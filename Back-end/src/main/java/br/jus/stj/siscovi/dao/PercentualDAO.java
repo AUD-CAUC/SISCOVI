@@ -25,7 +25,7 @@ public class PercentualDAO {
         ArrayList<PercentualModel> percertuais = new ArrayList<PercentualModel>();
         try {
             preparedStatement = connection.prepareStatement("SELECT NOME, PERCENTUAL, DATA_INICIO, DATA_FIM, DATA_ADITAMENTO FROM TB_CONTRATO C JOIN TB_PERCENTUAL_CONTRATO PC " +
-                    " ON PC.COD_CONTRATO=C.cod JOIN TB_RUBRICA R ON R.COD=PC.COD_RUBRICA WHERE C.cod=?");
+                    " ON PC.COD_CONTRATO=C.cod JOIN TB_RUBRICA R ON R.COD=PC.COD_RUBRICA WHERE C.cod=? AND DATA_FIM IS NULL");
             preparedStatement.setInt(1, codigoContrato);
             resultSet = preparedStatement.executeQuery();
             while(resultSet.next()){
@@ -34,6 +34,39 @@ public class PercentualDAO {
                                                                     resultSet.getDate("DATA_INICIO"),
                                                                     resultSet.getDate("DATA_FIM"),
                                                                     resultSet.getDate("DATA_ADITAMENTO"));
+                percertuais.add(percentual);
+            }
+            return percertuais;
+        }catch (SQLException sqle) {
+            sqle.printStackTrace();
+            throw new RuntimeException("Erro ao tentar recuperar os percentuais dos contratos ! " + sqle.getMessage());
+        }
+    }
+
+    public ArrayList<PercentualModel> getPercentuaisDoAjuste(int codigoContrato, int codigoAjuste) throws RuntimeException {
+        ResultSet resultSet = null;
+        PreparedStatement preparedStatement = null;
+        ArrayList<PercentualModel> percertuais = new ArrayList<PercentualModel>();
+        try {
+            preparedStatement = connection.prepareStatement("SELECT NOME, PERCENTUAL, DATA_INICIO, DATA_FIM, DATA_ADITAMENTO" +
+                    "        FROM TB_CONTRATO C " +
+                    "            JOIN TB_PERCENTUAL_CONTRATO PC ON PC.COD_CONTRATO=C.cod" +
+                    "            JOIN TB_RUBRICA R ON R.COD=PC.COD_RUBRICA" +
+                    "            JOIN tb_evento_contratual EC ON EC.COD_CONTRATO=PC.COD_CONTRATO" +
+                    "            JOIN TB_TIPO_EVENTO_CONTRATUAL TEC ON EC.COD_TIPO_EVENTO=TEC.COD" +
+                    "        WHERE TEC.TIPO != 'CONTRATO' AND C.cod=? AND EC.cod = ?" +
+                    "        AND ((EC.DATA_INICIO_VIGENCIA BETWEEN DATA_INICIO AND (CASE WHEN DATA_FIM IS NULL THEN (SELECT MAX(DATA_FIM_VIGENCIA) FROM tb_evento_contratual WHERE COD_CONTRATO = ?) ELSE DATA_FIM END))" +
+                    "        OR EC.DATA_INICIO_VIGENCIA = DATA_INICIO)");
+            preparedStatement.setInt(1, codigoContrato);
+            preparedStatement.setInt(2, codigoAjuste);
+            preparedStatement.setInt(3, codigoContrato);
+            resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()){
+                PercentualModel percentual = new PercentualModel(resultSet.getString("NOME"),
+                        resultSet.getFloat("PERCENTUAL"),
+                        resultSet.getDate("DATA_INICIO"),
+                        resultSet.getDate("DATA_FIM"),
+                        resultSet.getDate("DATA_ADITAMENTO"));
                 percertuais.add(percentual);
             }
             return percertuais;

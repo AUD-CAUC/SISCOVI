@@ -132,7 +132,7 @@ public class TotalMensalAReter {
                     "               MIN(DATA_INICIO_VIGENCIA)\n" +
                     "        FROM tb_evento_contratual ec\n" +
                     "        JOIN tb_terceirizado_contrato tc on tc.COD_CONTRATO=ec.COD_CONTRATO\n" +
-                    "        LEFT OUTER JOIN tb_total_mensal_a_reter ttmar on tc.COD_TERCEIRIZADO = ttmar.COD_TERCEIRIZADO_CONTRATO\n" +
+                    "        LEFT OUTER JOIN tb_total_mensal_a_reter ttmar on tc.COD = ttmar.COD_TERCEIRIZADO_CONTRATO\n" +
                     "        WHERE ec.COD_CONTRATO = ?\n" +
                     "        GROUP BY RETIDO, DATA_REFERENCIA, DATA_INICIO_VIGENCIA" +
                     "        ORDER BY DATA_REFERENCIA DESC");

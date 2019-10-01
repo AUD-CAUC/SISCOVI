@@ -9,6 +9,7 @@ public class SaldoIndividualContaVinculadaModel {
     private float decimoTerceiroRetido;
     private float incidenciaRetido;
     private float multaFgtsRetido;
+    private float multaFgtsRestituido;
     private float feriasRestituido;
     private float incidenciaFeriasRestituido;
     private float tercoRestituido;
@@ -28,6 +29,7 @@ public class SaldoIndividualContaVinculadaModel {
                                                float decimoTerceiroRetido,
                                                float incidenciaRetido,
                                                float multaFgtsRetido,
+                                               float multaFgtsRestituido,
                                                float feriasRestituido,
                                                float tercoRestituido,
                                                float incidenciaFeriasRestituido,
@@ -47,6 +49,7 @@ public class SaldoIndividualContaVinculadaModel {
         this.decimoTerceiroRetido = decimoTerceiroRetido;
         this.incidenciaRetido = incidenciaRetido;
         this.multaFgtsRetido = multaFgtsRetido;
+        this.multaFgtsRestituido = multaFgtsRestituido;
         this.feriasRestituido = feriasRestituido;
         this.tercoRestituido = tercoRestituido;
         this.incidenciaFeriasRestituido = incidenciaFeriasRestituido;

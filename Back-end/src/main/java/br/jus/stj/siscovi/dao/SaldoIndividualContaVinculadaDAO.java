@@ -51,6 +51,7 @@ public class SaldoIndividualContaVinculadaDAO {
                                     saldoContaVinculada.getSaldoIndividualContaVinculada(resultSet.getInt(3),  1,3),
                                     saldoContaVinculada.getSaldoIndividualContaVinculada(resultSet.getInt(3),  1,7),
                                     saldoContaVinculada.getSaldoIndividualContaVinculada(resultSet.getInt(3),  1,5),
+                                    saldoContaVinculada.getSaldoIndividualContaVinculada(resultSet.getInt(3),  3, 5),
                                     saldoContaVinculada.getSaldoIndividualContaVinculada(resultSet.getInt(3),  2,1),
                                     saldoContaVinculada.getSaldoIndividualContaVinculada(resultSet.getInt(3),  2,2),
                                     saldoContaVinculada.getSaldoIndividualContaVinculada(resultSet.getInt(3),  2,101),

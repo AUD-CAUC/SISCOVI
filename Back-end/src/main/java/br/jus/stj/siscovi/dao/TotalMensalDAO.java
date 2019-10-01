@@ -426,10 +426,11 @@ public class TotalMensalDAO {
                     ". Causado por: " + sqle.getMessage());
         }
 
-        String sql2 = "select MAX(month(DATA_FIM_VIGENCIA)) from tb_evento_contratual " +
-                "where YEAR(DATA_FIM_VIGENCIA) = ? " +
-                "AND COD_CONTRATO = ? " +
-                "AND (COD_TIPO_EVENTO = 2 OR PRORROGACAO = 'S')";
+        String sql2 = "select MAX(MONTH(DATA_FIM_VIGENCIA)) from tb_evento_contratual  \n" +
+                "                JOIN tb_tipo_evento_contratual ttec on tb_evento_contratual.COD_TIPO_EVENTO = ttec.cod  \n" +
+                "                where YEAR(DATA_FIM_VIGENCIA) = ?  \n" +
+                "                AND COD_CONTRATO = ?  \n" +
+                "                AND (TIPO = 'CONTRATO' OR PRORROGACAO = 'S')";
 
         try(PreparedStatement preparedStatement = connection.prepareStatement(sql2)) {
             preparedStatement.setInt(1, ano);
@@ -438,10 +439,14 @@ public class TotalMensalDAO {
                 if (resultSet.next()) {
                     maiorMes = resultSet.getInt(1);
                 }
-                if (maiorMes == 0 || maiorMes == menorMes) {
+                if (maiorMes == 0) {
                     // Quando é retornado 0 para o maior mês significa que não há nenhuma data fim do contrato para aquele ano,
                     // podendo se considerar que os restantes dos meses serão considerados.
-                    // Quando o maior mês é igual ao menor daquele ano significa que houve uma prorrogação
+                    maiorMes = 12;
+                } else if (maiorMes <= menorMes) {
+                    // Quando o maior mês é menor ou igual ao menor mês daquele ano significa que houve uma prorrogação
+                    // onde será considerado um ano completo
+                    menorMes = 0;
                     maiorMes = 12;
                 }
             }
@@ -520,18 +525,17 @@ public class TotalMensalDAO {
     public int getNumFuncionariosAtivos(int mesCalculo, int anoCalculo, int codContrato) {
 
         int numFunc;
-        String data = Integer.toString(anoCalculo) + '-' + Integer.toString(mesCalculo) + '-' + "01";
+        String data = Integer.toString(anoCalculo) + '-' + Integer.toString(mesCalculo) + '-' + "15";
 
         String sql = "SELECT COUNT(COD) FROM tb_terceirizado_contrato " +
                 "WHERE COD_CONTRATO = ? " +
-                "AND (DATA_DESLIGAMENTO IS NULL OR DATA_DESLIGAMENTO > ?) " +
-                "AND (YEAR(DATA_DISPONIBILIZACAO) <= year(?) AND MONTH(DATA_DISPONIBILIZACAO) <= MONTH(?))";
+                "AND (DATA_DESLIGAMENTO IS NULL OR DATA_DESLIGAMENTO >= ?) " +
+                "AND DATA_DISPONIBILIZACAO <= ? ";
 
         try(PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, codContrato);
             preparedStatement.setString(2, data);
             preparedStatement.setString(3, data);
-            preparedStatement.setString(4, data);
 
             try(ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {

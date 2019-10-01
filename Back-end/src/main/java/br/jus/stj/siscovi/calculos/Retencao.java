@@ -133,8 +133,7 @@ public class Retencao {
                                                                             " (ft.data_fim >= ?))" +
                                                                             " OR" +
                                                                             " (((CONVERT(date, CONVERT(varchar, year(ft.data_inicio)) + '-' + CONVERT(varchar, month(ft.data_inicio)) + '-01')) <= ?) " +
-                                                                             "AND" +
-                                                                            " (ft.data_fim IS NULL)))");
+                                                                             "AND (ft.data_fim IS NULL)))");
 
                 preparedStatement.setInt(1, vCodTerceirizadoContrato);
                 preparedStatement.setDate(2, vDataReferencia);
