@@ -15,6 +15,7 @@ public class TerceirizadoFerias {
     private final Date ultimoFimUsufruto;
     private final boolean emAnalise;
     private final Date dataDesligamento;
+    private final Date dataFimContrato;
 
     public TerceirizadoFerias(int codigoTerceirizadoContrato,
                               String nomeTerceirizado,
@@ -27,7 +28,8 @@ public class TerceirizadoFerias {
                               String parcelaAnterior,
                               Date ultimoFimUsufruto,
                               boolean emAnalise,
-                              Date dataDesligamento) {
+                              Date dataDesligamento,
+                              Date dataFimContrato) {
         this.codigoTerceirizadoContrato = codigoTerceirizadoContrato;
         this.nomeTerceirizado = nomeTerceirizado;
         this.inicioPeriodoAquisitivo = inicioPeriodoAquisitivo;
@@ -40,5 +42,6 @@ public class TerceirizadoFerias {
         this.ultimoFimUsufruto = ultimoFimUsufruto;
         this.emAnalise = emAnalise;
         this.dataDesligamento = dataDesligamento;
+        this.dataFimContrato = dataFimContrato;
     }
 }

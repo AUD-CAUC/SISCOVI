@@ -51,6 +51,7 @@ public class FeriasDAO {
                     Date ultimoFimUsufruto = ferias.RetornaUltimaDataFimUsufruto(resultSet.getInt("COD"), inicioPeriodoAquisitivo, fimPeriodoAquisitivo);
                     boolean emAnalise = ferias.RetornaStatusAnalise(resultSet.getInt("COD"));
                     Date dataDesligamento = consulta.RetornaDataDesligamento(resultSet.getInt("COD"), codigoContrato);
+                    Date dataFimContrato = consulta.RetornaPeriodoContrato(codigoContrato, 2);
 
                     TerceirizadoFerias terceirizadoFerias = new TerceirizadoFerias(resultSet.getInt("COD"),
                             resultSet.getString("NOME"),
@@ -63,7 +64,8 @@ public class FeriasDAO {
                             parcelaAnterior,
                             ultimoFimUsufruto,
                             emAnalise,
-                            dataDesligamento);
+                            dataDesligamento,
+                            dataFimContrato);
                     terceirizados.add(terceirizadoFerias);
                 }
             }
