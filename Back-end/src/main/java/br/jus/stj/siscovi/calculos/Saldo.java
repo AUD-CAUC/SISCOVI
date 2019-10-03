@@ -791,27 +791,19 @@ public class Saldo {
 
             try {
 
-                preparedStatement = connection.prepareStatement("SELECT ROUND(SUM(CASE WHEN rf.valor_ferias IS NULL THEN 0 ELSE rf.valor_ferias END + CASE WHEN srf.valor_ferias IS NULL THEN 0 ELSE srf.valor_ferias END + CASE WHEN r.valor_ferias IS NULL THEN 0 ELSE r.valor_ferias END + CASE WHEN r.valor_ferias_prop IS NULL THEN 0 ELSE r.valor_ferias_prop END + CASE WHEN srr.valor_ferias IS NULL THEN 0 ELSE srr.valor_ferias END + CASE WHEN srr.valor_ferias_prop IS NULL THEN 0 ELSE srr.valor_ferias_prop END), 2),\n" +
-                        "       ROUND(SUM(CASE WHEN rf.valor_terco_constitucional IS NULL THEN 0 ELSE rf.valor_terco_constitucional END + CASE WHEN srf.valor_terco IS NULL THEN 0 ELSE srf.valor_terco END + CASE WHEN r.valor_terco IS NULL THEN 0 ELSE r.valor_terco END + CASE WHEN srr.valor_terco IS NULL THEN 0 ELSE srr.valor_terco END + CASE WHEN r.valor_terco_prop IS NULL THEN 0 ELSE r.valor_terco_prop END + CASE WHEN srr.valor_terco_prop IS NULL THEN 0 ELSE srr.valor_terco_prop END), 2),\n" +
-                        "       ROUND(SUM(CASE WHEN rf.incid_submod_4_1_ferias IS NULL THEN 0 ELSE rf.incid_submod_4_1_ferias END + CASE WHEN srf.incid_submod_4_1_ferias IS NULL THEN 0 ELSE srf.incid_submod_4_1_ferias END + CASE WHEN r.incid_submod_4_1_ferias IS NULL THEN 0 ELSE r.incid_submod_4_1_ferias END + CASE WHEN srr.incid_submod_4_1_ferias IS NULL THEN 0 ELSE srr.incid_submod_4_1_ferias END + CASE WHEN r.incid_submod_4_1_ferias_prop IS NULL THEN 0 ELSE r.incid_submod_4_1_ferias_prop END + CASE WHEN srr.incid_submod_4_1_ferias_prop IS NULL THEN 0 ELSE srr.incid_submod_4_1_ferias_prop END), 2),\n" +
-                        "       ROUND(SUM(CASE WHEN rf.incid_submod_4_1_terco IS NULL THEN 0 ELSE rf.incid_submod_4_1_terco END + CASE WHEN srf.incid_submod_4_1_terco IS NULL THEN 0 ELSE srf.incid_submod_4_1_terco END + CASE WHEN r.incid_submod_4_1_terco IS NULL THEN 0 ELSE r.incid_submod_4_1_terco END + CASE WHEN srr.incid_submod_4_1_terco IS NULL THEN 0 ELSE srr.incid_submod_4_1_terco END + CASE WHEN r.incid_submod_4_1_terco_prop IS NULL THEN 0 ELSE r.incid_submod_4_1_terco_prop END + CASE WHEN srr.incid_submod_4_1_terco_prop IS NULL THEN 0 ELSE srr.incid_submod_4_1_terco_prop END), 2),\n" +
-                        "       ROUND(SUM(CASE WHEN rf.valor_ferias IS NULL THEN 0 ELSE rf.valor_ferias END + CASE WHEN srf.valor_ferias IS NULL THEN 0 ELSE srf.valor_ferias END + CASE WHEN r.valor_ferias IS NULL THEN 0 ELSE r.valor_ferias END + CASE WHEN r.valor_ferias_prop IS NULL THEN 0 ELSE r.valor_ferias_prop END + CASE WHEN srr.valor_ferias IS NULL THEN 0 ELSE srr.valor_ferias END + CASE WHEN srr.valor_ferias_prop IS NULL THEN 0 ELSE srr.valor_ferias_prop END +\n" +
-                        "                 CASE WHEN rf.valor_terco_constitucional IS NULL THEN 0 ELSE rf.valor_terco_constitucional END + CASE WHEN srf.valor_terco IS NULL THEN 0 ELSE srf.valor_terco END + CASE WHEN r.valor_terco IS NULL THEN 0 ELSE r.valor_terco END + CASE WHEN srr.valor_terco IS NULL THEN 0 ELSE srr.valor_terco END + CASE WHEN r.valor_terco_prop IS NULL THEN 0 ELSE r.valor_terco_prop END + CASE WHEN srr.valor_terco_prop IS NULL THEN 0 ELSE srr.valor_terco_prop END +\n" +
-                        "                 CASE WHEN rf.incid_submod_4_1_ferias IS NULL THEN 0 ELSE rf.incid_submod_4_1_ferias END + CASE WHEN srf.incid_submod_4_1_ferias IS NULL THEN 0 ELSE srf.incid_submod_4_1_ferias END + CASE WHEN r.incid_submod_4_1_ferias IS NULL THEN 0 ELSE r.incid_submod_4_1_ferias END + CASE WHEN srr.incid_submod_4_1_ferias IS NULL THEN 0 ELSE srr.incid_submod_4_1_ferias END + CASE WHEN r.incid_submod_4_1_ferias_prop IS NULL THEN 0 ELSE r.incid_submod_4_1_ferias_prop END + CASE WHEN srr.incid_submod_4_1_ferias_prop IS NULL THEN 0 ELSE srr.incid_submod_4_1_ferias_prop END +\n" +
-                        "                 CASE WHEN rf.incid_submod_4_1_terco IS NULL THEN 0 ELSE rf.incid_submod_4_1_terco END + CASE WHEN srf.incid_submod_4_1_terco IS NULL THEN 0 ELSE srf.incid_submod_4_1_terco END + CASE WHEN r.incid_submod_4_1_terco IS NULL THEN 0 ELSE r.incid_submod_4_1_terco END + CASE WHEN srr.incid_submod_4_1_terco IS NULL THEN 0 ELSE srr.incid_submod_4_1_terco END + CASE WHEN r.incid_submod_4_1_terco_prop IS NULL THEN 0 ELSE r.incid_submod_4_1_terco_prop END + CASE WHEN srr.incid_submod_4_1_terco_prop IS NULL THEN 0 ELSE srr.incid_submod_4_1_terco_prop END), 2)\n" +
+                preparedStatement = connection.prepareStatement("SELECT ROUND(SUM(CASE WHEN rf.valor_ferias IS NULL THEN 0 ELSE rf.valor_ferias END + CASE WHEN srf.valor_ferias IS NULL THEN 0 ELSE srf.valor_ferias END), 2),\n" +
+                        "       ROUND(SUM(CASE WHEN rf.valor_terco_constitucional IS NULL THEN 0 ELSE rf.valor_terco_constitucional END + CASE WHEN srf.valor_terco IS NULL THEN 0 ELSE srf.valor_terco END), 2),\n" +
+                        "       ROUND(SUM(CASE WHEN rf.incid_submod_4_1_ferias IS NULL THEN 0 ELSE rf.incid_submod_4_1_ferias END + CASE WHEN srf.incid_submod_4_1_ferias IS NULL THEN 0 ELSE srf.incid_submod_4_1_ferias END), 2),\n" +
+                        "       ROUND(SUM(CASE WHEN rf.incid_submod_4_1_terco IS NULL THEN 0 ELSE rf.incid_submod_4_1_terco END + CASE WHEN srf.incid_submod_4_1_terco IS NULL THEN 0 ELSE srf.incid_submod_4_1_terco END), 2)\n" +
                         "    FROM tb_terceirizado_contrato tc\n" +
                         "       JOIN tb_funcao_terceirizado ft ON ft.cod_terceirizado_contrato = tc.cod\n" +
                         "       JOIN tb_funcao_contrato fc ON fc.cod = ft.cod_funcao_contrato\n" +
                         "       LEFT JOIN tb_restituicao_ferias rf ON tc.cod = rf.cod_terceirizado_contrato\n" +
                         "       LEFT JOIN tb_saldo_residual_ferias srf ON srf.cod_restituicao_ferias = rf.cod\n" +
-                        "       LEFT JOIN tb_restituicao_rescisao r ON r.cod_terceirizado_contrato = tc.cod\n" +
-                        "       LEFT JOIN tb_saldo_residual_rescisao srr ON srr.COD_RESTITUICAO_RESCISAO = r.cod\n" +
                         "WHERE fc.cod_contrato = ?\n" +
                         "  AND fc.cod = ?\n" +
                         "  AND (srf.RESTITUIDO = 'S'\n" +
-                        "       OR r.restituido = 'S'\n" +
-                        "       OR rf.RESTITUIDO = 'S'\n" +
-                        "       OR srr.RESTITUIDO = 'S')");
+                        "       OR rf.RESTITUIDO = 'S')");
 
                 preparedStatement.setInt(1, pCodContrato);
                 preparedStatement.setInt(2, pCodFuncaoContrato);
@@ -823,7 +815,35 @@ public class Saldo {
                     vTercoConstitucionalRestituido = resultSet.getFloat(2);
                     vIncidenciaFeriasRestituido = resultSet.getFloat(3);
                     vIncidenciaTercoRestituido = resultSet.getFloat(4);
-                    vTotalRestituido = resultSet.getFloat(5);
+                    vTotalRestituido = vFeriasRestituido + vTercoConstitucionalRestituido + vIncidenciaFeriasRestituido + vIncidenciaTercoRestituido;
+
+                }
+
+                preparedStatement = connection.prepareStatement("SELECT ROUND(SUM(CASE WHEN r.valor_ferias IS NULL THEN 0 ELSE r.valor_ferias END + CASE WHEN r.valor_ferias_prop IS NULL THEN 0 ELSE r.valor_ferias_prop END + CASE WHEN srr.valor_ferias IS NULL THEN 0 ELSE srr.valor_ferias END + CASE WHEN srr.valor_ferias_prop IS NULL THEN 0 ELSE srr.valor_ferias_prop END), 2),\n" +
+                        "       ROUND(SUM(CASE WHEN r.valor_terco IS NULL THEN 0 ELSE r.valor_terco END + CASE WHEN srr.valor_terco IS NULL THEN 0 ELSE srr.valor_terco END + CASE WHEN r.valor_terco_prop IS NULL THEN 0 ELSE r.valor_terco_prop END + CASE WHEN srr.valor_terco_prop IS NULL THEN 0 ELSE srr.valor_terco_prop END), 2),\n" +
+                        "       ROUND(SUM(CASE WHEN r.incid_submod_4_1_ferias IS NULL THEN 0 ELSE r.incid_submod_4_1_ferias END + CASE WHEN srr.incid_submod_4_1_ferias IS NULL THEN 0 ELSE srr.incid_submod_4_1_ferias END + CASE WHEN r.incid_submod_4_1_ferias_prop IS NULL THEN 0 ELSE r.incid_submod_4_1_ferias_prop END + CASE WHEN srr.incid_submod_4_1_ferias_prop IS NULL THEN 0 ELSE srr.incid_submod_4_1_ferias_prop END), 2),\n" +
+                        "       ROUND(SUM(CASE WHEN r.incid_submod_4_1_terco IS NULL THEN 0 ELSE r.incid_submod_4_1_terco END + CASE WHEN srr.incid_submod_4_1_terco IS NULL THEN 0 ELSE srr.incid_submod_4_1_terco END + CASE WHEN r.incid_submod_4_1_terco_prop IS NULL THEN 0 ELSE r.incid_submod_4_1_terco_prop END + CASE WHEN srr.incid_submod_4_1_terco_prop IS NULL THEN 0 ELSE srr.incid_submod_4_1_terco_prop END), 2)\n" +
+                        "    FROM tb_terceirizado_contrato tc\n" +
+                        "       JOIN tb_funcao_terceirizado ft ON ft.cod_terceirizado_contrato = tc.cod\n" +
+                        "       JOIN tb_funcao_contrato fc ON fc.cod = ft.cod_funcao_contrato\n" +
+                        "       LEFT JOIN tb_restituicao_rescisao r ON r.cod_terceirizado_contrato = tc.cod\n" +
+                        "       LEFT JOIN tb_saldo_residual_rescisao srr ON srr.COD_RESTITUICAO_RESCISAO = r.cod\n" +
+                        "WHERE fc.cod_contrato = ?\n" +
+                        "  AND fc.cod = ?\n" +
+                        "  AND (r.restituido = 'S'\n" +
+                        "       OR srr.RESTITUIDO = 'S')");
+
+                preparedStatement.setInt(1, pCodContrato);
+                preparedStatement.setInt(2, pCodFuncaoContrato);
+                resultSet = preparedStatement.executeQuery();
+
+                if (resultSet.next()) {
+
+                    vFeriasRestituido += resultSet.getFloat(1);
+                    vTercoConstitucionalRestituido += resultSet.getFloat(2);
+                    vIncidenciaFeriasRestituido += resultSet.getFloat(3);
+                    vIncidenciaTercoRestituido += resultSet.getFloat(4);
+                    vTotalRestituido = vFeriasRestituido + vTercoConstitucionalRestituido + vIncidenciaFeriasRestituido + vIncidenciaTercoRestituido;
 
                 }
 
@@ -843,26 +863,17 @@ public class Saldo {
 
             try {
 
-                preparedStatement = connection.prepareStatement("SELECT ROUND(SUM(CASE WHEN rdt.valor IS NULL THEN 0 ELSE rdt.valor END + CASE WHEN srdt.valor IS NULL THEN 0 ELSE srdt.valor END + CASE WHEN r.valor_decimo_terceiro IS NULL THEN 0 ELSE r.valor_decimo_terceiro END + CASE WHEN srr.valor_decimo_terceiro IS NULL THEN 0 ELSE srr.valor_decimo_terceiro END), 2),\n" +
-                        "       ROUND(SUM(CASE WHEN rdt.incidencia_submodulo_4_1 IS NULL THEN 0 ELSE rdt.incidencia_submodulo_4_1 END + CASE WHEN srdt.incidencia_submodulo_4_1 IS NULL THEN 0 ELSE srdt.incidencia_submodulo_4_1 END + CASE WHEN r.incid_submod_4_1_dec_terceiro IS NULL THEN 0 ELSE r.incid_submod_4_1_dec_terceiro END + CASE WHEN srr.incid_submod_4_1_dec_terceiro IS NULL THEN 0 ELSE srr.incid_submod_4_1_dec_terceiro END), 2),\n" +
-                        "       ROUND(SUM(CASE WHEN r.INCID_MULTA_FGTS_DEC_TERCEIRO IS NULL THEN 0 ELSE r.INCID_MULTA_FGTS_DEC_TERCEIRO END + CASE WHEN r.INCID_MULTA_FGTS_FERIAS IS NULL THEN 0 ELSE r.INCID_MULTA_FGTS_FERIAS END + " +
-                        "       CASE WHEN r.INCID_MULTA_FGTS_TERCO IS NULL THEN 0 ELSE r.INCID_MULTA_FGTS_TERCO END + CASE WHEN r.INCID_MULTA_FGTS_FERIAS_PROP IS NULL THEN 0 ELSE r.INCID_MULTA_FGTS_FERIAS_PROP END +" +
-                        "       CASE WHEN r.INCID_MULTA_FGTS_TERCO_PROP IS NULL THEN 0 ELSE r.INCID_MULTA_FGTS_TERCO_PROP END + CASE WHEN r.MULTA_FGTS_SALARIO IS NULL THEN 0 ELSE r.MULTA_FGTS_SALARIO END),2)," +
-                        "       ROUND(SUM(CASE WHEN rdt.valor IS NULL THEN 0 ELSE rdt.valor END + CASE WHEN srdt.valor IS NULL THEN 0 ELSE srdt.valor END + CASE WHEN r.valor_decimo_terceiro IS NULL THEN 0 ELSE r.valor_decimo_terceiro END + CASE WHEN srr.valor_decimo_terceiro IS NULL THEN 0 ELSE srr.valor_decimo_terceiro END +\n" +
-                        "                 CASE WHEN rdt.incidencia_submodulo_4_1 IS NULL THEN 0 ELSE rdt.incidencia_submodulo_4_1 END + CASE WHEN srdt.incidencia_submodulo_4_1 IS NULL THEN 0 ELSE srdt.incidencia_submodulo_4_1 END + CASE WHEN r.incid_submod_4_1_dec_terceiro IS NULL THEN 0 ELSE r.incid_submod_4_1_dec_terceiro END + CASE WHEN srr.incid_submod_4_1_dec_terceiro IS NULL THEN 0 ELSE srr.incid_submod_4_1_dec_terceiro END), 2)\n" +
+                preparedStatement = connection.prepareStatement("SELECT ROUND(SUM(CASE WHEN rdt.valor IS NULL THEN 0 ELSE rdt.valor END + CASE WHEN srdt.valor IS NULL THEN 0 ELSE srdt.valor END), 2),\n" +
+                        "       ROUND(SUM(CASE WHEN rdt.incidencia_submodulo_4_1 IS NULL THEN 0 ELSE rdt.incidencia_submodulo_4_1 END + CASE WHEN srdt.incidencia_submodulo_4_1 IS NULL THEN 0 ELSE srdt.incidencia_submodulo_4_1 END), 2)\n" +
                         "FROM tb_terceirizado_contrato tc\n" +
                         "       JOIN tb_funcao_terceirizado ft ON ft.cod_terceirizado_contrato = tc.cod\n" +
                         "       JOIN tb_funcao_contrato fc ON fc.cod = ft.cod_funcao_contrato\n" +
                         "       LEFT JOIN tb_restituicao_decimo_terceiro rdt ON tc.cod = rdt.cod_terceirizado_contrato\n" +
                         "       LEFT JOIN tb_saldo_residual_dec_ter srdt ON srdt.cod_restituicao_dec_terceiro = rdt.cod\n" +
-                        "       LEFT JOIN tb_restituicao_rescisao r ON r.cod_terceirizado_contrato = tc.cod\n" +
-                        "       LEFT JOIN tb_saldo_residual_rescisao srr ON srr.COD_RESTITUICAO_RESCISAO = r.cod\n" +
                         "WHERE fc.cod_contrato = ?\n" +
                         "  AND fc.cod = ?\n" +
                         "  AND (srdt.RESTITUIDO = 'S'\n" +
-                        "         OR r.restituido = 'S'\n" +
-                        "         OR rdt.RESTITUIDO = 'S'\n" +
-                        "         OR srr.RESTITUIDO = 'S')\n");
+                        "         OR rdt.RESTITUIDO = 'S')");
 
                 preparedStatement.setInt(1, pCodContrato);
                 preparedStatement.setInt(2, pCodFuncaoContrato);
@@ -872,8 +883,35 @@ public class Saldo {
 
                     vDecimoTerceiroRestituido = resultSet.getFloat(1);
                     vIncidencia13Restituido = resultSet.getFloat(2);
+                    vTotalRestituido = vDecimoTerceiroRestituido + vIncidencia13Restituido;
+
+                }
+
+                preparedStatement = connection.prepareStatement("SELECT ROUND(SUM(CASE WHEN r.valor_decimo_terceiro IS NULL THEN 0 ELSE r.valor_decimo_terceiro END + CASE WHEN srr.valor_decimo_terceiro IS NULL THEN 0 ELSE srr.valor_decimo_terceiro END), 2),\n" +
+                        "       ROUND(SUM(CASE WHEN r.incid_submod_4_1_dec_terceiro IS NULL THEN 0 ELSE r.incid_submod_4_1_dec_terceiro END + CASE WHEN srr.incid_submod_4_1_dec_terceiro IS NULL THEN 0 ELSE srr.incid_submod_4_1_dec_terceiro END), 2),\n" +
+                        "       ROUND(SUM(CASE WHEN r.INCID_MULTA_FGTS_DEC_TERCEIRO IS NULL THEN 0 ELSE r.INCID_MULTA_FGTS_DEC_TERCEIRO END + CASE WHEN r.INCID_MULTA_FGTS_FERIAS IS NULL THEN 0 ELSE r.INCID_MULTA_FGTS_FERIAS END + " +
+                        "       CASE WHEN r.INCID_MULTA_FGTS_TERCO IS NULL THEN 0 ELSE r.INCID_MULTA_FGTS_TERCO END + CASE WHEN r.INCID_MULTA_FGTS_FERIAS_PROP IS NULL THEN 0 ELSE r.INCID_MULTA_FGTS_FERIAS_PROP END +" +
+                        "       CASE WHEN r.INCID_MULTA_FGTS_TERCO_PROP IS NULL THEN 0 ELSE r.INCID_MULTA_FGTS_TERCO_PROP END + CASE WHEN r.MULTA_FGTS_SALARIO IS NULL THEN 0 ELSE r.MULTA_FGTS_SALARIO END),2)" +
+                        "FROM tb_terceirizado_contrato tc\n" +
+                        "       JOIN tb_funcao_terceirizado ft ON ft.cod_terceirizado_contrato = tc.cod\n" +
+                        "       JOIN tb_funcao_contrato fc ON fc.cod = ft.cod_funcao_contrato\n" +
+                        "       LEFT JOIN tb_restituicao_rescisao r ON r.cod_terceirizado_contrato = tc.cod\n" +
+                        "       LEFT JOIN tb_saldo_residual_rescisao srr ON srr.COD_RESTITUICAO_RESCISAO = r.cod\n" +
+                        "WHERE fc.cod_contrato = ?\n" +
+                        "  AND fc.cod = ?\n" +
+                        "  AND (r.restituido = 'S'\n" +
+                        "         OR srr.RESTITUIDO = 'S')\n");
+
+                preparedStatement.setInt(1, pCodContrato);
+                preparedStatement.setInt(2, pCodFuncaoContrato);
+                resultSet = preparedStatement.executeQuery();
+
+                if (resultSet.next()) {
+
+                    vDecimoTerceiroRestituido += resultSet.getFloat(1);
+                    vIncidencia13Restituido += resultSet.getFloat(2);
                     vMultaFGTSRestituido = resultSet.getFloat(3);
-                    vTotalRestituido = resultSet.getFloat(4);
+                    vTotalRestituido = vDecimoTerceiroRestituido + vIncidencia13Restituido + vMultaFGTSRestituido;
 
                 }
 
