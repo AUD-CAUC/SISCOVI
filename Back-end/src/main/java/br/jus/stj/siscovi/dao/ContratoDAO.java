@@ -636,7 +636,7 @@ public class ContratoDAO {
                         " JOIN TB_TERCEIRIZADO_CONTRATO TC ON TC.COD=RF.COD_TERCEIRIZADO_CONTRATO" +
                         " JOIN TB_CONTRATO C ON C.COD=TC.COD_CONTRATO" +
                         " JOIN tb_historico_gestao_contrato HGC ON HGC.COD_CONTRATO=C.COD" +
-                        " WHERE RF.AUTORIZADO IS NULL AND HGC.COD_CONTRATO=?";
+                        " WHERE RF.AUTORIZADO IS NULL AND HGC.COD_USUARIO=?";
             }
 
             if(vCalculo == 2) {
@@ -644,7 +644,7 @@ public class ContratoDAO {
                         " JOIN TB_TERCEIRIZADO_CONTRATO TC ON TC.COD=RDT.COD_TERCEIRIZADO_CONTRATO" +
                         " JOIN TB_CONTRATO C ON C.COD=TC.COD_CONTRATO" +
                         " JOIN tb_historico_gestao_contrato HGC ON HGC.COD_CONTRATO=C.COD" +
-                        " WHERE RDT.AUTORIZADO IS NULL AND HGC.COD_CONTRATO=?";
+                        " WHERE RDT.AUTORIZADO IS NULL AND HGC.COD_USUARIO=?";
             }
 
             if(vCalculo == 3) {
@@ -652,7 +652,7 @@ public class ContratoDAO {
                         " JOIN TB_TERCEIRIZADO_CONTRATO TC ON TC.COD=RR.COD_TERCEIRIZADO_CONTRATO" +
                         " JOIN TB_CONTRATO C ON C.COD=TC.COD_CONTRATO" +
                         " JOIN tb_historico_gestao_contrato HGC ON HGC.COD_CONTRATO=C.COD" +
-                        " WHERE RR.AUTORIZADO IS NULL AND HGC.COD_CONTRATO=?";
+                        " WHERE RR.AUTORIZADO IS NULL AND HGC.COD_USUARIO=?";
             }
         }
 
