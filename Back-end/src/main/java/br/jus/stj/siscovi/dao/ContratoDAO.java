@@ -101,7 +101,18 @@ public class ContratoDAO {
                     if (resultSet.getDate("DATA_FIM") != null) {
                         contrato.setDataFim(resultSet.getDate("DATA_FIM"));
                     } else {
-                        contrato.setDataFim(null);
+                        preparedStatement2 = connection.prepareStatement("SELECT MAX(DATA_FIM_VIGENCIA) as DATA_FIM " +
+                                "FROM tb_evento_contratual WHERE COD_CONTRATO = ?");
+                        preparedStatement2.setInt(1, resultSet.getInt("COD"));
+                        resultSetDataFim = preparedStatement2.executeQuery();
+
+                        if (resultSetDataFim.next()) {
+                            if (resultSetDataFim.getDate("DATA_FIM") != null) {
+                                contrato.setDataFim(resultSetDataFim.getDate("DATA_FIM"));
+                            } else {
+                                contrato.setDataFim(null);
+                            }
+                        }
                     }
                     if (resultSet.getString("OBJETO") == null) {
                         contrato.setObjeto("-");
