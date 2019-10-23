@@ -643,7 +643,11 @@ public class ContratoDAO {
                         " WHERE RR.AUTORIZADO IS NULL OR (RR.RESTITUIDO = 'N' AND RR.AUTORIZADO = 'S')";
             }
             if(vCalculo == 4) {
-                sql = "SELECT DISTINCT C.COD, C.CNPJ, C.NOME_EMPRESA, C.NUMERO_CONTRATO, C.NUMERO_PROCESSO_STJ FROM TB_CONTRATO C";
+                sql = "SELECT DISTINCT C.COD, C.CNPJ, C.NOME_EMPRESA, C.NUMERO_CONTRATO, C.NUMERO_PROCESSO_STJ FROM tb_saldo_residual_ferias SRF" +
+                        " JOIN tb_restituicao_ferias RF ON RF.COD=SRF.COD_RESTITUICAO_FERIAS" +
+                        " JOIN TB_TERCEIRIZADO_CONTRATO TC ON TC.COD=RF.COD_TERCEIRIZADO_CONTRATO" +
+                        " JOIN TB_CONTRATO C ON C.COD=TC.COD_CONTRATO" +
+                        " WHERE SRF.AUTORIZADO IS NULL OR (SRF.RESTITUIDO = 'N' AND SRF.AUTORIZADO = 'S')";
             }
         }else {
             if(vCalculo == 1) {
