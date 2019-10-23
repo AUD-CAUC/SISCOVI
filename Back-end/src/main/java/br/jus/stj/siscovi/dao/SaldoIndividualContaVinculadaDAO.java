@@ -41,27 +41,52 @@ public class SaldoIndividualContaVinculadaDAO {
                 Saldo saldoContaVinculada = new Saldo(connection);
 
                 do {
+                    
+                    float feriasRetido = saldoContaVinculada.getSaldoIndividualContaVinculada(resultSet.getInt(3), 1,1);
+                    float tercoRetido = saldoContaVinculada.getSaldoIndividualContaVinculada(resultSet.getInt(3),  1,2);
+                    float decimoTerceiroRetido = saldoContaVinculada.getSaldoIndividualContaVinculada(resultSet.getInt(3),  1,3);
+                    float incidenciaRetido = saldoContaVinculada.getSaldoIndividualContaVinculada(resultSet.getInt(3),  1,7);
+                    float multaFgtsRetido = saldoContaVinculada.getSaldoIndividualContaVinculada(resultSet.getInt(3),  1,5);
+                    float totalRetido = feriasRetido + tercoRetido + decimoTerceiroRetido + incidenciaRetido + multaFgtsRetido;
+
+                    float feriasRestituido = saldoContaVinculada.getSaldoIndividualContaVinculada(resultSet.getInt(3),  2,1);
+                    float incidenciaFeriasRestituido = saldoContaVinculada.getSaldoIndividualContaVinculada(resultSet.getInt(3),  2,101);
+                    float totalFeriasRestituido = feriasRestituido + incidenciaFeriasRestituido;
+
+                    float tercoRestituido = saldoContaVinculada.getSaldoIndividualContaVinculada(resultSet.getInt(3),  2,2);
+                    float incidenciaTercoRestituido = saldoContaVinculada.getSaldoIndividualContaVinculada(resultSet.getInt(3),  2,102);
+                    float totalTercoRestituido = tercoRestituido + incidenciaTercoRestituido;
+
+                    float decimoTerceiroRestituido = saldoContaVinculada.getSaldoIndividualContaVinculada(resultSet.getInt(3),  3,3);
+                    float incidenciaDecimoTerceiroRestituido = saldoContaVinculada.getSaldoIndividualContaVinculada(resultSet.getInt(3),  3,103);
+                    float totalDecimoTerceiroRestituido = decimoTerceiroRestituido + incidenciaDecimoTerceiroRestituido;
+                    float multaFgtsRestituido = saldoContaVinculada.getSaldoIndividualContaVinculada(resultSet.getInt(3),  3, 5);
+
+                    float totalRestituido = totalFeriasRestituido + totalDecimoTerceiroRestituido + totalTercoRestituido + multaFgtsRestituido;
+
+                    float saldo = totalRetido - totalRestituido;
 
                     SaldoIndividualContaVinculadaModel saldoContaVinculadaModel =
 
                             new SaldoIndividualContaVinculadaModel(resultSet.getString(1),
                                     resultSet.getString(2),
-                                    saldoContaVinculada.getSaldoIndividualContaVinculada(resultSet.getInt(3), 1,1),
-                                    saldoContaVinculada.getSaldoIndividualContaVinculada(resultSet.getInt(3),  1,2),
-                                    saldoContaVinculada.getSaldoIndividualContaVinculada(resultSet.getInt(3),  1,3),
-                                    saldoContaVinculada.getSaldoIndividualContaVinculada(resultSet.getInt(3),  1,7),
-                                    saldoContaVinculada.getSaldoIndividualContaVinculada(resultSet.getInt(3),  1,5),
-                                    saldoContaVinculada.getSaldoIndividualContaVinculada(resultSet.getInt(3),  2,1),
-                                    saldoContaVinculada.getSaldoIndividualContaVinculada(resultSet.getInt(3),  2,2),
-                                    saldoContaVinculada.getSaldoIndividualContaVinculada(resultSet.getInt(3),  2,101),
-                                    saldoContaVinculada.getSaldoIndividualContaVinculada(resultSet.getInt(3),  2,102),
-                                    saldoContaVinculada.getSaldoIndividualContaVinculada(resultSet.getInt(3),  2,100),
-                                    saldoContaVinculada.getSaldoIndividualContaVinculada(resultSet.getInt(3),  3,3),
-                                    saldoContaVinculada.getSaldoIndividualContaVinculada(resultSet.getInt(3),  3,103),
-                                    saldoContaVinculada.getSaldoIndividualContaVinculada(resultSet.getInt(3),  3,100),
-                                    saldoContaVinculada.getSaldoIndividualContaVinculada(resultSet.getInt(3),  1,100),
-                                    saldoContaVinculada.getSaldoIndividualContaVinculada(resultSet.getInt(3),  2,100) + saldoContaVinculada.getSaldoIndividualContaVinculada(resultSet.getInt(3), 3,100),
-                                    saldoContaVinculada.getSaldoIndividualContaVinculada(resultSet.getInt(3),  1,100) - (saldoContaVinculada.getSaldoIndividualContaVinculada(resultSet.getInt(3), 2,100) + saldoContaVinculada.getSaldoIndividualContaVinculada(resultSet.getInt(3),  3,100)));
+                                    feriasRetido,
+                                    tercoRetido,
+                                    decimoTerceiroRetido,
+                                    incidenciaRetido,
+                                    multaFgtsRetido,
+                                    multaFgtsRestituido,
+                                    feriasRestituido,
+                                    tercoRestituido,
+                                    incidenciaFeriasRestituido,
+                                    incidenciaTercoRestituido,
+                                    totalFeriasRestituido,
+                                    decimoTerceiroRestituido,
+                                    incidenciaDecimoTerceiroRestituido,
+                                    totalDecimoTerceiroRestituido,
+                                    totalRetido,
+                                    totalRestituido,
+                                    saldo);
 
                     lista.add(saldoContaVinculadaModel);
 

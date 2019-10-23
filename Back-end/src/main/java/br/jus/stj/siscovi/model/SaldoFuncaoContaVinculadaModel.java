@@ -3,14 +3,13 @@ package br.jus.stj.siscovi.model;
 public class SaldoFuncaoContaVinculadaModel {
 
     private String funcao;
-    //private String gestor;
-    //private String empresa;
-    //private String numeroContrato;
+
     private float valorFeriasRetido;
     private float valorTercoRetido;
     private float valorDecimoTerceiroRetido;
     private float valorIncidenciaRetido;
     private float valorMultaFGTSRetido;
+    private float valorMultaFGTSRestituido;
     private float valorTotalRetido;
     private float valorFeriasRestituido;
     private float valorIncidenciaFeriasRestituido;
@@ -20,19 +19,16 @@ public class SaldoFuncaoContaVinculadaModel {
     private float valorDecimoTerceiroRestituido;
     private float valorIncidenciaDecimoTerceiroRestituido;
     private float valorTotalDecimoTerceiroRestituido;
-    //private float valorMultaFGTSRestituido;
     private float valorTotalRestituido;
     private float valorSaldo;
 
     public SaldoFuncaoContaVinculadaModel(String funcao,
-                                          //String gestor,
-                                          //String empresa,
-                                          //String numeroContrato,
                                           float valorFeriasRetido,
                                           float valorTercoRetido,
                                           float valorDecimoTerceiroRetido,
                                           float valorIncidenciaRetido,
                                           float valorMultaFGTSRetido,
+                                          float valorMultaFGTSRestituido,
                                           float valorTotalRetido,
                                           float valorFeriasRestituido,
                                           float valorTercoRestituido,
@@ -46,14 +42,12 @@ public class SaldoFuncaoContaVinculadaModel {
                                           float valorSaldo) {
 
         this.funcao = funcao;
-        //this.gestor = gestor;
-        //this.empresa = empresa;
-        //this.numeroContrato = numeroContrato;
         this.valorFeriasRetido = valorFeriasRetido;
         this.valorTercoRetido = valorTercoRetido;
         this.valorDecimoTerceiroRetido = valorDecimoTerceiroRetido;
         this.valorIncidenciaRetido = valorIncidenciaRetido;
         this.valorMultaFGTSRetido = valorMultaFGTSRetido;
+        this.valorMultaFGTSRestituido = valorMultaFGTSRestituido;
         this.valorTotalRetido = valorTotalRetido;
         this.valorFeriasRestituido = valorFeriasRestituido;
         this.valorTercoRestituido = valorTercoRestituido;
@@ -70,12 +64,6 @@ public class SaldoFuncaoContaVinculadaModel {
 
     public String getFuncao() { return funcao; }
 
-    //public String getGestor() { return gestor; }
-
-    //public String getEmpresa() { return empresa; }
-
-    //public String getNumeroContrato() { return numeroContrato; }
-
     public float getValorFeriasRetido() { return valorFeriasRetido; }
 
     public float getValorTercoRetido() { return valorTercoRetido; }
@@ -85,6 +73,8 @@ public class SaldoFuncaoContaVinculadaModel {
     public float getValorIncidenciaRetido() { return valorIncidenciaRetido; }
 
     public float getValorMultaFGTSRetido () { return valorMultaFGTSRetido; }
+
+    public float getValorMultaFGTSRestituido () { return valorMultaFGTSRestituido; }
 
     public float getValorTotalRetido() { return valorTotalRetido; }
 

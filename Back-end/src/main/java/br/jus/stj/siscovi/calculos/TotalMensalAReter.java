@@ -4,10 +4,15 @@ import br.jus.stj.siscovi.model.CodTerceirizadoECodFuncaoTerceirizadoModel;
 
 import javax.validation.constraints.Null;
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.Month;
 import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+
 import br.jus.stj.siscovi.dao.sql.InsertTSQL;
 
 public class TotalMensalAReter {
@@ -80,8 +85,8 @@ public class TotalMensalAReter {
         Date vDataReferencia = Date.valueOf(pAno + "-" + pMes + "-01");
         Date vDataInicio = null;
         Date vDataFim = null;
+        Date vDataUltimaRetencao = null;
         Date vDataInicioContrato = null;
-        Date vDataFimContrato = null;
 
 
         /*Variável de checagem da existência do contrato.*/
@@ -115,38 +120,48 @@ public class TotalMensalAReter {
 
         }
 
-        /**Se a data passada for anterior ao contrato ou posterior ao seu termino aborta-se.*/
+        /**Se a data passada for posterior ao último mês que se deve reter, aborta-se.*/
 
         try {
 
-            preparedStatement = connection.prepareStatement("SELECT MIN(EC.DATA_INICIO_VIGENCIA), MAX(EC.DATA_FIM_VIGENCIA) FROM tb_evento_contratual EC WHERE EC.COD_CONTRATO = ?");
+            preparedStatement = connection.prepareStatement("SELECT\n" +
+                    "               DATA_REFERENCIA = MAX(CASE RETIDO\n" +
+                    "                   WHEN 'S' THEN DATA_REFERENCIA\n" +
+                    "                   ELSE NULL\n" +
+                    "                END),\n" +
+                    "               MIN(DATA_INICIO_VIGENCIA)\n" +
+                    "        FROM tb_evento_contratual ec\n" +
+                    "        JOIN tb_terceirizado_contrato tc on tc.COD_CONTRATO=ec.COD_CONTRATO\n" +
+                    "        LEFT OUTER JOIN tb_total_mensal_a_reter ttmar on tc.COD = ttmar.COD_TERCEIRIZADO_CONTRATO\n" +
+                    "        WHERE ec.COD_CONTRATO = ?\n" +
+                    "        GROUP BY RETIDO, DATA_REFERENCIA, DATA_INICIO_VIGENCIA" +
+                    "        ORDER BY DATA_REFERENCIA DESC");
             preparedStatement.setInt(1, pCodContrato);
             resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
 
-                vDataInicioContrato = resultSet.getDate(1);
-                vDataFimContrato = resultSet.getDate(2);
+                vDataUltimaRetencao = resultSet.getDate(1);
+                vDataInicioContrato = resultSet.getDate(2);
 
             }
 
         } catch (SQLException sqle) {
 
-            throw new NullPointerException("A data deve estar dentro do período de validade do contrato.");
+            throw new NullPointerException("Erro ao recuperar a data da última retenção.");
 
         }
 
-        if (vDataReferencia.before(Date.valueOf(vDataInicioContrato.toLocalDate().minusMonths(1).withDayOfMonth(vDataInicioContrato.toLocalDate().lengthOfMonth()).plusDays(1)))) {
-
-            throw new NullPointerException("O período que se tenta calcular está fora da vigência do contrato.");
-
+        if (vDataUltimaRetencao == null) {
+            vDataUltimaRetencao = Date.valueOf(vDataInicioContrato.toLocalDate().withDayOfMonth(1).minusMonths(1));
         }
 
-        if (vDataReferencia.after(Date.valueOf(vDataFimContrato.toLocalDate().minusMonths(1).withDayOfMonth(vDataFimContrato.toLocalDate().lengthOfMonth()).plusDays(1)))) {
-
-            throw new NullPointerException("A data passada deve ser anterior a data de validade do contrato.");
-
+        if (vDataReferencia.after(Date.valueOf(vDataUltimaRetencao.toLocalDate().plusMonths(1)))) {
+            String mes = vDataUltimaRetencao.toLocalDate().plusMonths(1).getMonth().getDisplayName(TextStyle.FULL, new Locale("pt"));
+            int ano = vDataUltimaRetencao.toLocalDate().plusMonths(1).getYear();
+            throw new NullPointerException("Deve ser realizado a retenção referente ao mês de " + mes + " de " + ano + " antes de reter esta");
         }
+
 
         /**Verificação da existência de cálculo para aquele mês e consequente deleção.*/
 
@@ -197,7 +212,7 @@ public class TotalMensalAReter {
 
         }
 
-        /**Caso não hajam mudaças de percentual no mês designado carregam-se os valores.*/
+        /**Caso não hajam mudanças de percentual no mês designado carregam-se os valores.*/
 
         if (!percentual.ExisteMudancaPercentual(pCodContrato, pMes, pAno, 1)) {
 

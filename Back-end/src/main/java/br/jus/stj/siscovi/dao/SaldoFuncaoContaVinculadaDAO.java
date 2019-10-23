@@ -47,32 +47,53 @@ public class SaldoFuncaoContaVinculadaDAO {
 
                 resultSet.next();
 
+                Saldo saldoContaVinculada = new Saldo(connection);
+                
                 do {
 
-                    Saldo saldoContaVinculada = new Saldo(connection);
+                    float valorFeriasRetido = saldoContaVinculada.getSaldoFuncaoContaVinculada(pCodContrato, resultSet.getInt(6), 1,1);
+                    float valorTercoRetido = saldoContaVinculada.getSaldoFuncaoContaVinculada(pCodContrato, resultSet.getInt(6), 1,2);
+                    float valorDecimoTerceiroRetido = saldoContaVinculada.getSaldoFuncaoContaVinculada(pCodContrato, resultSet.getInt(6), 1,3);
+                    float valorIncidenciaRetido = saldoContaVinculada.getSaldoFuncaoContaVinculada(pCodContrato, resultSet.getInt(6), 1,7);
+                    float valorMultaFGTSRetido = saldoContaVinculada.getSaldoFuncaoContaVinculada(pCodContrato, resultSet.getInt(6), 1,5);
+                    float valorTotalRetido = valorFeriasRetido + valorTercoRetido + valorDecimoTerceiroRetido + valorIncidenciaRetido + valorMultaFGTSRetido;
+
+                    float valorFeriasRestituido = saldoContaVinculada.getSaldoFuncaoContaVinculada(pCodContrato, resultSet.getInt(6), 2,1);
+                    float valorIncidenciaFeriasRestituido = saldoContaVinculada.getSaldoFuncaoContaVinculada(pCodContrato, resultSet.getInt(6), 2,101);
+                    float valorTotalFeriasRestituido = valorFeriasRestituido + valorIncidenciaFeriasRestituido;
+
+                    float valorTercoRestituido = saldoContaVinculada.getSaldoFuncaoContaVinculada(pCodContrato, resultSet.getInt(6), 2,2);
+                    float valorIncidenciaTercoRestituido = saldoContaVinculada.getSaldoFuncaoContaVinculada(pCodContrato, resultSet.getInt(6), 2,102);
+                    float valorTotalTercoRestituido = valorTercoRestituido + valorIncidenciaTercoRestituido;
+
+                    float valorDecimoTerceiroRestituido = saldoContaVinculada.getSaldoFuncaoContaVinculada(pCodContrato, resultSet.getInt(6), 3,3);
+                    float valorIncidenciaDecimoTerceiroRestituido = saldoContaVinculada.getSaldoFuncaoContaVinculada(pCodContrato, resultSet.getInt(6), 3,103);
+                    float valorTotalDecimoTerceiroRestituido = valorDecimoTerceiroRestituido + valorIncidenciaDecimoTerceiroRestituido;
+
+                    float valorMultaFGTSRestituido = saldoContaVinculada.getSaldoFuncaoContaVinculada(pCodContrato, resultSet.getInt(6), 3,5);
+                    float valorTotalRestituido = valorTotalFeriasRestituido + valorTotalDecimoTerceiroRestituido + valorTotalTercoRestituido + valorMultaFGTSRestituido;
+                    float valorSaldo = valorTotalRetido - valorTotalRestituido;
 
                     SaldoFuncaoContaVinculadaModel saldoFuncaoContaVinculadaModel =
 
                             new SaldoFuncaoContaVinculadaModel(resultSet.getString(4),
-                                    //resultSet.getString(1),
-                                    //resultSet.getString(2),
-                                    //resultSet.getString(3),
-                                    saldoContaVinculada.getSaldoFuncaoContaVinculada(pCodContrato, resultSet.getInt(6), 1,1),
-                                    saldoContaVinculada.getSaldoFuncaoContaVinculada(pCodContrato, resultSet.getInt(6), 1,2),
-                                    saldoContaVinculada.getSaldoFuncaoContaVinculada(pCodContrato, resultSet.getInt(6), 1,3),
-                                    saldoContaVinculada.getSaldoFuncaoContaVinculada(pCodContrato, resultSet.getInt(6), 1,7),
-                                    saldoContaVinculada.getSaldoFuncaoContaVinculada(pCodContrato, resultSet.getInt(6), 1,5),
-                                    saldoContaVinculada.getSaldoFuncaoContaVinculada(pCodContrato, resultSet.getInt(6), 1,100),
-                                    saldoContaVinculada.getSaldoFuncaoContaVinculada(pCodContrato, resultSet.getInt(6), 2,1),
-                                    saldoContaVinculada.getSaldoFuncaoContaVinculada(pCodContrato, resultSet.getInt(6), 2,2),
-                                    saldoContaVinculada.getSaldoFuncaoContaVinculada(pCodContrato, resultSet.getInt(6), 3,3),
-                                    saldoContaVinculada.getSaldoFuncaoContaVinculada(pCodContrato, resultSet.getInt(6), 2,100) + saldoContaVinculada.getSaldoFuncaoContaVinculada(pCodContrato, resultSet.getInt(6), 3,100),
-                                    saldoContaVinculada.getSaldoFuncaoContaVinculada(pCodContrato, resultSet.getInt(6), 2,101),
-                                    saldoContaVinculada.getSaldoFuncaoContaVinculada(pCodContrato, resultSet.getInt(6), 2,102),
-                                    saldoContaVinculada.getSaldoFuncaoContaVinculada(pCodContrato, resultSet.getInt(6), 2,100),
-                                    saldoContaVinculada.getSaldoFuncaoContaVinculada(pCodContrato, resultSet.getInt(6), 3,103),
-                                    saldoContaVinculada.getSaldoFuncaoContaVinculada(pCodContrato, resultSet.getInt(6), 3,100),
-                                    saldoContaVinculada.getSaldoFuncaoContaVinculada(pCodContrato, resultSet.getInt(6), 1,100) - (saldoContaVinculada.getSaldoFuncaoContaVinculada(pCodContrato, resultSet.getInt(6), 2,100) + saldoContaVinculada.getSaldoFuncaoContaVinculada(pCodContrato, resultSet.getInt(6), 3,100)));
+                                    valorFeriasRetido,
+                                    valorTercoRetido,
+                                    valorDecimoTerceiroRetido,
+                                    valorIncidenciaRetido,
+                                    valorMultaFGTSRetido,
+                                    valorMultaFGTSRestituido,
+                                    valorTotalRetido,
+                                    valorFeriasRestituido,
+                                    valorTercoRestituido,
+                                    valorDecimoTerceiroRestituido,
+                                    valorTotalRestituido,
+                                    valorIncidenciaFeriasRestituido,
+                                    valorIncidenciaTercoRestituido,
+                                    valorTotalFeriasRestituido,
+                                    valorIncidenciaDecimoTerceiroRestituido,
+                                    valorTotalDecimoTerceiroRestituido,
+                                    valorSaldo);
 
                     lista.add(saldoFuncaoContaVinculadaModel);
 

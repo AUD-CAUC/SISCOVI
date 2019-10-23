@@ -1,6 +1,7 @@
 package br.jus.stj.siscovi.dao;
 
 import br.jus.stj.siscovi.calculos.Ferias;
+import br.jus.stj.siscovi.calculos.Rescisao;
 import br.jus.stj.siscovi.model.AvaliacaoRescisao;
 import br.jus.stj.siscovi.model.CalcularRescisaoModel;
 import br.jus.stj.siscovi.model.CalculoPendenteRescisaoModel;
@@ -24,15 +25,17 @@ public class RescisaoDAO {
     public ArrayList<TerceirizadoRescisao> getListaTerceirizadoParaCalculoDeRescisao (int codigoContrato) {
         ArrayList<TerceirizadoRescisao> terceirizados = new ArrayList<>();
         Ferias ferias = new Ferias(connection);
+        Rescisao rescisao = new Rescisao(connection);
         String sql = "SELECT TC.COD," +
-                     "       T.NOME," +
-                     "       TC.DATA_DESLIGAMENTO" +
+                     " T.NOME," +
+                     " TC.DATA_DESLIGAMENTO" +
                      " FROM tb_terceirizado_contrato TC" +
-                     "   JOIN tb_terceirizado T ON T.COD = TC.COD_TERCEIRIZADO" +
+                     " JOIN tb_terceirizado T ON T.COD = TC.COD_TERCEIRIZADO" +
                      " WHERE COD_CONTRATO = ?" +
-                     "   AND TC.DATA_DESLIGAMENTO IS NOT NULL" +
-                     "   AND tc.cod NOT IN (SELECT cod_terceirizado_contrato" +
-                     "                        FROM tb_restituicao_rescisao)";
+                     " AND TC.DATA_DESLIGAMENTO IS NOT NULL" +
+                     " AND tc.cod NOT IN (SELECT cod_terceirizado_contrato" +
+                     "                     FROM tb_restituicao_rescisao " +
+                     "                     WHERE AUTORIZADO = 'S' AND RESTITUIDO = 'S')";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, codigoContrato);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -45,7 +48,8 @@ public class RescisaoDAO {
                             ferias.RetornaDatasPeriodoFeriasRescisao(resultSet.getInt(1), resultSet.getDate(3), 3),
                             ferias.RetornaDatasPeriodoFeriasRescisao(resultSet.getInt(1), resultSet.getDate(3), 4),
                             null,
-                            null);
+                            null,
+                            rescisao.RetornaStatusAnalise(resultSet.getInt("COD")));
                     terceirizados.add(terceirizadoRescisao);
                 }
             } catch (SQLException sqle) {
@@ -191,7 +195,7 @@ public class RescisaoDAO {
                     "        rt.VALOR_TERCO, \n" +
                     "        rt.INCID_SUBMOD_4_1_FERIAS, \n" +
                     "        rt.INCID_SUBMOD_4_1_TERCO,\n" +
-                    "        rt.INCID_SUBMOD_4_1_TERCO_PROP,\n" +
+                    "        rt.INCID_MULTA_FGTS_FERIAS,\n" +
                     "        rt.INCID_MULTA_FGTS_TERCO,\n" +
                     "        rt.VALOR_FERIAS_PROP,\n" +
                     "        rt.VALOR_TERCO_PROP,\n" +
@@ -214,7 +218,7 @@ public class RescisaoDAO {
                     "    JOIN tb_usuario u ON u.cod = hgc.cod_usuario \n" +
                     "    JOIN tb_funcao_contrato fc ON fc.cod = ft.cod_funcao_contrato \n" +
                     "    JOIN tb_funcao f ON f.cod = fc.cod_funcao \n" +
-                    "   WHERE tc.COD_CONTRATO = ? AND AUTORIZADO IS NULL";
+                    "   WHERE tc.COD_CONTRATO = ? AND ((AUTORIZADO IS NULL) OR (RESTITUIDO = 'N' AND AUTORIZADO = 'S'))";
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 preparedStatement.setInt(1, codigoContrato);
                 try (ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -309,7 +313,8 @@ public class RescisaoDAO {
                     "        rt.MULTA_FGTS_SALARIO,\n" +
                     "        rt.valor_decimo_terceiro + rt.INCID_SUBMOD_4_1_DEC_TERCEIRO + rt.INCID_MULTA_FGTS_DEC_TERCEIRO + rt.VALOR_FERIAS + rt.VALOR_TERCO + rt.INCID_SUBMOD_4_1_FERIAS + rt.INCID_SUBMOD_4_1_TERCO + rt.INCID_MULTA_FGTS_FERIAS + rt.INCID_MULTA_FGTS_TERCO + rt.VALOR_FERIAS_PROP + rt.VALOR_TERCO_PROP + rt.INCID_SUBMOD_4_1_FERIAS_PROP + rt.INCID_MULTA_FGTS_TERCO_PROP + rt.INCID_MULTA_FGTS_FERIAS_PROP + rt.INCID_MULTA_FGTS_TERCO_PROP + rt.MULTA_FGTS_SALARIO, \n" +
                     "        rt.AUTORIZADO, \n" +
-                    "        rt.RESTITUIDO \n" +
+                    "        rt.RESTITUIDO, \n" +
+                    "        rt.OBSERVACAO \n" +
                     "   FROM tb_restituicao_rescisao rt \n" +
                     "    JOIN tb_terceirizado_contrato tc ON tc.cod = rt.cod_terceirizado_contrato \n" +
                     "    JOIN tb_funcao_terceirizado ft ON ft.cod_terceirizado_contrato = tc.cod \n" +
@@ -554,7 +559,8 @@ public class RescisaoDAO {
                     "        rt.MULTA_FGTS_SALARIO,\n" +
                     "        rt.valor_decimo_terceiro + rt.INCID_SUBMOD_4_1_DEC_TERCEIRO + rt.INCID_MULTA_FGTS_DEC_TERCEIRO + rt.VALOR_FERIAS + rt.VALOR_TERCO + rt.INCID_SUBMOD_4_1_FERIAS + rt.INCID_SUBMOD_4_1_TERCO + rt.INCID_MULTA_FGTS_FERIAS + rt.INCID_MULTA_FGTS_TERCO + rt.VALOR_FERIAS_PROP + rt.VALOR_TERCO_PROP + rt.INCID_SUBMOD_4_1_FERIAS_PROP + rt.INCID_MULTA_FGTS_TERCO_PROP + rt.INCID_MULTA_FGTS_FERIAS_PROP + rt.INCID_MULTA_FGTS_TERCO_PROP + rt.MULTA_FGTS_SALARIO, \n" +
                     "        rt.AUTORIZADO, \n" +
-                    "        rt.RESTITUIDO \n" +
+                    "        rt.RESTITUIDO, \n" +
+                    "        rt.OBSERVACAO \n" +
                     "   FROM tb_restituicao_rescisao rt \n" +
                     "    JOIN tb_terceirizado_contrato tc ON tc.cod = rt.cod_terceirizado_contrato \n" +
                     "    JOIN tb_funcao_terceirizado ft ON ft.cod_terceirizado_contrato = tc.cod \n" +
