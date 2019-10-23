@@ -43,7 +43,8 @@ public class SaldoResidualDAO {
                 "WHERE c.cod = ? " +
                 "AND ft.data_inicio = (SELECT MAX(data_inicio) " +
                 "FROM tb_funcao_terceirizado " +
-                "WHERE cod_terceirizado_contrato = tc.cod) AND srf.PEDIDO IS NULL";
+                "WHERE cod_terceirizado_contrato = tc.cod)" +
+                "AND rt.AUTORIZADO = 'S' AND rt.RESTITUIDO = 'S'";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
@@ -112,7 +113,8 @@ public class SaldoResidualDAO {
                 "WHERE c.cod = ? " +
                 "AND ft.data_inicio = (SELECT MAX(data_inicio) " +
                 "FROM tb_funcao_terceirizado " +
-                "WHERE cod_terceirizado_contrato = tc.cod)";
+                "WHERE cod_terceirizado_contrato = tc.cod)" +
+                "AND rt.AUTORIZADO = 'S' AND rt.RESTITUIDO = 'S'";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
@@ -183,7 +185,8 @@ public class SaldoResidualDAO {
                 "WHERE c.cod = ? " +
                 "AND ft.data_inicio = (SELECT MAX(data_inicio) " +
                 "FROM tb_funcao_terceirizado " +
-                "WHERE cod_terceirizado_contrato = tc.cod)";
+                "WHERE cod_terceirizado_contrato = tc.cod)" +
+                "AND rr.AUTORIZADO = 'S' AND rr.RESTITUIDO = 'S'";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
@@ -256,7 +259,7 @@ public class SaldoResidualDAO {
                     "AND ft.data_inicio = (SELECT MAX(data_inicio) " +
                     "FROM tb_funcao_terceirizado " +
                     "WHERE cod_terceirizado_contrato = tc.cod)" +
-                    "AND ((srf.AUTORIZADO IS NULL) OR (srf.RESTITUIDO = 'N' AND srf.AUTORIZADO = 'S')) AND srf.PEDIDO IS NOT NULL";
+                    "AND ((srf.AUTORIZADO IS NULL) OR (srf.RESTITUIDO = 'N' AND srf.AUTORIZADO = 'S'))";
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
                 preparedStatement.setInt(1, codigoContrato);
@@ -328,7 +331,7 @@ public class SaldoResidualDAO {
                     "AND ft.data_inicio = (SELECT MAX(data_inicio) " +
                     "FROM tb_funcao_terceirizado " +
                     "WHERE cod_terceirizado_contrato = tc.cod)" +
-                    "AND ((srdt.AUTORIZADO IS NULL) OR (srdt.RESTITUIDO = 'N' AND srdt.AUTORIZADO = 'S')) AND srdt.PEDIDO IS NOT NULL";
+                    "AND ((srdt.AUTORIZADO IS NULL) OR (srdt.RESTITUIDO = 'N' AND srdt.AUTORIZADO = 'S'))";
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
                 preparedStatement.setInt(1, codigoContrato);
