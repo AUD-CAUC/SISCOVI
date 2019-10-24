@@ -29,8 +29,8 @@ public class SaldoResidualDAO {
                 "srf.valor_ferias, " +
                 "srf.valor_terco, " +
                 "srf.incid_submod_4_1_ferias, " +
-                "srf.incid_submod_4_1_terco " +
-                // "CASE WHEN srf.restituido = 'S' THEN 'SIM' ELSE 'NÃO' END " +
+                "srf.incid_submod_4_1_terco, " +
+                "srf.AUTORIZADO " +
                 "FROM tb_restituicao_ferias rt " +
                 "JOIN tb_terceirizado_contrato tc ON tc.cod = rt.cod_terceirizado_contrato " +
                 "JOIN tb_funcao_terceirizado ft ON ft.cod_terceirizado_contrato = tc.cod " +
