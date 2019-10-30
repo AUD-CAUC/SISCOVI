@@ -89,6 +89,7 @@ public class TesteRestituicaoRescisao {
                 restituicao.getValorIncidenciaTercoIntegral(),
                 restituicao.getValorFGTSFeriasIntegral(),
                 restituicao.getValorFGTSTercoIntegral(),
+                restituicao.getValorFGTSRestante(),
                 restituicao.getValorFeriasProporcional(),
                 restituicao.getValorTercoProporcional(),
                 restituicao.getValorIncidenciaFeriasProporcional(),
