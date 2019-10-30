@@ -768,6 +768,7 @@ public class RestituicaoRescisao {
                                                  float pValorFGTSFeriasProporcional,
                                                  float pValorFGTSTercoProporcional,
                                                  float pValorFGTSSalario,
+                                                 float pValorFGTSRestante,
                                                  String pLoginAtualizacao) {
 
         ConsultaTSQL consulta = new ConsultaTSQL(connection);
@@ -796,6 +797,7 @@ public class RestituicaoRescisao {
         float vFGTSFeriasProporcional = 0;
         float vFGTSTercoProporcional = 0;
         float vFGTSRemuneracao = 0;
+        float vFGTSRestante = 0;
         float vDecimoTerceiro = 0;
 
 
@@ -818,6 +820,7 @@ public class RestituicaoRescisao {
             vFGTSFerias = pValorFGTSFerias;
             vFGTSTerco = pValorFGTSTerco;
             vFGTSRemuneracao = pValorFGTSSalario;
+            vFGTSRestante = pValorFGTSRestante;
             vIncidFeriasProporcional = pValorIncidenciaFeriasProporcional;
             vIncidTercoProporcional = pValorIncidenciaTercoProporcional;
             vFGTSFeriasProporcional = pValorFGTSFeriasProporcional;
@@ -848,6 +851,7 @@ public class RestituicaoRescisao {
             pValorFGTSFerias = 0;
             pValorFGTSTerco = 0;
             pValorFGTSSalario = 0;
+            pValorFGTSRestante = 0;
             pValorIncidenciaFeriasProporcional = 0;
             pValorIncidenciaTercoProporcional = 0;
             pValorFGTSFeriasProporcional = 0;
@@ -882,6 +886,7 @@ public class RestituicaoRescisao {
                                                                      pValorFGTSFeriasProporcional,
                                                                      pValorFGTSTercoProporcional,
                                                                      pValorFGTSSalario,
+                                                                     pValorFGTSRestante,
                                                                      pLoginAtualizacao);
 
         if (pTipoRestituicao.equals("MOVIMENTAÇÃO")) {
@@ -903,6 +908,7 @@ public class RestituicaoRescisao {
                     vFGTSFeriasProporcional,
                     vFGTSTercoProporcional,
                     vFGTSRemuneracao,
+                    vFGTSRestante,
                     pLoginAtualizacao);
 
         }
@@ -936,6 +942,7 @@ public class RestituicaoRescisao {
                                               float pValorFGTSFeriasProporcional,
                                               float pValorFGTSTercoProporcional,
                                               float pValorFGTSSalario,
+                                              float pValorFGTSRestante,
                                               String pLoginAtualizacao) {
 
         int vRetornoChavePrimaria;
@@ -1001,6 +1008,7 @@ public class RestituicaoRescisao {
         float vIncidTercoProporcional = 0;
         float vFGTSFeriasProporcional = 0;
         float vFGTSTercoProporcional = 0;
+        float vFGTSRestante = 0;
 
         /*Provisionamento da incidência para o saldo residual no caso de movimentação.*/
 
@@ -1013,6 +1021,7 @@ public class RestituicaoRescisao {
             vFGTSFerias = pValorFGTSFerias;
             vFGTSTerco = pValorFGTSTerco;
             vFGTSRemuneracao = pValorFGTSSalario;
+            vFGTSRestante = pValorFGTSRestante;
             vIncidFeriasProporcional = pValorIncidenciaFeriasProporcional;
             vIncidTercoProporcional = pValorIncidenciaTercoProporcional;
             vFGTSFeriasProporcional = pValorFGTSFeriasProporcional;
@@ -1029,6 +1038,7 @@ public class RestituicaoRescisao {
             pValorFGTSFeriasProporcional = 0;
             pValorFGTSTercoProporcional = 0;
             pValorFGTSSalario = 0;
+            pValorFGTSRestante = 0;
 
 
         }
@@ -1058,6 +1068,7 @@ public class RestituicaoRescisao {
                 pValorFGTSFeriasProporcional,
                 pValorFGTSTercoProporcional,
                 pValorFGTSSalario,
+                pValorFGTSRestante,
                 "",
                 "",
                 "",
@@ -1082,6 +1093,7 @@ public class RestituicaoRescisao {
                     vFGTSFeriasProporcional,
                     vFGTSTercoProporcional,
                     vFGTSRemuneracao,
+                    vFGTSRestante,
                     pLoginAtualizacao);
 
         }

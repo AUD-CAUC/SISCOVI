@@ -129,6 +129,7 @@ public class RescisaoController {
                         calcularRescisaoModel.getTotalMultaFgtsFeriasProporcionais(),
                         calcularRescisaoModel.getTotalMultaFgtsTercoProporcional(),
                         calcularRescisaoModel.getTotalMultaFgtsSalario(),
+                        calcularRescisaoModel.getTotalMultaFgtsRestante(),
                         calcularRescisaoModel.getUsername().toUpperCase());
         }
         try {
