@@ -32,6 +32,7 @@ public class CalcularRescisaoModel {
     private float totalMultaFgtsFeriasProporcionais;
     private float totalMultaFgtsTercoProporcional;
     private float totalMultaFgtsSalario;
+    private float totalMultaFgtsRestante;
     private String username;
 
     public CalcularRescisaoModel(int codTerceirizadoContrato,
@@ -61,7 +62,8 @@ public class CalcularRescisaoModel {
                                  float totalIncidenciaTercoProporcional,
                                  float totalMultaFgtsFeriasProporcionais,
                                  float totalMultaFgtsTercoProporcional,
-                                 float totalMultaFgtsSalario) {
+                                 float totalMultaFgtsSalario,
+                                 float totalMultaFgtsRestante) {
 
         this.codTerceirizadoContrato = codTerceirizadoContrato;
         this.tipoRestituicao = tipoRestituicao;
@@ -91,6 +93,7 @@ public class CalcularRescisaoModel {
         this.totalMultaFgtsFeriasProporcionais = totalMultaFgtsFeriasProporcionais;
         this.totalMultaFgtsTercoProporcional = totalMultaFgtsTercoProporcional;
         this.totalMultaFgtsSalario = totalMultaFgtsSalario;
+        this.totalMultaFgtsRestante = totalMultaFgtsRestante;
 
     }
 
@@ -203,6 +206,8 @@ public class CalcularRescisaoModel {
     public float getTotalMultaFgtsSalario() {
         return totalMultaFgtsSalario;
     }
+
+    public float getTotalMultaFgtsRestante() { return totalMultaFgtsRestante; }
 
     public void setTipoRestituicao(String tipoRestituicao) {
         this.tipoRestituicao = tipoRestituicao;
