@@ -542,7 +542,8 @@ public class Saldo {
                         "       ROUND(SUM(CASE WHEN r.incid_submod_4_1_dec_terceiro IS NULL THEN 0 ELSE r.incid_submod_4_1_dec_terceiro END + CASE WHEN srr.incid_submod_4_1_dec_terceiro IS NULL THEN 0 ELSE srr.incid_submod_4_1_dec_terceiro END), 2),\n" +
                         "       ROUND(SUM(CASE WHEN r.INCID_MULTA_FGTS_DEC_TERCEIRO IS NULL THEN 0 ELSE r.INCID_MULTA_FGTS_DEC_TERCEIRO END + CASE WHEN r.INCID_MULTA_FGTS_FERIAS IS NULL THEN 0 ELSE r.INCID_MULTA_FGTS_FERIAS END + " +
                         "       CASE WHEN r.INCID_MULTA_FGTS_TERCO IS NULL THEN 0 ELSE r.INCID_MULTA_FGTS_TERCO END + CASE WHEN r.INCID_MULTA_FGTS_FERIAS_PROP IS NULL THEN 0 ELSE r.INCID_MULTA_FGTS_FERIAS_PROP END +" +
-                        "       CASE WHEN r.INCID_MULTA_FGTS_TERCO_PROP IS NULL THEN 0 ELSE r.INCID_MULTA_FGTS_TERCO_PROP END + CASE WHEN r.MULTA_FGTS_SALARIO IS NULL THEN 0 ELSE r.MULTA_FGTS_SALARIO END),2)," +
+                        "       CASE WHEN r.INCID_MULTA_FGTS_TERCO_PROP IS NULL THEN 0 ELSE r.INCID_MULTA_FGTS_TERCO_PROP END + CASE WHEN r.MULTA_FGTS_SALARIO IS NULL THEN 0 ELSE r.MULTA_FGTS_SALARIO END + " +
+                        "       CASE WHEN r.MULTA_FGTS_RESTANTE IS NULL THEN 0 ELSE r.MULTA_FGTS_RESTANTE END),2)," +
                         "       ROUND(SUM(CASE WHEN r.valor_decimo_terceiro IS NULL THEN 0 ELSE r.valor_decimo_terceiro END + CASE WHEN srr.valor_decimo_terceiro IS NULL THEN 0 ELSE srr.valor_decimo_terceiro END +\n" +
                         "                 CASE WHEN r.incid_submod_4_1_dec_terceiro IS NULL THEN 0 ELSE r.incid_submod_4_1_dec_terceiro END + CASE WHEN srr.incid_submod_4_1_dec_terceiro IS NULL THEN 0 ELSE srr.incid_submod_4_1_dec_terceiro END), 2)\n" +
                         "  FROM tb_terceirizado_contrato tc\n" +
