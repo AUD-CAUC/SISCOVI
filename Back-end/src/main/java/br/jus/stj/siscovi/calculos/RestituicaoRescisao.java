@@ -44,6 +44,7 @@ public class RestituicaoRescisao {
 
         ConsultaTSQL consulta = new ConsultaTSQL(connection);
         DecimoTerceiro decimoTerceiro = new DecimoTerceiro(connection);
+        Saldo saldo = new Saldo(connection);
 
         /*Variáveis totalizadoras de valores.*/
 
@@ -57,6 +58,7 @@ public class RestituicaoRescisao {
         float vTotalMultaFGTSFerias = 0;
         float vTotalMultaFGTSTerco = 0;
         float vTotalMultaFGTSDecimoTerceiro = 0;
+        float vTotalMultaFGTSRestante = 0;
         float vTotalFeriasProporcional = 0;
         float vTotalTercoConstitucionalProporcional = 0;
         float vTotalIncidenciaFeriasProporcional = 0;
@@ -108,6 +110,9 @@ public class RestituicaoRescisao {
             vTotalMultaFGTSTercoProporcional = CalcularValorRubricaRescisao(pCodTerceirizadoContrato, 8, pDataInicioFeriasProporcionais, pDataFimFeriasProporcionais);
         }
 
+        float vTotalMultaFGTS = vTotalMultaFGTSDecimoTerceiro + vTotalMultaFGTSRemuneracao + vTotalMultaFGTSFerias + vTotalMultaFGTSTerco + vTotalMultaFGTSFeriasProporcional + vTotalMultaFGTSTercoProporcional;
+        vTotalMultaFGTSRestante = saldo.getSaldoIndividualContaVinculada(pCodTerceirizadoContrato, 1, 5) - vTotalMultaFGTS;
+
         return new ValorRestituicaoRescisaoModel(vDataInicioContagemDecTer,
                                                  vTotalDecimoTerceiro,
                                                  vTotalIncidenciaDecimoTerceiro,
@@ -118,6 +123,7 @@ public class RestituicaoRescisao {
                                                  vTotalIncidenciaTerco,
                                                  vTotalMultaFGTSFerias,
                                                  vTotalMultaFGTSTerco,
+                                                 vTotalMultaFGTSRestante,
                                                  vTotalFeriasProporcional,
                                                  vTotalTercoConstitucionalProporcional,
                                                  vTotalIncidenciaFeriasProporcional,

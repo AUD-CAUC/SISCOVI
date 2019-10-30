@@ -15,6 +15,7 @@ public class ValorRestituicaoRescisaoModel {
     private final float valorFGTSFeriasIntegral;
     private final float valorFGTSTercoIntegral;
     private final float valorFGTSSalario;
+    private final float valorFGTSRestante;
     private final float valorFeriasProporcional;
     private final float valorTercoProporcional;
     private final float valorIncidenciaFeriasProporcional;
@@ -32,6 +33,7 @@ public class ValorRestituicaoRescisaoModel {
                                           float valorIncidenciaTercoIntegral,
                                           float valorFGTSFeriasIntegral,
                                           float valorFGTSTercoIntegral,
+                                          float valorFGTSRestante,
                                           float valorFeriasProporcional,
                                           float valorTercoProporcional,
                                           float valorIncidenciaFeriasProporcional,
@@ -51,6 +53,7 @@ public class ValorRestituicaoRescisaoModel {
         this.valorFGTSFeriasIntegral = valorFGTSFeriasIntegral;
         this.valorFGTSTercoIntegral = valorFGTSTercoIntegral;
         this.valorFGTSSalario = valorFGTSSalario;
+        this.valorFGTSRestante = valorFGTSRestante;
         this.valorFeriasProporcional = valorFeriasProporcional;
         this.valorTercoProporcional = valorTercoProporcional;
         this.valorIncidenciaFeriasProporcional = valorIncidenciaFeriasProporcional;
@@ -159,6 +162,12 @@ public class ValorRestituicaoRescisaoModel {
     public float getValorFGTSTercoProporcional () {
 
         return valorFGTSTercoProporcional;
+
+    }
+
+    public float getValorFGTSRestante () {
+
+        return valorFGTSRestante;
 
     }
 
