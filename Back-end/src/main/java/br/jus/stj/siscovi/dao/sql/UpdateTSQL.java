@@ -208,6 +208,7 @@ public class UpdateTSQL {
      * @param pValorFGTSFerias;
      * @param pValorFGTSTerco;
      * @param pValorFGTSSalario;
+     * @param pValorFGTSRestante;
      * @param pAutorizado;
      * @param pRestituido;
      * @param pObservacao;
@@ -239,6 +240,7 @@ public class UpdateTSQL {
                                           float pValorFGTSFeriasProporcional,
                                           float pValorFGTSTercoProporcional,
                                           float pValorFGTSSalario,
+                                          float pValorFGTSRestante,
                                           String pAutorizado,
                                           String pRestituido,
                                           String pObservacao,
@@ -271,6 +273,7 @@ public class UpdateTSQL {
                 " INCID_MULTA_FGTS_FERIAS_PROP = ?," +
                 " INCID_MULTA_FGTS_TERCO_PROP = ?," +
                 " MULTA_FGTS_SALARIO = ?," +
+                " MULTA_FGTS_RESTANTE = ?, " +
                 " DATA_REFERENCIA = GETDATE()," +
                 " AUTORIZADO = ?," +
                 " RESTITUIDO = ?," +
@@ -306,11 +309,12 @@ public class UpdateTSQL {
             preparedStatement.setFloat(22, pValorFGTSFeriasProporcional);
             preparedStatement.setFloat(23, pValorFGTSTercoProporcional);
             preparedStatement.setFloat(24, pValorFGTSSalario);
-            preparedStatement.setString(25, String.valueOf(pAutorizado));
-            preparedStatement.setString(26, String.valueOf(pRestituido));
-            preparedStatement.setString(27, pObservacao);
-            preparedStatement.setString(28, pLoginAtualizacao);
-            preparedStatement.setInt(29, pCodRestituicaoRescisao);
+            preparedStatement.setFloat(25, pValorFGTSRestante);
+            preparedStatement.setString(26, String.valueOf(pAutorizado));
+            preparedStatement.setString(27, String.valueOf(pRestituido));
+            preparedStatement.setString(28, pObservacao);
+            preparedStatement.setString(29, pLoginAtualizacao);
+            preparedStatement.setInt(30, pCodRestituicaoRescisao);
 
             preparedStatement.executeUpdate();
 
