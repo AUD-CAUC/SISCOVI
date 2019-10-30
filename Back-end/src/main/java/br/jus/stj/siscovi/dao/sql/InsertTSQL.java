@@ -314,6 +314,7 @@ public class InsertTSQL {
                                           float pValorFGTSFeriasProporcional,
                                           float pValorFGTSTercoProporcional,
                                           float pValorFGTSSalario,
+                                          float pValorFGTSRestante,
                                           String pLoginAtualizacao) {
 
         PreparedStatement preparedStatement;
@@ -350,10 +351,11 @@ public class InsertTSQL {
                                                              " INCID_MULTA_FGTS_FERIAS_PROP," +
                                                              " INCID_MULTA_FGTS_TERCO_PROP," +
                                                              " MULTA_FGTS_SALARIO," +
+                                                             " MULTA_FGTS_RESTANTE," +
                                                              " DATA_REFERENCIA," +
                                                              " LOGIN_ATUALIZACAO," +
                                                              " DATA_ATUALIZACAO)" +
-                         " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, GETDATE(), ?, CURRENT_TIMESTAMP);" +
+                         " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, GETDATE(), ?, CURRENT_TIMESTAMP);" +
                         " SET IDENTITY_INSERT tb_restituicao_rescisao OFF;";
 
             preparedStatement = connection.prepareStatement(sql);
@@ -384,7 +386,8 @@ public class InsertTSQL {
             preparedStatement.setFloat(24, pValorFGTSFeriasProporcional);
             preparedStatement.setFloat(25, pValorFGTSTercoProporcional);
             preparedStatement.setFloat(26, pValorFGTSSalario);
-            preparedStatement.setString(27, pLoginAtualizacao);
+            preparedStatement.setFloat(27, pValorFGTSRestante);
+            preparedStatement.setString(28, pLoginAtualizacao);
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
@@ -416,6 +419,7 @@ public class InsertTSQL {
                                             float pValorFGTSFeriasProporcional,
                                             float pValorFGTSTercoProporcional,
                                             float pValorFGTSSalario,
+                                            float pValorFGTSRestante,
                                             String pLoginAtualizacao) {
 
         PreparedStatement preparedStatement;
@@ -444,9 +448,10 @@ public class InsertTSQL {
                     " incid_multa_fgts_ferias_prop," +
                     " incid_multa_fgts_terco_prop," +
                     " multa_fgts_salario," +
+                    " multa_fgts_restante," +
                     " login_atualizacao," +
                     " data_atualizacao)" +
-                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,  CURRENT_TIMESTAMP);" +
+                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP);" +
                     " SET IDENTITY_INSERT TB_SALDO_RESIDUAL_RESCISAO OFF;";
 
             preparedStatement = connection.prepareStatement(sql);
@@ -469,7 +474,8 @@ public class InsertTSQL {
             preparedStatement.setFloat(16, pValorFGTSFeriasProporcional);
             preparedStatement.setFloat(17, pValorFGTSTercoProporcional);
             preparedStatement.setFloat(18, pValorFGTSSalario);
-            preparedStatement.setString(19, pLoginAtualizacao);
+            preparedStatement.setFloat(19, pValorFGTSRestante);
+            preparedStatement.setString(20, pLoginAtualizacao);
 
             preparedStatement.executeUpdate();
 
