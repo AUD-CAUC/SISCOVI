@@ -97,7 +97,8 @@ public class RescisaoDAO {
                         "        rt.INCID_MULTA_FGTS_FERIAS_PROP,\n" +
                         "        rt.INCID_MULTA_FGTS_TERCO_PROP,\n" +
                         "        rt.MULTA_FGTS_SALARIO,\n" +
-                        "        rt.valor_decimo_terceiro + rt.INCID_SUBMOD_4_1_DEC_TERCEIRO + rt.INCID_MULTA_FGTS_DEC_TERCEIRO + rt.VALOR_FERIAS + rt.VALOR_TERCO + rt.INCID_SUBMOD_4_1_FERIAS + rt.INCID_SUBMOD_4_1_TERCO + rt.INCID_MULTA_FGTS_FERIAS + rt.INCID_MULTA_FGTS_TERCO + rt.VALOR_FERIAS_PROP + rt.VALOR_TERCO_PROP + rt.INCID_SUBMOD_4_1_FERIAS_PROP + rt.INCID_MULTA_FGTS_TERCO_PROP + rt.INCID_MULTA_FGTS_FERIAS_PROP + rt.INCID_MULTA_FGTS_TERCO_PROP + rt.MULTA_FGTS_SALARIO, \n" +
+                        "        rt.MULTA_FGTS_RESTANTE,\n" +
+                        "        rt.valor_decimo_terceiro + rt.INCID_SUBMOD_4_1_DEC_TERCEIRO + rt.INCID_MULTA_FGTS_DEC_TERCEIRO + rt.VALOR_FERIAS + rt.VALOR_TERCO + rt.INCID_SUBMOD_4_1_FERIAS + rt.INCID_SUBMOD_4_1_TERCO + rt.INCID_MULTA_FGTS_FERIAS + rt.INCID_MULTA_FGTS_TERCO + rt.VALOR_FERIAS_PROP + rt.VALOR_TERCO_PROP + rt.INCID_SUBMOD_4_1_FERIAS_PROP + rt.INCID_MULTA_FGTS_TERCO_PROP + rt.INCID_MULTA_FGTS_FERIAS_PROP + rt.INCID_MULTA_FGTS_TERCO_PROP + rt.MULTA_FGTS_SALARIO + rt.MULTA_FGTS_RESTANTE, \n" +
                         "        rt.AUTORIZADO, \n" +
                         "        rt.RESTITUIDO \n" +
                         "   FROM tb_restituicao_rescisao rt \n" +
@@ -144,7 +145,8 @@ public class RescisaoDAO {
                                 resultSet.getFloat(28),
                                 resultSet.getFloat(29),
                                 resultSet.getFloat(30),
-                                resultSet.getFloat(31));
+                                resultSet.getFloat(31),
+                                resultSet.getFloat(32));
 
 
                         CalculoPendenteRescisaoModel calculoPendenteModel = new CalculoPendenteRescisaoModel(resultSet.getInt(1),
@@ -152,7 +154,7 @@ public class RescisaoDAO {
                                 resultSet.getString(8),
                                 resultSet.getString(9),
                                 null,
-                                resultSet.getFloat(32));
+                                resultSet.getFloat(33));
                         lista.add(calculoPendenteModel);
                     }
                 }
@@ -204,7 +206,8 @@ public class RescisaoDAO {
                     "        rt.INCID_MULTA_FGTS_FERIAS_PROP,\n" +
                     "        rt.INCID_MULTA_FGTS_TERCO_PROP,\n" +
                     "        rt.MULTA_FGTS_SALARIO,\n" +
-                    "        rt.valor_decimo_terceiro + rt.INCID_SUBMOD_4_1_DEC_TERCEIRO + rt.INCID_MULTA_FGTS_DEC_TERCEIRO + rt.VALOR_FERIAS + rt.VALOR_TERCO + rt.INCID_SUBMOD_4_1_FERIAS + rt.INCID_SUBMOD_4_1_TERCO + rt.INCID_MULTA_FGTS_FERIAS + rt.INCID_MULTA_FGTS_TERCO + rt.VALOR_FERIAS_PROP + rt.VALOR_TERCO_PROP + rt.INCID_SUBMOD_4_1_FERIAS_PROP + rt.INCID_MULTA_FGTS_TERCO_PROP + rt.INCID_MULTA_FGTS_FERIAS_PROP + rt.INCID_MULTA_FGTS_TERCO_PROP + rt.MULTA_FGTS_SALARIO, \n" +
+                    "        rt.MULTA_FGTS_RESTANTE,\n" +
+                    "        rt.valor_decimo_terceiro + rt.INCID_SUBMOD_4_1_DEC_TERCEIRO + rt.INCID_MULTA_FGTS_DEC_TERCEIRO + rt.VALOR_FERIAS + rt.VALOR_TERCO + rt.INCID_SUBMOD_4_1_FERIAS + rt.INCID_SUBMOD_4_1_TERCO + rt.INCID_MULTA_FGTS_FERIAS + rt.INCID_MULTA_FGTS_TERCO + rt.VALOR_FERIAS_PROP + rt.VALOR_TERCO_PROP + rt.INCID_SUBMOD_4_1_FERIAS_PROP + rt.INCID_MULTA_FGTS_TERCO_PROP + rt.INCID_MULTA_FGTS_FERIAS_PROP + rt.INCID_MULTA_FGTS_TERCO_PROP + rt.MULTA_FGTS_SALARIO + rt.MULTA_FGTS_RESTANTE, \n" +
                     "        rt.AUTORIZADO, \n" +
                     "        rt.RESTITUIDO \n" +
                     "   FROM tb_restituicao_rescisao rt \n" +
@@ -254,7 +257,8 @@ public class RescisaoDAO {
                                 resultSet.getFloat(28),
                                 resultSet.getFloat(29),
                                 resultSet.getFloat(30),
-                                resultSet.getFloat(31));
+                                resultSet.getFloat(31),
+                                resultSet.getFloat(32));
 
 
                         CalculoPendenteRescisaoModel calculoPendenteModel = new CalculoPendenteRescisaoModel(resultSet.getInt(1),
@@ -262,7 +266,7 @@ public class RescisaoDAO {
                                 resultSet.getString(8),
                                 resultSet.getString(9),
                                 status,
-                                resultSet.getFloat(32));
+                                resultSet.getFloat(33));
                         lista.add(calculoPendenteModel);
                     }
                 }
@@ -311,7 +315,8 @@ public class RescisaoDAO {
                     "        rt.INCID_MULTA_FGTS_FERIAS_PROP,\n" +
                     "        rt.INCID_MULTA_FGTS_TERCO_PROP,\n" +
                     "        rt.MULTA_FGTS_SALARIO,\n" +
-                    "        rt.valor_decimo_terceiro + rt.INCID_SUBMOD_4_1_DEC_TERCEIRO + rt.INCID_MULTA_FGTS_DEC_TERCEIRO + rt.VALOR_FERIAS + rt.VALOR_TERCO + rt.INCID_SUBMOD_4_1_FERIAS + rt.INCID_SUBMOD_4_1_TERCO + rt.INCID_MULTA_FGTS_FERIAS + rt.INCID_MULTA_FGTS_TERCO + rt.VALOR_FERIAS_PROP + rt.VALOR_TERCO_PROP + rt.INCID_SUBMOD_4_1_FERIAS_PROP + rt.INCID_MULTA_FGTS_TERCO_PROP + rt.INCID_MULTA_FGTS_FERIAS_PROP + rt.INCID_MULTA_FGTS_TERCO_PROP + rt.MULTA_FGTS_SALARIO, \n" +
+                    "        rt.MULTA_FGTS_RESTANTE,\n" +
+                    "        rt.valor_decimo_terceiro + rt.INCID_SUBMOD_4_1_DEC_TERCEIRO + rt.INCID_MULTA_FGTS_DEC_TERCEIRO + rt.VALOR_FERIAS + rt.VALOR_TERCO + rt.INCID_SUBMOD_4_1_FERIAS + rt.INCID_SUBMOD_4_1_TERCO + rt.INCID_MULTA_FGTS_FERIAS + rt.INCID_MULTA_FGTS_TERCO + rt.VALOR_FERIAS_PROP + rt.VALOR_TERCO_PROP + rt.INCID_SUBMOD_4_1_FERIAS_PROP + rt.INCID_MULTA_FGTS_TERCO_PROP + rt.INCID_MULTA_FGTS_FERIAS_PROP + rt.INCID_MULTA_FGTS_TERCO_PROP + rt.MULTA_FGTS_SALARIO + rt.MULTA_FGTS_RESTANTE, \n" +
                     "        rt.AUTORIZADO, \n" +
                     "        rt.RESTITUIDO, \n" +
                     "        rt.OBSERVACAO \n" +
@@ -365,7 +370,8 @@ public class RescisaoDAO {
                                 resultSet.getFloat(28),
                                 resultSet.getFloat(29),
                                 resultSet.getFloat(30),
-                                resultSet.getFloat(31));
+                                resultSet.getFloat(31),
+                                resultSet.getFloat(32));
 
 
                         CalculoPendenteRescisaoModel calculoPendenteModel = new CalculoPendenteRescisaoModel(resultSet.getInt(1),
@@ -373,7 +379,7 @@ public class RescisaoDAO {
                                 resultSet.getString(8),
                                 resultSet.getString(9),
                                 status,
-                                resultSet.getFloat(32));
+                                resultSet.getFloat(33));
                         calculoPendenteModel.setObservacoes(resultSet.getString("OBSERVACAO"));
                         lista.add(calculoPendenteModel);
                     }
@@ -438,7 +444,8 @@ public class RescisaoDAO {
                     "        rt.INCID_MULTA_FGTS_FERIAS_PROP,\n" +
                     "        rt.INCID_MULTA_FGTS_TERCO_PROP,\n" +
                     "        rt.MULTA_FGTS_SALARIO,\n" +
-                    "        rt.valor_decimo_terceiro + rt.INCID_SUBMOD_4_1_DEC_TERCEIRO + rt.INCID_MULTA_FGTS_DEC_TERCEIRO + rt.VALOR_FERIAS + rt.VALOR_TERCO + rt.INCID_SUBMOD_4_1_FERIAS + rt.INCID_SUBMOD_4_1_TERCO + rt.INCID_MULTA_FGTS_FERIAS + rt.INCID_MULTA_FGTS_TERCO + rt.VALOR_FERIAS_PROP + rt.VALOR_TERCO_PROP + rt.INCID_SUBMOD_4_1_FERIAS_PROP + rt.INCID_MULTA_FGTS_TERCO_PROP + rt.INCID_MULTA_FGTS_FERIAS_PROP + rt.INCID_MULTA_FGTS_TERCO_PROP + rt.MULTA_FGTS_SALARIO, \n" +
+                    "        rt.MULTA_FGTS_RESTANTE,\n" +
+                    "        rt.valor_decimo_terceiro + rt.INCID_SUBMOD_4_1_DEC_TERCEIRO + rt.INCID_MULTA_FGTS_DEC_TERCEIRO + rt.VALOR_FERIAS + rt.VALOR_TERCO + rt.INCID_SUBMOD_4_1_FERIAS + rt.INCID_SUBMOD_4_1_TERCO + rt.INCID_MULTA_FGTS_FERIAS + rt.INCID_MULTA_FGTS_TERCO + rt.VALOR_FERIAS_PROP + rt.VALOR_TERCO_PROP + rt.INCID_SUBMOD_4_1_FERIAS_PROP + rt.INCID_MULTA_FGTS_TERCO_PROP + rt.INCID_MULTA_FGTS_FERIAS_PROP + rt.INCID_MULTA_FGTS_TERCO_PROP + rt.MULTA_FGTS_SALARIO + rt.MULTA_FGTS_RESTANTE, \n" +
                     "        rt.AUTORIZADO, \n" +
                     "        rt.RESTITUIDO \n" +
                     "   FROM tb_restituicao_rescisao rt \n" +
@@ -500,7 +507,8 @@ public class RescisaoDAO {
                                 resultSet.getFloat(28),
                                 resultSet.getFloat(29),
                                 resultSet.getFloat(30),
-                                resultSet.getFloat(31));
+                                resultSet.getFloat(31),
+                                resultSet.getFloat(32));
 
 
                         CalculoPendenteRescisaoModel calculoPendenteModel = new CalculoPendenteRescisaoModel(resultSet.getInt(1),
@@ -508,7 +516,7 @@ public class RescisaoDAO {
                                 resultSet.getString(8),
                                 resultSet.getString(9),
                                 status,
-                                resultSet.getFloat(32));
+                                resultSet.getFloat(33));
                         lista.add(calculoPendenteModel);
                     }
                 }
@@ -557,7 +565,8 @@ public class RescisaoDAO {
                     "        rt.INCID_MULTA_FGTS_FERIAS_PROP,\n" +
                     "        rt.INCID_MULTA_FGTS_TERCO_PROP,\n" +
                     "        rt.MULTA_FGTS_SALARIO,\n" +
-                    "        rt.valor_decimo_terceiro + rt.INCID_SUBMOD_4_1_DEC_TERCEIRO + rt.INCID_MULTA_FGTS_DEC_TERCEIRO + rt.VALOR_FERIAS + rt.VALOR_TERCO + rt.INCID_SUBMOD_4_1_FERIAS + rt.INCID_SUBMOD_4_1_TERCO + rt.INCID_MULTA_FGTS_FERIAS + rt.INCID_MULTA_FGTS_TERCO + rt.VALOR_FERIAS_PROP + rt.VALOR_TERCO_PROP + rt.INCID_SUBMOD_4_1_FERIAS_PROP + rt.INCID_MULTA_FGTS_TERCO_PROP + rt.INCID_MULTA_FGTS_FERIAS_PROP + rt.INCID_MULTA_FGTS_TERCO_PROP + rt.MULTA_FGTS_SALARIO, \n" +
+                    "        rt.MULTA_FGTS_RESTANTE,\n" +
+                    "        rt.valor_decimo_terceiro + rt.INCID_SUBMOD_4_1_DEC_TERCEIRO + rt.INCID_MULTA_FGTS_DEC_TERCEIRO + rt.VALOR_FERIAS + rt.VALOR_TERCO + rt.INCID_SUBMOD_4_1_FERIAS + rt.INCID_SUBMOD_4_1_TERCO + rt.INCID_MULTA_FGTS_FERIAS + rt.INCID_MULTA_FGTS_TERCO + rt.VALOR_FERIAS_PROP + rt.VALOR_TERCO_PROP + rt.INCID_SUBMOD_4_1_FERIAS_PROP + rt.INCID_MULTA_FGTS_TERCO_PROP + rt.INCID_MULTA_FGTS_FERIAS_PROP + rt.INCID_MULTA_FGTS_TERCO_PROP + rt.MULTA_FGTS_SALARIO + rt.MULTA_FGTS_RESTANTE, \n" +
                     "        rt.AUTORIZADO, \n" +
                     "        rt.RESTITUIDO, \n" +
                     "        rt.OBSERVACAO \n" +
@@ -622,7 +631,8 @@ public class RescisaoDAO {
                                 resultSet.getFloat(28),
                                 resultSet.getFloat(29),
                                 resultSet.getFloat(30),
-                                resultSet.getFloat(31));
+                                resultSet.getFloat(31),
+                                resultSet.getFloat(32));
 
 
                         CalculoPendenteRescisaoModel calculoPendenteModel = new CalculoPendenteRescisaoModel(resultSet.getInt(1),
@@ -630,7 +640,7 @@ public class RescisaoDAO {
                                 resultSet.getString(8),
                                 resultSet.getString(9),
                                 status,
-                                resultSet.getFloat(32));
+                                resultSet.getFloat(33));
                         calculoPendenteModel.setObservacoes(resultSet.getString("OBSERVACAO"));
                         lista.add(calculoPendenteModel);
                     }
