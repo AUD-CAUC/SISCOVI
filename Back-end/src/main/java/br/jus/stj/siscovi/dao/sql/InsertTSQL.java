@@ -31,8 +31,7 @@ public class InsertTSQL {
 
         try {
 
-            String sql = "INSERT INTO TB_TOTAL_MENSAL_A_RETER (COD, " +
-                                                              "COD_TERCEIRIZADO_CONTRATO, " +
+            String sql = "INSERT INTO TB_TOTAL_MENSAL_A_RETER (COD_TERCEIRIZADO_CONTRATO, " +
                                                               "COD_FUNCAO_TERCEIRIZADO, " +
                                                               "FERIAS, " +
                                                               "TERCO_CONSTITUCIONAL, " +
@@ -43,21 +42,20 @@ public class InsertTSQL {
                                                               "DATA_REFERENCIA, " +
                                                               "LOGIN_ATUALIZACAO, " +
                                                               "DATA_ATUALIZACAO) " +
-                            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)";
+                            "VALUES (?, ?, ROUND(?,2), ROUND(?,2), ROUND(?,2), ROUND(?,2), ROUND(?,2), ROUND(?,2), ?, ?, CURRENT_TIMESTAMP)";
 
             preparedStatement = connection.prepareStatement(sql);
 
-            preparedStatement.setInt(1, vCod);
             preparedStatement.setInt(1, pCodTerceirizadoContrato);
-            preparedStatement.setInt(3, pCodFuncaoTerceirizadoContrato);
-            preparedStatement.setFloat(4, pFerias);
-            preparedStatement.setFloat(5, pTercoConstitucional);
-            preparedStatement.setFloat(6, pDecimoTerceiro);
-            preparedStatement.setFloat(7, pIncidenciaSubmodulo41);
-            preparedStatement.setFloat(8, pMultaFgts);
-            preparedStatement.setFloat(9, pTotal);
-            preparedStatement.setDate(10, pDataReferencia);
-            preparedStatement.setString(11, pLoginAtualizacao);
+            preparedStatement.setInt(2, pCodFuncaoTerceirizadoContrato);
+            preparedStatement.setFloat(3, pFerias);
+            preparedStatement.setFloat(4, pTercoConstitucional);
+            preparedStatement.setFloat(5, pDecimoTerceiro);
+            preparedStatement.setFloat(6, pIncidenciaSubmodulo41);
+            preparedStatement.setFloat(7, pMultaFgts);
+            preparedStatement.setFloat(8, pTotal);
+            preparedStatement.setDate(9, pDataReferencia);
+            preparedStatement.setString(10, pLoginAtualizacao);
 
             preparedStatement.executeUpdate();
 
@@ -220,7 +218,7 @@ public class InsertTSQL {
                     " DATA_REFERENCIA," +
                     " LOGIN_ATUALIZACAO," +
                     " DATA_ATUALIZACAO)" +
-                    " VALUES (?, ?, ?, ?, ?, ?, ?, GETDATE(), ?, CURRENT_TIMESTAMP);" +
+                    " VALUES (?, ?, ?, ?, ?, ROUND(?,2), ROUND(?,2), GETDATE(), ?, CURRENT_TIMESTAMP);" +
                     " SET IDENTITY_INSERT TB_RESTITUICAO_DECIMO_TERCEIRO OFF;";
 
             preparedStatement = connection.prepareStatement(sql);
@@ -355,7 +353,7 @@ public class InsertTSQL {
                                                              " DATA_REFERENCIA," +
                                                              " LOGIN_ATUALIZACAO," +
                                                              " DATA_ATUALIZACAO)" +
-                         " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, GETDATE(), ?, CURRENT_TIMESTAMP);" +
+                         " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ROUND(?,2), ROUND(?,2), ROUND(?,2), ROUND(?,2), ROUND(?,2), ROUND(?,2), ROUND(?,2), ROUND(?,2), ROUND(?,2), ROUND(?,2), ROUND(?,2), ROUND(?,2), ROUND(?,2), ROUND(?,2), ROUND(?,2), ROUND(?,2), ROUND(?,2), GETDATE(), ?, CURRENT_TIMESTAMP);" +
                         " SET IDENTITY_INSERT tb_restituicao_rescisao OFF;";
 
             preparedStatement = connection.prepareStatement(sql);

@@ -1,5 +1,9 @@
 package br.jus.stj.siscovi.calculos;
 
+import javax.crypto.Mac;
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -675,7 +679,7 @@ public class Saldo {
 
         if (pOperacao == 3 && pCodRubrica == 3) {
 
-            return vDecimoTerceiroRestituido + vRescisaoDecimoTerceiroRestituido;
+            return new BigDecimal(Float.toString(vDecimoTerceiroRestituido)).add(new BigDecimal(Float.toString(vRescisaoDecimoTerceiroRestituido))).floatValue();
 
         }
 
@@ -683,7 +687,8 @@ public class Saldo {
 
         if (pOperacao == 3 && pCodRubrica == 103) {
 
-            return vIncidencia13Restituido + vRescisaoIncidencia13Restituido;
+            // Converte para BigDecimal para arredondar com mais precisão.
+            return new BigDecimal(Float.toString(vIncidencia13Restituido)).add(new BigDecimal(Float.toString(vRescisaoIncidencia13Restituido))).floatValue();
 
         }
 
@@ -691,7 +696,7 @@ public class Saldo {
 
         if (pOperacao == 3 && pCodRubrica == 100) {
 
-            return vTotalRestituido + vRescisaoTotalRestituido;
+            return new BigDecimal(Float.toString(vTotalRestituido)).add(new BigDecimal(Float.toString(vRescisaoTotalRestituido))).floatValue();
 
         }
 

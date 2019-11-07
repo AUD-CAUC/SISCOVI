@@ -161,6 +161,10 @@ public class RestituicaoDecimoTerceiro {
 
                     }
 
+                    /* Arredonda para efeito de cálculo */
+                    vValorDecimoTerceiro = Math.round(vValorDecimoTerceiro * 100.0f) / 100.0f;
+                    vValorIncidencia = Math.round(vValorIncidencia * 100.0f) / 100.0f;
+
                     /*Contabilização do valor calculado.*/
 
                     vTotalDecimoTerceiro = vTotalDecimoTerceiro + vValorDecimoTerceiro;
@@ -230,6 +234,10 @@ public class RestituicaoDecimoTerceiro {
                             vValorIncidencia = (vValorIncidencia / vDiasSubperiodo) * periodo.DiasTrabalhadosPeriodo(tupla.getCod(), vDataInicio, vDataFim);
 
                         }
+
+                        /* Arredonda para efeito de cálculo */
+                        vValorDecimoTerceiro = Math.round(vValorDecimoTerceiro * 100.0f) / 100.0f;
+                        vValorIncidencia = Math.round(vValorIncidencia * 100.0f) / 100.0f;
 
                         /*Contabilização do valor calculado.*/
 
@@ -306,6 +314,10 @@ public class RestituicaoDecimoTerceiro {
 
                         }
 
+                        /* Arredonda para efeito de cálculo */
+                        vValorDecimoTerceiro = Math.round(vValorDecimoTerceiro * 100.0f) / 100.0f;
+                        vValorIncidencia = Math.round(vValorIncidencia * 100.0f) / 100.0f;
+
                         /*Contabilização do valor calculado.*/
 
                         vTotalDecimoTerceiro = vTotalDecimoTerceiro + vValorDecimoTerceiro;
@@ -380,6 +392,10 @@ public class RestituicaoDecimoTerceiro {
                             vValorIncidencia = (vValorIncidencia / vDiasSubperiodo) * periodo.DiasTrabalhadosPeriodo(tupla.getCod(), vDataInicio, vDataFim);
 
                         }
+
+                        /* Arredonda para efeito de cálculo */
+                        vValorDecimoTerceiro = Math.round(vValorDecimoTerceiro * 100.0f) / 100.0f;
+                        vValorIncidencia = Math.round(vValorIncidencia * 100.0f) / 100.0f;
 
                         /*Contabilização do valor calculado.*/
 

@@ -320,6 +320,19 @@ public class RestituicaoRescisao {
                     vTotalMultaFGTSTerco = vTotalMultaFGTSTerco + vValorMultaFGTSTerco;
                     vTotalMultaFGTSDecimoTerceiro = vTotalMultaFGTSDecimoTerceiro + vValorMultaFGTSDecimoTerceiro;
 
+                    /*Arredonda valores para efeito de cálculo*/
+
+                    vTotalFerias = Math.round(vTotalFerias * 100.0f) / 100.0f;
+                    vTotalTercoConstitucional = Math.round(vTotalTercoConstitucional * 100.0f) / 100.0f;
+                    vTotalDecimoTerceiro = Math.round(vTotalDecimoTerceiro * 100.0f) / 100.0f;
+                    vTotalIncidenciaFerias = Math.round(vTotalIncidenciaFerias * 100.0f) / 100.0f;
+                    vTotalIncidenciaTerco = Math.round(vTotalIncidenciaTerco * 100.0f) / 100.0f;
+                    vTotalIncidenciaDecimoTerceiro = Math.round(vTotalIncidenciaDecimoTerceiro * 100.0f) / 100.0f;
+                    vTotalMultaFGTSRemuneracao = Math.round(vTotalMultaFGTSRemuneracao * 100.0f) / 100.0f;
+                    vTotalMultaFGTSFerias = Math.round(vTotalMultaFGTSFerias * 100.0f) / 100.0f;
+                    vTotalMultaFGTSTerco = Math.round(vTotalMultaFGTSTerco * 100.0f) / 100.0f;
+                    vTotalMultaFGTSDecimoTerceiro = Math.round(vTotalMultaFGTSDecimoTerceiro * 100.0f) / 100.0f;
+
                 }
 
                 /*Se existe apenas alteração de percentual no mês.*/
@@ -405,6 +418,18 @@ public class RestituicaoRescisao {
                             vValorMultaFGTSRemuneracao = (vValorMultaFGTSRemuneracao / vDiasSubperiodo) * periodo.DiasTrabalhadosPeriodo(tupla.getCod(), vDataInicio, vDataFim);
 
                         }
+
+                        /*Arredonda valores para efeito de cálculo*/
+                        vValorFerias = Math.round(vValorFerias * 100.0f) / 100.0f;
+                        vValorTercoConstitucional = Math.round(vValorTercoConstitucional * 100.0f) / 100.0f;
+                        vValorDecimoTerceiro = Math.round(vValorDecimoTerceiro * 100.0f) / 100.0f;
+                        vValorIncidenciaFerias = Math.round(vValorIncidenciaFerias * 100.0f) / 100.0f;
+                        vValorIncidenciaTerco = Math.round(vValorIncidenciaTerco * 100.0f) / 100.0f;
+                        vValorIncidenciaDecimoTerceiro = Math.round(vValorIncidenciaDecimoTerceiro * 100.0f) / 100.0f;
+                        vValorMultaFGTSRemuneracao = Math.round(vValorMultaFGTSRemuneracao * 100.0f) / 100.0f;
+                        vValorMultaFGTSFerias = Math.round(vValorMultaFGTSFerias * 100.0f) / 100.0f;
+                        vValorMultaFGTSTerco = Math.round(vValorMultaFGTSTerco * 100.0f) / 100.0f;
+                        vValorMultaFGTSDecimoTerceiro = Math.round(vValorMultaFGTSDecimoTerceiro * 100.0f) / 100.0f;
 
                         /*Contabilização do valor calculado.*/
 
@@ -510,6 +535,18 @@ public class RestituicaoRescisao {
 
                         }
 
+                        /*Arredonda valores para efeito de cálculo*/
+                        vValorFerias = Math.round(vValorFerias * 100.0f) / 100.0f;
+                        vValorTercoConstitucional = Math.round(vValorTercoConstitucional * 100.0f) / 100.0f;
+                        vValorDecimoTerceiro = Math.round(vValorDecimoTerceiro * 100.0f) / 100.0f;
+                        vValorIncidenciaFerias = Math.round(vValorIncidenciaFerias * 100.0f) / 100.0f;
+                        vValorIncidenciaTerco = Math.round(vValorIncidenciaTerco * 100.0f) / 100.0f;
+                        vValorIncidenciaDecimoTerceiro = Math.round(vValorIncidenciaDecimoTerceiro * 100.0f) / 100.0f;
+                        vValorMultaFGTSRemuneracao = Math.round(vValorMultaFGTSRemuneracao * 100.0f) / 100.0f;
+                        vValorMultaFGTSFerias = Math.round(vValorMultaFGTSFerias * 100.0f) / 100.0f;
+                        vValorMultaFGTSTerco = Math.round(vValorMultaFGTSTerco * 100.0f) / 100.0f;
+                        vValorMultaFGTSDecimoTerceiro = Math.round(vValorMultaFGTSDecimoTerceiro * 100.0f) / 100.0f;
+
                         /*Contabilização do valor calculado.*/
 
                         vTotalFerias = vTotalFerias + vValorFerias;
@@ -613,6 +650,18 @@ public class RestituicaoRescisao {
                             vValorMultaFGTSRemuneracao = (vValorMultaFGTSRemuneracao / vDiasSubperiodo) * periodo.DiasTrabalhadosPeriodo(tupla.getCod(), vDataInicio, vDataFim);
 
                         }
+
+                        /*Arredonda valores para efeito de cálculo*/
+                        vValorFerias = Math.round(vValorFerias * 100.0f) / 100.0f;
+                        vValorTercoConstitucional = Math.round(vValorTercoConstitucional * 100.0f) / 100.0f;
+                        vValorDecimoTerceiro = Math.round(vValorDecimoTerceiro * 100.0f) / 100.0f;
+                        vValorIncidenciaFerias = Math.round(vValorIncidenciaFerias * 100.0f) / 100.0f;
+                        vValorIncidenciaTerco = Math.round(vValorIncidenciaTerco * 100.0f) / 100.0f;
+                        vValorIncidenciaDecimoTerceiro = Math.round(vValorIncidenciaDecimoTerceiro * 100.0f) / 100.0f;
+                        vValorMultaFGTSRemuneracao = Math.round(vValorMultaFGTSRemuneracao * 100.0f) / 100.0f;
+                        vValorMultaFGTSFerias = Math.round(vValorMultaFGTSFerias * 100.0f) / 100.0f;
+                        vValorMultaFGTSTerco = Math.round(vValorMultaFGTSTerco * 100.0f) / 100.0f;
+                        vValorMultaFGTSDecimoTerceiro = Math.round(vValorMultaFGTSDecimoTerceiro * 100.0f) / 100.0f;
 
                         /*Contabilização do valor calculado.*/
 

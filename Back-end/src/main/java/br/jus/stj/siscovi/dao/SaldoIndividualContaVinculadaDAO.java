@@ -3,6 +3,7 @@ package br.jus.stj.siscovi.dao;
 import br.jus.stj.siscovi.calculos.Saldo;
 import br.jus.stj.siscovi.model.SaldoIndividualContaVinculadaModel;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -47,27 +48,32 @@ public class SaldoIndividualContaVinculadaDAO {
                     float decimoTerceiroRetido = saldoContaVinculada.getSaldoIndividualContaVinculada(resultSet.getInt(3),  1,3);
                     float incidenciaRetido = saldoContaVinculada.getSaldoIndividualContaVinculada(resultSet.getInt(3),  1,7);
                     float multaFgtsRetido = saldoContaVinculada.getSaldoIndividualContaVinculada(resultSet.getInt(3),  1,5);
-                    float totalRetido = feriasRetido + tercoRetido + decimoTerceiroRetido + incidenciaRetido + multaFgtsRetido;
+                    float totalRetido = new BigDecimal(Float.toString(feriasRetido)).add(new BigDecimal(Float.toString(tercoRetido))).add(new BigDecimal(Float.toString(decimoTerceiroRetido)))
+                            .add(new BigDecimal(Float.toString(incidenciaRetido))).add(new BigDecimal(Float.toString(multaFgtsRetido))).floatValue();
 
                     float feriasRestituido = saldoContaVinculada.getSaldoIndividualContaVinculada(resultSet.getInt(3),  2,1);
                     float incidenciaFeriasRestituido = saldoContaVinculada.getSaldoIndividualContaVinculada(resultSet.getInt(3),  2,101);
-                    float totalFeriasRestituido = feriasRestituido + incidenciaFeriasRestituido;
+                    float totalFeriasRestituido = new BigDecimal(Float.toString(feriasRestituido)).add(new BigDecimal(Float.toString(incidenciaFeriasRestituido))).floatValue();
 
                     float tercoRestituido = saldoContaVinculada.getSaldoIndividualContaVinculada(resultSet.getInt(3),  2,2);
                     float incidenciaTercoRestituido = saldoContaVinculada.getSaldoIndividualContaVinculada(resultSet.getInt(3),  2,102);
-                    float totalTercoRestituido = tercoRestituido + incidenciaTercoRestituido;
+                    float totalTercoRestituido = new BigDecimal(Float.toString(tercoRestituido)).add(new BigDecimal(Float.toString(incidenciaTercoRestituido))).floatValue();
+
 
                     float decimoTerceiroRestituido = saldoContaVinculada.getSaldoIndividualContaVinculada(resultSet.getInt(3),  3,3);
                     float incidenciaDecimoTerceiroRestituido = saldoContaVinculada.getSaldoIndividualContaVinculada(resultSet.getInt(3),  3,103);
-                    float totalDecimoTerceiroRestituido = decimoTerceiroRestituido + incidenciaDecimoTerceiroRestituido;
+                    float totalDecimoTerceiroRestituido = new BigDecimal(Float.toString(decimoTerceiroRestituido)).add(new BigDecimal(Float.toString(incidenciaDecimoTerceiroRestituido))).floatValue();
                     float multaFgtsRestituido = saldoContaVinculada.getSaldoIndividualContaVinculada(resultSet.getInt(3),  3, 5);
 
-                    float totalRestituido = totalFeriasRestituido + totalDecimoTerceiroRestituido + totalTercoRestituido + multaFgtsRestituido;
+                    float totalRestituido = new BigDecimal(Float.toString(totalFeriasRestituido)).add(new BigDecimal(Float.toString(totalDecimoTerceiroRestituido)))
+                            .add(new BigDecimal(Float.toString(totalTercoRestituido))).add(new BigDecimal(Float.toString(multaFgtsRestituido))).floatValue();
 
-                    float saldo = totalRetido - totalRestituido;
+                    float saldoIncidencia = new BigDecimal(Float.toString(incidenciaRetido)).add(new BigDecimal(Float.toString(incidenciaFeriasRestituido))).add(new BigDecimal(Float.toString(incidenciaTercoRestituido)))
+                            .add(new BigDecimal(Float.toString(incidenciaDecimoTerceiroRestituido))).add(new BigDecimal(Float.toString(multaFgtsRestituido))).floatValue();
+
+                    float saldo = new BigDecimal(Float.toString(totalRetido)).add(new BigDecimal(Float.toString(totalRestituido))).floatValue();
 
                     SaldoIndividualContaVinculadaModel saldoContaVinculadaModel =
-
                             new SaldoIndividualContaVinculadaModel(resultSet.getString(1),
                                     resultSet.getString(2),
                                     feriasRetido,

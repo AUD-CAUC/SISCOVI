@@ -16,10 +16,10 @@ public class ValorRestituicaoFeriasModel {
                                         Date inicioPeriodoAquisitivo,
                                         Date fimPeriodoAquisitivo) {
 
-        this.valorFerias = valorFerias;
-        this.valorIncidenciaFerias = valorIncidenciaFerias;
-        this.valorTercoConstitucional = valorTercoConstitucional;
-        this.valorIncidenciaTercoConstitucional = valorIncidenciaTercoConstitucional;
+        this.valorFerias = Math.round(valorFerias * 100.0f) / 100.0f;
+        this.valorIncidenciaFerias = Math.round(valorIncidenciaFerias * 100.0f) / 100.0f;
+        this.valorTercoConstitucional = Math.round(valorTercoConstitucional * 100.0f) / 100.0f;
+        this.valorIncidenciaTercoConstitucional = Math.round(valorIncidenciaTercoConstitucional * 100.0f) / 100.0f;
         this.inicioPeriodoAquisitivo = inicioPeriodoAquisitivo;
         this.fimPeriodoAquisitivo = fimPeriodoAquisitivo;
 

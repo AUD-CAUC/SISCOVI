@@ -51,6 +51,9 @@ public class TotalMensalAReter {
         float vTotalTercoConstitucional = 0;
         float vTotalDecimoTerceiro = 0;
         float vTotalIncidencia = 0;
+        float vTotalIncidenciaFerias = 0;
+        float vTotalIncidenciaTerco = 0;
+        float vTotalIncidenciaDecimoTerceiro = 0;
         float vTotalIndenizacao = 0;
         float vTotal = 0;
 
@@ -60,6 +63,9 @@ public class TotalMensalAReter {
         float vValorTercoConstitucional = 0;
         float vValorDecimoTerceiro = 0;
         float vValorIncidencia = 0;
+        float vValorIncidenciaFerias = 0;
+        float vValorIncidenciaTerco = 0;
+        float vValorIncidenciaDecimoTerceiro = 0;
         float vValorIndenizacao = 0 ;
 
         /*Variáveis de percentuais.*/
@@ -68,6 +74,9 @@ public class TotalMensalAReter {
         float vPercentualTercoConstitucional = 0;
         float vPercentualDecimoTerceiro = 0;
         float vPercentualIncidencia = 0;
+        float vPercentualIncidenciaFerias = 0;
+        float vPercentualIncidenciaTerco = 0;
+        float vPercentualIncidenciaDecimoTerceiro = 0;
         float vPercentualIndenizacao = 0;
         float vPercentualPenalidadeFGTS = 0;
         float vPercentualMultaFGTS = 0;
@@ -221,8 +230,12 @@ public class TotalMensalAReter {
             vPercentualFerias = percentual.RetornaPercentualContrato(pCodContrato, 1, pMes, pAno, 1,1);
             vPercentualTercoConstitucional = percentual.RetornaPercentualContrato(pCodContrato, 2, pMes, pAno, 1,1);
             vPercentualDecimoTerceiro = percentual.RetornaPercentualContrato(pCodContrato, 3, pMes, pAno, 1, 1);
-            vPercentualIncidencia = (percentual.RetornaPercentualContrato(pCodContrato, 7, pMes, pAno, 1, 1) *
-                    (vPercentualFerias + vPercentualDecimoTerceiro + vPercentualTercoConstitucional))/100;
+
+            vPercentualIncidencia = percentual.RetornaPercentualContrato(pCodContrato, 7, pMes, pAno, 1, 1);
+            vPercentualIncidenciaFerias = (vPercentualIncidencia * vPercentualFerias)/100;
+            vPercentualIncidenciaTerco = (vPercentualIncidencia * vPercentualTercoConstitucional)/100;
+            vPercentualIncidenciaDecimoTerceiro = (vPercentualIncidencia * vPercentualDecimoTerceiro)/100;
+
             vPercentualIndenizacao = percentual.RetornaPercentualEstatico(pCodContrato, 4, pMes, pAno, 1, 1);
             vPercentualPenalidadeFGTS = percentual.RetornaPercentualEstatico(pCodContrato, 6, pMes, pAno, 1, 1);
             vPercentualMultaFGTS = percentual.RetornaPercentualEstatico(pCodContrato, 5, pMes, pAno, 1, 1);
@@ -283,6 +296,9 @@ public class TotalMensalAReter {
                     vTotalFerias = 0;
                     vTotalTercoConstitucional = 0;
                     vTotalDecimoTerceiro = 0;
+                    vTotalIncidenciaFerias = 0;
+                    vTotalIncidenciaTerco = 0;
+                    vTotalIncidenciaDecimoTerceiro = 0;
                     vTotalIncidencia = 0;
                     vTotalIndenizacao = 0;
 
@@ -291,47 +307,38 @@ public class TotalMensalAReter {
                     vTotalFerias = vRemuneracao * (vPercentualFerias/100);
                     vTotalTercoConstitucional = vRemuneracao * (vPercentualTercoConstitucional/100);
                     vTotalDecimoTerceiro = vRemuneracao * (vPercentualDecimoTerceiro/100);
-                    vTotalIncidencia = vRemuneracao * (vPercentualIncidencia/100);
+                    vTotalIncidenciaFerias = vRemuneracao * (vPercentualIncidenciaFerias/100);
+                    vTotalIncidenciaTerco = vRemuneracao * (vPercentualIncidenciaTerco/100);
+                    vTotalIncidenciaDecimoTerceiro = vRemuneracao * (vPercentualIncidenciaDecimoTerceiro/100);
                     vTotalIndenizacao = vRemuneracao * (vPercentualIndenizacao/100);
 
                     /**No caso de mudança de função temos um recolhimento proporcional ao dias trabalhados no cargo, situação similar para a retenção proporcional.*/
 
                     if (retencao.ExisteMudancaFuncao(tuplas.get(j).getCodTerceirizadoContrato(), pMes, pAno) || !retencao.FuncaoRetencaoIntegral(tuplas.get(j).getCod(), pMes, pAno)) {
 
-                        vTotalFerias = (vTotalFerias/30) * periodo.DiasTrabalhadosMes(tuplas.get(j).getCod(), pMes, pAno);
-                        vTotalTercoConstitucional = (vTotalTercoConstitucional/30) * periodo.DiasTrabalhadosMes(tuplas.get(j).getCod(), pMes, pAno);
-                        vTotalDecimoTerceiro = (vTotalDecimoTerceiro/30) * periodo.DiasTrabalhadosMes(tuplas.get(j).getCod(), pMes, pAno);
-                        vTotalIncidencia = (vTotalIncidencia/30) * periodo.DiasTrabalhadosMes(tuplas.get(j).getCod(), pMes, pAno);
-                        vTotalIndenizacao = (vTotalIndenizacao/30) * periodo.DiasTrabalhadosMes(tuplas.get(j).getCod(), pMes, pAno);
+                        int diasPeriodoTrabalhado  = periodo.DiasTrabalhadosMes(tuplas.get(j).getCod(), pMes, pAno);
+                        vTotalFerias = (vTotalFerias/30) * diasPeriodoTrabalhado;
+                        vTotalTercoConstitucional = (vTotalTercoConstitucional/30) * diasPeriodoTrabalhado;
+                        vTotalDecimoTerceiro = (vTotalDecimoTerceiro/30) * diasPeriodoTrabalhado;
+                        vTotalIncidenciaFerias = (vTotalIncidenciaFerias/30) * diasPeriodoTrabalhado;
+                        vTotalIncidenciaTerco = (vTotalIncidenciaTerco/30) * diasPeriodoTrabalhado;
+                        vTotalIncidenciaDecimoTerceiro = (vTotalIncidenciaDecimoTerceiro/30) * diasPeriodoTrabalhado;
+                        vTotalIndenizacao = (vTotalIndenizacao/30) * diasPeriodoTrabalhado;
 
                     }
+
+                    vTotalFerias = Math.round(vTotalFerias * 100.0f) / 100.0f;
+                    vTotalTercoConstitucional = Math.round(vTotalTercoConstitucional * 100.0f) / 100.0f;
+                    vTotalDecimoTerceiro = Math.round(vTotalDecimoTerceiro * 100.0f) / 100.0f;
+                    vTotalIncidenciaFerias = Math.round(vTotalIncidenciaFerias * 100.0f) / 100.0f;
+                    vTotalIncidenciaTerco = Math.round(vTotalIncidenciaTerco * 100.0f) / 100.0f;
+                    vTotalIncidenciaDecimoTerceiro = Math.round(vTotalIncidenciaDecimoTerceiro * 100.0f) / 100.0f;
+                    vTotalIncidencia = vTotalIncidenciaFerias + vTotalIncidenciaTerco + vTotalIncidenciaDecimoTerceiro;
+                    vTotalIndenizacao = Math.round(vTotalIndenizacao * 100.0f) / 100.0f;
 
                     vTotal = (vTotalFerias + vTotalTercoConstitucional + vTotalDecimoTerceiro + vTotalIncidencia + vTotalIndenizacao);
-
-                    try {
-
-                        preparedStatement = connection.prepareStatement("INSERT INTO TB_TOTAL_MENSAL_A_RETER (COD_TERCEIRIZADO_CONTRATO, COD_FUNCAO_TERCEIRIZADO, FERIAS, TERCO_CONSTITUCIONAL," +
-                                " DECIMO_TERCEIRO, INCIDENCIA_SUBMODULO_4_1, MULTA_FGTS, TOTAL, DATA_REFERENCIA, LOGIN_ATUALIZACAO, DATA_ATUALIZACAO) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'SYSTEM', CURRENT_TIMESTAMP)");
-
-                        preparedStatement.setInt(1, tuplas.get(j).getCodTerceirizadoContrato());
-                        preparedStatement.setInt(2, tuplas.get(j).getCod());
-                        preparedStatement.setFloat(3, vTotalFerias);
-                        preparedStatement.setFloat(4, vTotalTercoConstitucional);
-                        preparedStatement.setFloat(5, vTotalDecimoTerceiro);
-                        preparedStatement.setFloat(6, vTotalIncidencia);
-                        preparedStatement.setFloat(7, vTotalIndenizacao);
-                        preparedStatement.setFloat(8, vTotal);
-                        preparedStatement.setDate(9, vDataReferencia);
-                        preparedStatement.executeUpdate();
-
-                    } catch (SQLException e) {
-
-                        e.printStackTrace();
-
-                        throw new RuntimeException("Erro ao tentar inserir os resultados do cálculo de Total Mensal a Reter no banco de dados!");
-
-                    }
-
+                    insert.InsertTotalMensalAReter(tuplas.get(j).getCodTerceirizadoContrato(), tuplas.get(j).getCod(), vTotalFerias, vTotalTercoConstitucional, vTotalDecimoTerceiro, vTotalIncidencia,
+                            vTotalIndenizacao, vTotal, vDataReferencia, pLoginAtualizacao);
                 }
             }
 
@@ -365,6 +372,9 @@ public class TotalMensalAReter {
                     vValorTercoConstitucional = 0;
                     vValorDecimoTerceiro = 0;
                     vValorIncidencia = 0;
+                    vValorIncidenciaFerias = 0;
+                    vValorIncidenciaTerco = 0;
+                    vValorIncidenciaDecimoTerceiro = 0;
                     vValorIndenizacao = 0;
 
                     vDataInicio = vDataReferencia;
@@ -477,8 +487,12 @@ public class TotalMensalAReter {
                         vPercentualFerias = percentual.RetornaPercentualContrato(pCodContrato, 1, vDataInicio, vDataFim, 1);
                         vPercentualTercoConstitucional = vPercentualFerias / 3;
                         vPercentualDecimoTerceiro = percentual.RetornaPercentualContrato(pCodContrato, 3, vDataInicio, vDataFim, 1);
-                        vPercentualIncidencia = (percentual.RetornaPercentualContrato(pCodContrato, 7, vDataInicio, vDataFim, 1) *
-                                (vPercentualFerias + vPercentualDecimoTerceiro + vPercentualTercoConstitucional)) / 100;
+
+                        vPercentualIncidencia = percentual.RetornaPercentualContrato(pCodContrato, 7, vDataInicio, vDataFim, 1);
+                        vPercentualIncidenciaFerias = (vPercentualIncidencia * vPercentualFerias)/100;
+                        vPercentualIncidenciaTerco = (vPercentualIncidencia * vPercentualTercoConstitucional)/100;
+                        vPercentualIncidenciaDecimoTerceiro = (vPercentualIncidencia * vPercentualDecimoTerceiro)/100;
+
                         vPercentualIndenizacao = percentual.RetornaPercentualEstatico(pCodContrato, 4, vDataInicio, vDataFim, 1);
                         vPercentualPenalidadeFGTS = percentual.RetornaPercentualEstatico(pCodContrato, 6, vDataInicio, vDataFim, 1);
                         vPercentualMultaFGTS = percentual.RetornaPercentualEstatico(pCodContrato, 5, vDataInicio, vDataFim, 1);
@@ -490,7 +504,9 @@ public class TotalMensalAReter {
                         vValorFerias = ((vRemuneracao * (vPercentualFerias/100))/30) * vDiasSubperiodo;
                         vValorTercoConstitucional = ((vRemuneracao * (vPercentualTercoConstitucional/100))/30) * vDiasSubperiodo;
                         vValorDecimoTerceiro = ((vRemuneracao * (vPercentualDecimoTerceiro/100))/30) * vDiasSubperiodo;
-                        vValorIncidencia = ((vRemuneracao * (vPercentualIncidencia/100))/30) * vDiasSubperiodo;
+                        vTotalIncidenciaFerias = ((vRemuneracao * (vPercentualIncidenciaFerias/100))/30) * vDiasSubperiodo;
+                        vTotalIncidenciaTerco = ((vRemuneracao * (vPercentualIncidenciaDecimoTerceiro/100))/30) * vDiasSubperiodo;
+                        vTotalIncidenciaDecimoTerceiro = ((vRemuneracao * (vPercentualIncidencia/100))/30) * vDiasSubperiodo;
                         vValorIndenizacao = ((vRemuneracao * (vPercentualIndenizacao/100))/30) * vDiasSubperiodo;
 
                         /* No caso de mudança de função ou retenção parcial temos um recolhimento proporcional ao dias trabalhados no cargo. */
@@ -500,10 +516,21 @@ public class TotalMensalAReter {
                             vValorFerias = (vValorFerias/vDiasSubperiodo) * periodo.DiasTrabalhadosPeriodo(tuplas.get(j).getCod(), vDataInicio, vDataFim);
                             vValorTercoConstitucional = (vValorTercoConstitucional/vDiasSubperiodo) * periodo.DiasTrabalhadosPeriodo(tuplas.get(j).getCod(), vDataInicio, vDataFim);
                             vValorDecimoTerceiro = (vValorDecimoTerceiro/vDiasSubperiodo) * periodo.DiasTrabalhadosPeriodo(tuplas.get(j).getCod(), vDataInicio, vDataFim);;
-                            vValorIncidencia = (vValorIncidencia/vDiasSubperiodo) * periodo.DiasTrabalhadosPeriodo(tuplas.get(j).getCod(), vDataInicio, vDataFim);
+                            vValorIncidenciaFerias = (vValorIncidenciaFerias/vDiasSubperiodo) * periodo.DiasTrabalhadosPeriodo(tuplas.get(j).getCod(), vDataInicio, vDataFim);
+                            vValorIncidenciaTerco = (vValorIncidenciaTerco/vDiasSubperiodo) * periodo.DiasTrabalhadosPeriodo(tuplas.get(j).getCod(), vDataInicio, vDataFim);
+                            vValorIncidenciaDecimoTerceiro = (vValorIncidenciaDecimoTerceiro/vDiasSubperiodo) * periodo.DiasTrabalhadosPeriodo(tuplas.get(j).getCod(), vDataInicio, vDataFim);
                             vValorIndenizacao = (vValorIndenizacao/vDiasSubperiodo) * periodo.DiasTrabalhadosPeriodo(tuplas.get(j).getCod(), vDataInicio, vDataFim);
 
                         }
+
+                        vValorFerias = Math.round(vValorFerias * 100.0f) / 100.0f;
+                        vValorTercoConstitucional = Math.round(vValorTercoConstitucional * 100.0f) / 100.0f;
+                        vValorDecimoTerceiro = Math.round(vValorDecimoTerceiro * 100.0f) / 100.0f;
+                        vValorIncidenciaFerias = Math.round(vValorIncidenciaFerias * 100.0f) / 100.0f;
+                        vValorIncidenciaTerco = Math.round(vValorIncidenciaTerco * 100.0f) / 100.0f;
+                        vValorIncidenciaDecimoTerceiro = Math.round(vValorIncidenciaDecimoTerceiro * 100.0f) / 100.0f;
+                        vValorIncidencia = vValorIncidenciaFerias + vValorIncidenciaTerco + vValorIncidenciaDecimoTerceiro;
+                        vValorIndenizacao = Math.round(vValorIndenizacao * 100.0f) / 100.0f;
 
                         vTotalFerias = vTotalFerias + vValorFerias;
                         vTotalTercoConstitucional = vTotalTercoConstitucional + vValorTercoConstitucional;
@@ -545,6 +572,9 @@ public class TotalMensalAReter {
                     vValorTercoConstitucional = 0;
                     vValorDecimoTerceiro = 0;
                     vValorIncidencia = 0;
+                    vValorIncidenciaFerias = 0;
+                    vValorIncidenciaTerco = 0;
+                    vValorIncidenciaDecimoTerceiro = 0;
                     vValorIndenizacao = 0;
 
                     vDataInicio = vDataReferencia;
@@ -643,7 +673,9 @@ public class TotalMensalAReter {
                         vValorFerias = ((vRemuneracao * (vPercentualFerias/100))/30) * vDiasSubperiodo;
                         vValorTercoConstitucional = ((vRemuneracao * (vPercentualTercoConstitucional/100))/30) * vDiasSubperiodo;
                         vValorDecimoTerceiro = ((vRemuneracao * (vPercentualDecimoTerceiro/100))/30) * vDiasSubperiodo;
-                        vValorIncidencia = ((vRemuneracao * (vPercentualIncidencia/100))/30) * vDiasSubperiodo;
+                        vTotalIncidenciaFerias = ((vRemuneracao * (vPercentualIncidenciaFerias/100))/30) * vDiasSubperiodo;
+                        vTotalIncidenciaTerco = ((vRemuneracao * (vPercentualIncidenciaDecimoTerceiro/100))/30) * vDiasSubperiodo;
+                        vTotalIncidenciaDecimoTerceiro = ((vRemuneracao * (vPercentualIncidencia/100))/30) * vDiasSubperiodo;
                         vValorIndenizacao = ((vRemuneracao * (vPercentualIndenizacao/100))/30) * vDiasSubperiodo;
 
                         /* No caso de mudança de função ou retenção parcial temos um recolhimento proporcional ao dias trabalhados no cargo. */
@@ -653,10 +685,21 @@ public class TotalMensalAReter {
                             vValorFerias = (vValorFerias/vDiasSubperiodo) * periodo.DiasTrabalhadosPeriodo(tuplas.get(j).getCod(), vDataInicio, vDataFim);
                             vValorTercoConstitucional = (vValorTercoConstitucional/vDiasSubperiodo) * periodo.DiasTrabalhadosPeriodo(tuplas.get(j).getCod(), vDataInicio, vDataFim);
                             vValorDecimoTerceiro = (vValorDecimoTerceiro/vDiasSubperiodo) * periodo.DiasTrabalhadosPeriodo(tuplas.get(j).getCod(), vDataInicio, vDataFim);;
-                            vValorIncidencia = (vValorIncidencia/vDiasSubperiodo) * periodo.DiasTrabalhadosPeriodo(tuplas.get(j).getCod(), vDataInicio, vDataFim);
+                            vValorIncidenciaFerias = (vValorIncidenciaFerias/vDiasSubperiodo) * periodo.DiasTrabalhadosPeriodo(tuplas.get(j).getCod(), vDataInicio, vDataFim);
+                            vValorIncidenciaTerco = (vValorIncidenciaTerco/vDiasSubperiodo) * periodo.DiasTrabalhadosPeriodo(tuplas.get(j).getCod(), vDataInicio, vDataFim);
+                            vValorIncidenciaDecimoTerceiro = (vValorIncidenciaDecimoTerceiro/vDiasSubperiodo) * periodo.DiasTrabalhadosPeriodo(tuplas.get(j).getCod(), vDataInicio, vDataFim);
                             vValorIndenizacao = (vValorIndenizacao/vDiasSubperiodo) * periodo.DiasTrabalhadosPeriodo(tuplas.get(j).getCod(), vDataInicio, vDataFim);
 
                         }
+
+                        vValorFerias = Math.round(vValorFerias * 100.0f) / 100.0f;
+                        vValorTercoConstitucional = Math.round(vValorTercoConstitucional * 100.0f) / 100.0f;
+                        vValorDecimoTerceiro = Math.round(vValorDecimoTerceiro * 100.0f) / 100.0f;
+                        vValorIncidenciaFerias = Math.round(vValorIncidenciaFerias * 100.0f) / 100.0f;
+                        vValorIncidenciaTerco = Math.round(vValorIncidenciaTerco * 100.0f) / 100.0f;
+                        vValorIncidenciaDecimoTerceiro = Math.round(vValorIncidenciaDecimoTerceiro * 100.0f) / 100.0f;
+                        vValorIncidencia = vValorIncidenciaFerias + vValorIncidenciaTerco + vValorIncidenciaDecimoTerceiro;
+                        vValorIndenizacao = Math.round(vValorIndenizacao * 100.0f) / 100.0f;
 
                         vTotalFerias = vTotalFerias + vValorFerias;
                         vTotalTercoConstitucional = vTotalTercoConstitucional + vValorTercoConstitucional;
@@ -688,6 +731,9 @@ public class TotalMensalAReter {
                     vValorTercoConstitucional = 0;
                     vValorDecimoTerceiro = 0;
                     vValorIncidencia = 0;
+                    vValorIncidenciaFerias = 0;
+                    vValorIncidenciaTerco = 0;
+                    vValorIncidenciaDecimoTerceiro = 0;
                     vValorIndenizacao = 0;
                     List<Date> datas = new ArrayList<>();
                     try {
@@ -818,8 +864,11 @@ public class TotalMensalAReter {
                         vPercentualFerias = percentual.RetornaPercentualContrato(pCodContrato, 1, vDataInicio, vDataFim, 1);
                         vPercentualTercoConstitucional = vPercentualFerias / 3;
                         vPercentualDecimoTerceiro = percentual.RetornaPercentualContrato(pCodContrato, 3, vDataInicio, vDataFim, 1);
-                        vPercentualIncidencia = (percentual.RetornaPercentualContrato(pCodContrato, 7, vDataInicio, vDataFim, 1) *
-                                (vPercentualFerias + vPercentualDecimoTerceiro + vPercentualTercoConstitucional))/100;
+
+                        vPercentualIncidencia = percentual.RetornaPercentualContrato(pCodContrato, 7, vDataInicio, vDataFim, 1);
+                        vPercentualIncidenciaFerias = (vPercentualIncidencia * vPercentualFerias)/100;
+                        vPercentualIncidenciaTerco = (vPercentualIncidencia * vPercentualTercoConstitucional)/100;
+                        vPercentualIncidenciaDecimoTerceiro = (vPercentualIncidencia * vPercentualDecimoTerceiro)/100;
 
                         vPercentualIndenizacao = percentual.RetornaPercentualEstatico(pCodContrato, 4, vDataInicio, vDataFim, 1);
                         vPercentualPenalidadeFGTS = percentual.RetornaPercentualEstatico(pCodContrato, 6, vDataInicio, vDataFim, 1);
@@ -833,7 +882,9 @@ public class TotalMensalAReter {
                         vValorFerias = ((vRemuneracao * (vPercentualFerias/100))/30) * vDiasSubperiodo;
                         vValorTercoConstitucional = ((vRemuneracao * (vPercentualTercoConstitucional/100))/30) * vDiasSubperiodo;
                         vValorDecimoTerceiro = ((vRemuneracao * (vPercentualDecimoTerceiro/100))/30) * vDiasSubperiodo;
-                        vValorIncidencia = ((vRemuneracao * (vPercentualIncidencia/100))/30) * vDiasSubperiodo;
+                        vTotalIncidenciaFerias = ((vRemuneracao * (vPercentualIncidenciaFerias/100))/30) * vDiasSubperiodo;
+                        vTotalIncidenciaTerco = ((vRemuneracao * (vPercentualIncidenciaDecimoTerceiro/100))/30) * vDiasSubperiodo;
+                        vTotalIncidenciaDecimoTerceiro = ((vRemuneracao * (vPercentualIncidencia/100))/30) * vDiasSubperiodo;
                         vValorIndenizacao = ((vRemuneracao * (vPercentualIndenizacao/100))/30) * vDiasSubperiodo;
 
                         /* No caso de mudança de função ou retenção parcial temos um recolhimento proporcional ao dias trabalhados no cargo. */
@@ -843,10 +894,21 @@ public class TotalMensalAReter {
                             vValorFerias = (vValorFerias/vDiasSubperiodo) * periodo.DiasTrabalhadosPeriodo(tuplas.get(j).getCod(), vDataInicio, vDataFim);
                             vValorTercoConstitucional = (vValorTercoConstitucional/vDiasSubperiodo) * periodo.DiasTrabalhadosPeriodo(tuplas.get(j).getCod(), vDataInicio, vDataFim);
                             vValorDecimoTerceiro = (vValorDecimoTerceiro/vDiasSubperiodo) * periodo.DiasTrabalhadosPeriodo(tuplas.get(j).getCod(), vDataInicio, vDataFim);;
-                            vValorIncidencia = (vValorIncidencia/vDiasSubperiodo) * periodo.DiasTrabalhadosPeriodo(tuplas.get(j).getCod(), vDataInicio, vDataFim);
+                            vValorIncidenciaFerias = (vValorIncidenciaFerias/vDiasSubperiodo) * periodo.DiasTrabalhadosPeriodo(tuplas.get(j).getCod(), vDataInicio, vDataFim);
+                            vValorIncidenciaTerco = (vValorIncidenciaTerco/vDiasSubperiodo) * periodo.DiasTrabalhadosPeriodo(tuplas.get(j).getCod(), vDataInicio, vDataFim);
+                            vValorIncidenciaDecimoTerceiro = (vValorIncidenciaDecimoTerceiro/vDiasSubperiodo) * periodo.DiasTrabalhadosPeriodo(tuplas.get(j).getCod(), vDataInicio, vDataFim);
                             vValorIndenizacao = (vValorIndenizacao/vDiasSubperiodo) * periodo.DiasTrabalhadosPeriodo(tuplas.get(j).getCod(), vDataInicio, vDataFim);
 
                         }
+
+                        vValorFerias = Math.round(vValorFerias * 100.0f) / 100.0f;
+                        vValorTercoConstitucional = Math.round(vValorTercoConstitucional * 100.0f) / 100.0f;
+                        vValorDecimoTerceiro = Math.round(vValorDecimoTerceiro * 100.0f) / 100.0f;
+                        vValorIncidenciaFerias = Math.round(vValorIncidenciaFerias * 100.0f) / 100.0f;
+                        vValorIncidenciaTerco = Math.round(vValorIncidenciaTerco * 100.0f) / 100.0f;
+                        vValorIncidenciaDecimoTerceiro = Math.round(vValorIncidenciaDecimoTerceiro * 100.0f) / 100.0f;
+                        vValorIncidencia = vValorIncidenciaFerias + vValorIncidenciaTerco + vValorIncidenciaDecimoTerceiro;
+                        vValorIndenizacao = Math.round(vValorIndenizacao * 100.0f) / 100.0f;
 
                         vTotalFerias = vTotalFerias + vValorFerias;
                         vTotalTercoConstitucional = vTotalTercoConstitucional + vValorTercoConstitucional;
