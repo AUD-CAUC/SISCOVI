@@ -68,10 +68,10 @@ public class SaldoIndividualContaVinculadaDAO {
                     float totalRestituido = new BigDecimal(Float.toString(totalFeriasRestituido)).add(new BigDecimal(Float.toString(totalDecimoTerceiroRestituido)))
                             .add(new BigDecimal(Float.toString(totalTercoRestituido))).add(new BigDecimal(Float.toString(multaFgtsRestituido))).floatValue();
 
-                    float saldoIncidencia = new BigDecimal(Float.toString(incidenciaRetido)).add(new BigDecimal(Float.toString(incidenciaFeriasRestituido))).add(new BigDecimal(Float.toString(incidenciaTercoRestituido)))
-                            .add(new BigDecimal(Float.toString(incidenciaDecimoTerceiroRestituido))).add(new BigDecimal(Float.toString(multaFgtsRestituido))).floatValue();
+                    float saldoIncidencia = new BigDecimal(Float.toString(incidenciaRetido)).subtract(new BigDecimal(Float.toString(incidenciaFeriasRestituido))).subtract(new BigDecimal(Float.toString(incidenciaTercoRestituido)))
+                            .subtract(new BigDecimal(Float.toString(incidenciaDecimoTerceiroRestituido))).floatValue();
 
-                    float saldo = new BigDecimal(Float.toString(totalRetido)).add(new BigDecimal(Float.toString(totalRestituido))).floatValue();
+                    float saldo = new BigDecimal(Float.toString(totalRetido)).subtract(new BigDecimal(Float.toString(totalRestituido))).floatValue();
 
                     SaldoIndividualContaVinculadaModel saldoContaVinculadaModel =
                             new SaldoIndividualContaVinculadaModel(resultSet.getString(1),
@@ -92,6 +92,7 @@ public class SaldoIndividualContaVinculadaDAO {
                                     totalDecimoTerceiroRestituido,
                                     totalRetido,
                                     totalRestituido,
+                                    saldoIncidencia,
                                     saldo);
 
                     lista.add(saldoContaVinculadaModel);

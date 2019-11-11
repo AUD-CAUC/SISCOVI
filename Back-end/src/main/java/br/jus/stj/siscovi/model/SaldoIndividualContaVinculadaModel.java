@@ -20,6 +20,7 @@ public class SaldoIndividualContaVinculadaModel {
     private float totalDecimoTerceiroRestituido;
     private float totalRetido;
     private float totalRestituido;
+    private float saldoIncidencia;
     private float saldo;
 
     public SaldoIndividualContaVinculadaModel (String nomeFuncionario,
@@ -40,6 +41,7 @@ public class SaldoIndividualContaVinculadaModel {
                                                float totalDecimoTerceiroRestituido,
                                                float totalRetido,
                                                float totalRestituido,
+                                               float saldoIncidencia,
                                                float saldo) {
 
         this.nomeFuncionario = nomeFuncionario;
@@ -60,6 +62,7 @@ public class SaldoIndividualContaVinculadaModel {
         this.totalDecimoTerceiroRestituido = totalDecimoTerceiroRestituido;
         this.totalRetido = totalRetido;
         this.totalRestituido = totalRestituido;
+        this.saldoIncidencia = saldoIncidencia;
         this.saldo = saldo;
 
     }
