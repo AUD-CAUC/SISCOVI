@@ -20,6 +20,7 @@ public class SaldoFuncaoContaVinculadaModel {
     private float valorIncidenciaDecimoTerceiroRestituido;
     private float valorTotalDecimoTerceiroRestituido;
     private float valorTotalRestituido;
+    private float valorSaldoIncidencia;
     private float valorSaldo;
 
     public SaldoFuncaoContaVinculadaModel(String funcao,
@@ -39,6 +40,7 @@ public class SaldoFuncaoContaVinculadaModel {
                                           float valorTotalFeriasRestituido,
                                           float valorIncidenciaDecimoTerceiroRestituido,
                                           float valorTotalDecimoTerceiroRestituido,
+                                          float valorSaldoIncidencia,
                                           float valorSaldo) {
 
         this.funcao = funcao;
@@ -58,6 +60,7 @@ public class SaldoFuncaoContaVinculadaModel {
         this.valorTotalFeriasRestituido = valorTotalFeriasRestituido;
         this.valorIncidenciaDecimoTerceiroRestituido = valorIncidenciaDecimoTerceiroRestituido;
         this.valorTotalDecimoTerceiroRestituido = valorTotalDecimoTerceiroRestituido;
+        this.valorSaldoIncidencia = valorSaldoIncidencia;
         this.valorSaldo = valorSaldo;
 
     }
@@ -95,6 +98,8 @@ public class SaldoFuncaoContaVinculadaModel {
     public float getValorIncidenciaDecimoTerceiroRestituido() { return valorIncidenciaDecimoTerceiroRestituido; }
 
     public float getValorTotalDecimoTerceiroRestituido() { return valorTotalDecimoTerceiroRestituido; }
+
+    public float getValorSaldoIncidencia() { return valorSaldoIncidencia; }
 
     public float getValorSaldo() { return valorSaldo; }
 

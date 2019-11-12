@@ -732,7 +732,7 @@ public class Saldo {
         float vDecimoTerceiroRetido = 0;
         float vIncidenciaRetido = 0;
         float vMultaFGTSRetido = 0;
-        float vMultaFGTSRestituido = 0;
+        float vRescisaoMultaRestituido = 0;
         float vTotalRetido = 0;
         float vFeriasRestituido = 0;
         float vTercoConstitucionalRestituido = 0;
@@ -741,6 +741,9 @@ public class Saldo {
         float vDecimoTerceiroRestituido = 0;
         float vIncidencia13Restituido = 0;
         float vTotalRestituido = 0;
+        float vRescisaoDecimoTerceiroRestituido = 0;
+        float vRescisaoIncidencia13Restituido = 0;
+        float vRescisaoTotalRestituido = 0;
 
         PreparedStatement preparedStatement;
         ResultSet resultSet;
@@ -897,7 +900,8 @@ public class Saldo {
                         "       ROUND(SUM(CASE WHEN r.incid_submod_4_1_dec_terceiro IS NULL THEN 0 ELSE r.incid_submod_4_1_dec_terceiro END + CASE WHEN srr.incid_submod_4_1_dec_terceiro IS NULL THEN 0 ELSE srr.incid_submod_4_1_dec_terceiro END), 2),\n" +
                         "       ROUND(SUM(CASE WHEN r.INCID_MULTA_FGTS_DEC_TERCEIRO IS NULL THEN 0 ELSE r.INCID_MULTA_FGTS_DEC_TERCEIRO END + CASE WHEN r.INCID_MULTA_FGTS_FERIAS IS NULL THEN 0 ELSE r.INCID_MULTA_FGTS_FERIAS END + " +
                         "       CASE WHEN r.INCID_MULTA_FGTS_TERCO IS NULL THEN 0 ELSE r.INCID_MULTA_FGTS_TERCO END + CASE WHEN r.INCID_MULTA_FGTS_FERIAS_PROP IS NULL THEN 0 ELSE r.INCID_MULTA_FGTS_FERIAS_PROP END +" +
-                        "       CASE WHEN r.INCID_MULTA_FGTS_TERCO_PROP IS NULL THEN 0 ELSE r.INCID_MULTA_FGTS_TERCO_PROP END + CASE WHEN r.MULTA_FGTS_SALARIO IS NULL THEN 0 ELSE r.MULTA_FGTS_SALARIO END),2)" +
+                        "       CASE WHEN r.INCID_MULTA_FGTS_TERCO_PROP IS NULL THEN 0 ELSE r.INCID_MULTA_FGTS_TERCO_PROP END + CASE WHEN r.MULTA_FGTS_SALARIO IS NULL THEN 0 ELSE r.MULTA_FGTS_SALARIO END +" +
+                        "       CASE WHEN r.MULTA_FGTS_RESTANTE IS NULL THEN 0 ELSE r.MULTA_FGTS_RESTANTE END),2)" +
                         "FROM tb_terceirizado_contrato tc\n" +
                         "       JOIN tb_funcao_terceirizado ft ON ft.cod_terceirizado_contrato = tc.cod\n" +
                         "       JOIN tb_funcao_contrato fc ON fc.cod = ft.cod_funcao_contrato\n" +
@@ -914,10 +918,10 @@ public class Saldo {
 
                 if (resultSet.next()) {
 
-                    vDecimoTerceiroRestituido += resultSet.getFloat(1);
-                    vIncidencia13Restituido += resultSet.getFloat(2);
-                    vMultaFGTSRestituido = resultSet.getFloat(3);
-                    vTotalRestituido = vDecimoTerceiroRestituido + vIncidencia13Restituido + vMultaFGTSRestituido;
+                    vRescisaoDecimoTerceiroRestituido = resultSet.getFloat(1);
+                    vRescisaoIncidencia13Restituido = resultSet.getFloat(2);
+                    vRescisaoMultaRestituido = resultSet.getFloat(3);
+                    vRescisaoTotalRestituido = vRescisaoDecimoTerceiroRestituido + vRescisaoIncidencia13Restituido + vRescisaoMultaRestituido;
 
                 }
 
@@ -1023,13 +1027,13 @@ public class Saldo {
 
         if (pOperacao == 3 && pCodRubrica == 3) {
 
-            return vDecimoTerceiroRestituido;
+            return new BigDecimal(Float.toString(vDecimoTerceiroRestituido)).add(new BigDecimal(Float.toString(vRescisaoDecimoTerceiroRestituido))).floatValue();
 
         }
 
         if (pOperacao == 3 && pCodRubrica == 5) {
 
-            return vMultaFGTSRestituido;
+            return vRescisaoMultaRestituido;
 
         }
 
@@ -1037,7 +1041,8 @@ public class Saldo {
 
         if (pOperacao == 3 && pCodRubrica == 103) {
 
-            return vIncidencia13Restituido;
+            return new BigDecimal(Float.toString(vIncidencia13Restituido)).add(new BigDecimal(Float.toString(vRescisaoIncidencia13Restituido))).floatValue();
+
 
         }
 
@@ -1045,7 +1050,7 @@ public class Saldo {
 
         if (pOperacao == 3 && pCodRubrica == 100) {
 
-            return vTotalRestituido;
+            return new BigDecimal(Float.toString(vTotalRestituido)).add(new BigDecimal(Float.toString(vRescisaoTotalRestituido))).floatValue();
 
         }
 
