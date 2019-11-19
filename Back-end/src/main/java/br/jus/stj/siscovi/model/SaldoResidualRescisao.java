@@ -2,6 +2,7 @@ package br.jus.stj.siscovi.model;
 
 public class SaldoResidualRescisao {
 
+    private int codigoTerceirizadoContrato;
     private String terceirizado;
     private String cpf;
     private float valorIncidenciaDecimoTerceiroResidual;
@@ -14,7 +15,8 @@ public class SaldoResidualRescisao {
     private float valorTotalResidual;
     private String restituidoFlag;
 
-    public SaldoResidualRescisao (String terceirizado,
+    public SaldoResidualRescisao (int codigoTerceirizadoContrato,
+                                          String terceirizado,
                                           String cpf,
                                           float valorIncidenciaDecimoTerceiroResidual,
                                           float valorMultaFgtsDecimoTerceiroResidual,
@@ -26,6 +28,7 @@ public class SaldoResidualRescisao {
                                           float valorTotalResidual,
                                           String restituidoFlag) {
 
+        this.codigoTerceirizadoContrato = codigoTerceirizadoContrato;
         this.terceirizado = terceirizado;
         this.cpf = cpf;
         this.valorIncidenciaDecimoTerceiroResidual = valorIncidenciaDecimoTerceiroResidual;

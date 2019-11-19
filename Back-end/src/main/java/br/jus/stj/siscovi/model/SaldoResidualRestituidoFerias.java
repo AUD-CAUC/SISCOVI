@@ -2,6 +2,7 @@ package br.jus.stj.siscovi.model;
 
 public class SaldoResidualRestituidoFerias {
 
+    private int codigoTerceirizadoContrato;
     private String terceirizado;
     private String cpf;
     private float valorFeriasResidual;
@@ -9,17 +10,20 @@ public class SaldoResidualRestituidoFerias {
     private float valorIncidenciaFeriasResidual;
     private float valorIncidenciaTercoResidual;
     private float valorTotalResidual;
-    private String restituidoFlag;
+    private String status;
 
-    public SaldoResidualRestituidoFerias (String terceirizado,
-                                          String cpf,
-                                          float valorFeriasResidual,
-                                          float valorTercoResidual,
-                                          float valorIncidenciaFeriasResidual,
-                                          float valorIncidenciaTercoResidual,
-                                          float valorTotalResidual,
-                                          String restituidoFlag) {
+    public SaldoResidualRestituidoFerias(
+            int codigoTerceirizadoContrato,
+            String terceirizado,
+            String cpf,
+            float valorFeriasResidual,
+            float valorTercoResidual,
+            float valorIncidenciaFeriasResidual,
+            float valorIncidenciaTercoResidual,
+            float valorTotalResidual,
+            String status) {
 
+        this.codigoTerceirizadoContrato = codigoTerceirizadoContrato;
         this.terceirizado = terceirizado;
         this.cpf = cpf;
         this.valorFeriasResidual = valorFeriasResidual;
@@ -27,8 +31,7 @@ public class SaldoResidualRestituidoFerias {
         this.valorIncidenciaFeriasResidual = valorIncidenciaFeriasResidual;
         this.valorIncidenciaTercoResidual = valorIncidenciaTercoResidual;
         this.valorTotalResidual = valorTotalResidual;
-        this.restituidoFlag = restituidoFlag;
-
+        this.status = status;
     }
 
 }

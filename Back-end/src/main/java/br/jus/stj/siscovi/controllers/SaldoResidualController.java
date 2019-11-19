@@ -1,21 +1,23 @@
 package br.jus.stj.siscovi.controllers;
 
-import br.jus.stj.siscovi.dao.ConnectSQLServer;
-import br.jus.stj.siscovi.dao.SaldoResidualDecimoTerceiroDAO;
-import br.jus.stj.siscovi.dao.SaldoResidualFeriasDAO;
-import br.jus.stj.siscovi.dao.SaldoResidualRescisaoDAO;
+import br.jus.stj.siscovi.dao.*;
+import br.jus.stj.siscovi.helpers.CalculosPendentesResiduaisHelper;
 import br.jus.stj.siscovi.helpers.ErrorMessage;
+import br.jus.stj.siscovi.model.AvaliacaoResiduais;
+import br.jus.stj.siscovi.model.ContratoModel;
 import br.jus.stj.siscovi.model.SaldoResidualRescisao;
+import br.jus.stj.siscovi.model.SaldoResidualRestituidoFerias;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.sql.SQLException;
+import java.util.List;
 
 @Path("/saldo-residual")
 public class SaldoResidualController {
@@ -25,11 +27,11 @@ public class SaldoResidualController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getSaldoResidualFerias(@PathParam("codigoContrato") int codigoContrato) {
         ConnectSQLServer connectSQLServer = new ConnectSQLServer();
-        SaldoResidualFeriasDAO saldoFerias = new SaldoResidualFeriasDAO(connectSQLServer.dbConnect());
+        SaldoResidualDAO saldoResidualDAO = new SaldoResidualDAO(connectSQLServer.dbConnect());
         String json;
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
         try{
-            json = gson.toJson(saldoFerias.getSaldoResidualFeriasRestituido(codigoContrato));
+            json = gson.toJson(saldoResidualDAO.getSaldoResidualFeriasRestituido(codigoContrato));
             connectSQLServer.dbConnect().close();
         }catch (SQLException slqe) {
             ErrorMessage errorMessage = new ErrorMessage();
@@ -46,15 +48,39 @@ public class SaldoResidualController {
     }
 
     @GET
+    @Path("/getCalculosPendentes/{codigoUsuario}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getCalculosPendentes(@PathParam("codigoUsuario") int codigoUsuario) {
+        ConnectSQLServer connectSQLServer = new ConnectSQLServer();
+        SaldoResidualDAO saldoResidualDAO = new SaldoResidualDAO(connectSQLServer.dbConnect());
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+        String json = "";
+        try {
+            JsonArray jsonArray = new JsonArray();
+            List<ContratoModel> contratos = new ContratoDAO(connectSQLServer.dbConnect()).getCodigosContratosCalculosPendentes(codigoUsuario, 4);
+            for (ContratoModel contrato : contratos) {
+                jsonArray.add(CalculosPendentesResiduaisHelper.formataCalculosPendentes(contrato, gson, saldoResidualDAO,
+                       codigoUsuario, 1));
+                }
+            json = gson.toJson(jsonArray);
+            connectSQLServer.dbConnect().close();
+        } catch (Exception ex) {
+            json = gson.toJson(ErrorMessage.handleError(ex));
+            return Response.status(Response.Status.NOT_FOUND).entity(json).build();
+        }
+        return Response.ok(json, MediaType.APPLICATION_JSON).build();
+    }
+
+    @GET
     @Path("/getSaldoResidualDecimoTerceiro/{codigoContrato}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getSaldoResidualDecimoTerceiro(@PathParam("codigoContrato") int codigoContrato) {
         ConnectSQLServer connectSQLServer = new ConnectSQLServer();
-        SaldoResidualDecimoTerceiroDAO saldoDecimoTerceiro = new SaldoResidualDecimoTerceiroDAO(connectSQLServer.dbConnect());
+        SaldoResidualDAO saldoResidualDAO = new SaldoResidualDAO(connectSQLServer.dbConnect());
         String json;
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
         try{
-            json = gson.toJson(saldoDecimoTerceiro.getSaldoResidualDecimoTerceiroRestituido(codigoContrato));
+            json = gson.toJson(saldoResidualDAO.getSaldoResidualDecimoTerceiroRestituido(codigoContrato));
             connectSQLServer.dbConnect().close();
         }catch (SQLException slqe) {
             ErrorMessage errorMessage = new ErrorMessage();
@@ -75,7 +101,7 @@ public class SaldoResidualController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getSaldoResidualRescisao(@PathParam("codigoContrato") int codigoContrato) {
         ConnectSQLServer connectSQLServer = new ConnectSQLServer();
-        SaldoResidualRescisaoDAO saldorescisao = new SaldoResidualRescisaoDAO(connectSQLServer.dbConnect());
+        SaldoResidualDAO saldorescisao = new SaldoResidualDAO(connectSQLServer.dbConnect());
         String json;
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
         try{
@@ -95,4 +121,27 @@ public class SaldoResidualController {
         return Response.ok(json, MediaType.APPLICATION_JSON).build();
     }
 
+    @PUT
+    @Path("/confirmarFeriasResiduais")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response salvarFeriasAvaliadas(String object) {
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+        List<AvaliacaoResiduais> avaliacoesResiduais = gson.fromJson(object, new TypeToken<List<AvaliacaoResiduais>>() {
+        }.getType());
+        ConnectSQLServer connectSQLServer = new ConnectSQLServer();
+        SaldoResidualDAO saldoResidualDAO = new SaldoResidualDAO(connectSQLServer.dbConnect());
+        String json = "";
+        try {
+            for (AvaliacaoResiduais avaliacaoResiduais : avaliacoesResiduais) {
+                saldoResidualDAO.confirmarFeriasResiduais(avaliacaoResiduais);
+            }
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("success", true);
+            json = gson.toJson(jsonObject);
+        } catch (Exception ex) {
+            json = gson.toJson(ErrorMessage.handleError(ex));
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(json).build();
+        }
+        return Response.ok(json, MediaType.APPLICATION_JSON).build();
+    }
 }
